@@ -1,0 +1,44 @@
+.red-text{
+    color: red;
+}
+
+.form-check-input~.custom-indicator.is-invalid{
+    border-color: #d9534f;
+}
+
+.form-check-input:checked~.custom-indicator{
+    background-color: #fff;
+}
+
+.form-check-input~.custom-indicator{
+    border-color: gray;
+    position: absolute;
+    margin-top: 0.3rem;
+    margin-left: -1.25rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    border: 1px solid gray;
+    border-radius: 2px;
+}
+
+.form-check-input~.custom-indicator:after {
+    left: 3px;
+    top: 0px;
+    width: 5px;
+    height: 9px;
+    border: solid #26B4FF;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .form-check-input~.custom-indicator:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .form-check-input:checked~.custom-indicator:after {
+    display: block;
+  }

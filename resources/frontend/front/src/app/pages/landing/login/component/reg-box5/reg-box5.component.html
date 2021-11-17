@@ -1,0 +1,51 @@
+<div>
+    <form [formGroup]="dataForm">
+        <div>
+            <label class="form-label">Which communications would you like to receive?</label>
+            <label class="form-check" *ngFor="let item of communications">
+                <input class="form-check-input" type="checkbox" [value]="item.id" [checked]="item.checked"
+                    (change)="onCheckChange($event)" style="display: none;">
+                <span class="custom-indicator" [ngClass]="{'is-invalid': submitted && f.interest_communications.errors }"></span>
+                <div class="form-check-label">
+                    {{ item.title }}
+                </div>
+            </label>
+            <form [formGroup]="dataForm">
+                <div class="form-group">
+                    <input formControlName="interest_communications" name="interest_communications" type="hidden" class="form-control"
+                        [ngClass]="{'is-invalid': submitted && f.interest_communications.errors }">
+                    <div *ngIf="submitted && f.interest_communications.errors" class="invalid-feedback">
+                        <div *ngIf="f.interest_communications.errors.required">Please select an option</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div>
+            <label class="form-label"><span class="red-text mr-1">*</span>Terms and privacy agreement</label>
+            <label class="form-check">
+                <input class="form-check-input" type="checkbox" [value]="f.agree_terms.value" [checked]="f.agree_terms.value === 'yes'"
+                    (change)="onAgreeTerms($event)" style="display: none;">
+                <span class="custom-indicator" [ngClass]="{'is-invalid': submitted && f.agree_terms.errors }"></span>
+                <div class="form-check-label">
+                    I have read and agree to the 
+                    <a href="https://www.gjsservices.com/cms/index/home/terms_and_conditions.html" target="_blank">terms</a>
+                     and 
+                     <a href="https://www.gjsservices.com/cms/index/home/online_privacy_statement.html" target="_blank">privacy policy</a>
+                </div>
+            </label>
+            <form [formGroup]="dataForm">
+                <div class="form-group">
+                    <input formControlName="agree_terms" name="agree_terms" type="hidden" class="form-control"
+                        [ngClass]="{'is-invalid': submitted && f.agree_terms.errors }">
+                    <div *ngIf="submitted && f.agree_terms.errors" class="invalid-feedback">
+                        <div *ngIf="f.agree_terms.errors.required">You should agree terms and privacy agreement</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="d-flex align-items-center m-0">
+            <button type="button" class="btn btn-primary" (click)="onSubmit()" type="button">Submit</button>
+            <button type="button" class="btn" (click)="onBack()" type="button">Back</button>
+        </div>
+    </form>
+</div>

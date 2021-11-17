@@ -1,0 +1,117 @@
+<!-- Form -->
+<form [formGroup]="dataForm">
+    <div class="form-group">
+        <label class="form-label"><span class="red-text mr-1">*</span>First name</label>
+        <input formControlName="first_name" name="first_name" type="text" class="form-control"
+            [ngClass]="{'is-invalid': submitted && f.first_name.errors }">
+        <div *ngIf="submitted && f.first_name.errors" class="invalid-feedback">
+            <div *ngIf="f.first_name.errors.required">First name is Required</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label"><span class="red-text mr-1">*</span>Surname</label>
+        <input formControlName="last_name" name="last_name" type="text" class="form-control"
+            [ngClass]="{'is-invalid': submitted && f.last_name.errors }">
+        <div *ngIf="submitted && f.last_name.errors" class="invalid-feedback">
+            <div *ngIf="f.last_name.errors.required">Last name is Required</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label"><span class="red-text mr-1">*</span>Email</label>
+        <input formControlName="email" name="email" type="text" class="form-control"
+            [ngClass]="{'is-invalid': submitted && (f.email.errors || emailIsValid === false ) }"
+            (change)="checkEmail()">
+        <div *ngIf="submitted && (f.email.errors || emailIsValid === false)" class="invalid-feedback">
+            <div *ngIf="(f.email.errors.email || emailIsValid === false)">Email is Invalid</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label"><span class="red-text mr-1">*</span>Phone number</label>
+        <input formControlName="home_phone" name="home_phone" type="text" class="form-control"
+            [ngClass]="{'is-invalid': submitted && f.home_phone.errors }">
+        <div *ngIf="submitted && f.home_phone.errors" class="invalid-feedback">
+            <div *ngIf="f.home_phone.errors.required">Please enter your phone number - no spaces or symbols -
+                447123456789 or 01234567890</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label"><span class="red-text mr-1">*</span>Mobile number</label>
+        <input formControlName="mobile_phone" name="mobile_phone" type="text" class="form-control"
+            [ngClass]="{'is-invalid': submitted && f.mobile_phone.errors }">
+        <div *ngIf="submitted && f.mobile_phone.errors" class="invalid-feedback">
+            <div *ngIf="f.mobile_phone.errors.required">Please enter your phone number - no spaces or symbols -
+                447123456789 or 01234567890</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label"><span class="red-text mr-1">*</span>Are you the primary account contact?</label>
+        <label class="form-check ">
+            <input formControlName="primary_account" class="form-check-input" type="radio" value="yes"
+                name="primary_account">
+            <div class="form-check-label">
+                Yes
+            </div>
+        </label>
+        <label class="form-check ">
+            <input formControlName="primary_account" class="form-check-input" type="radio" value="no"
+                name="primary_account">
+            <div class="form-check-label">
+                No
+            </div>
+        </label>
+        <input formControlName="primary_account" name="primary_account" type="hidden" class="form-control"
+            [ngClass]="{'is-invalid': submitted && f.primary_account.errors }">
+        <div *ngIf="submitted && f.primary_account.errors" class="invalid-feedback">
+            <div *ngIf="f.primary_account.errors.required">Please select an option</div>
+        </div>
+    </div>
+    <div *ngIf="f.primary_account.value === 'no'">
+        <div class="form-group">
+            <label class="form-label"><span class="red-text mr-1">*</span>First name</label>
+            <input formControlName="s_first_name" name="s_first_name" type="text" class="form-control"
+                [ngClass]="{'is-invalid': submitted && f.s_first_name.errors }">
+            <div *ngIf="submitted && f.s_first_name.errors" class="invalid-feedback">
+                <div *ngIf="f.s_first_name.errors.required">First name is Required</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label"><span class="red-text mr-1">*</span>Surname</label>
+            <input formControlName="s_last_name" name="s_last_name" type="text" class="form-control"
+                [ngClass]="{'is-invalid': submitted && f.s_last_name.errors }">
+            <div *ngIf="submitted && f.s_last_name.errors" class="invalid-feedback">
+                <div *ngIf="f.s_last_name.errors.required">Last name is Required</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label"><span class="red-text mr-1">*</span>Email</label>
+            <input formControlName="s_email" name="s_email" type="text" class="form-control"
+                [ngClass]="{'is-invalid': submitted && f.s_email.errors }">
+            <div *ngIf="submitted && f.s_email.errors" class="invalid-feedback">
+                <div *ngIf="f.s_email.errors.required">Email Required</div>
+                <div *ngIf="f.s_email.errors.email">Email is Invalid</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label"><span class="red-text mr-1">*</span>Phone number</label>
+            <input formControlName="s_home_phone" name="s_home_phone" type="text" class="form-control"
+                [ngClass]="{'is-invalid': submitted && f.s_home_phone.errors }">
+            <div *ngIf="submitted && f.s_home_phone.errors" class="invalid-feedback">
+                <div *ngIf="f.s_home_phone.errors.required">Please enter your phone number - no spaces or symbols -
+                    447123456789 or 01234567890</div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex align-items-center m-0">
+        <button type="button" class="btn btn-primary" (click)="onSubmit()" type="button">Continue</button>
+        <button type="button" class="btn" (click)="onBack()" type="button">Back</button>
+    </div>
+</form>
+<!-- / Form -->

@@ -1,0 +1,67 @@
+<h4 class="font-weight-bold py-3 mb-4">
+  <span class="text-muted font-weight-light">Charts /</span> Ng2 Charts
+</h4>
+
+<hr class="container-m-nx border-light mt-0 mb-5">
+
+<div class="demo-vertical-spacing-lg">
+  <div style="height: 250px">
+    <canvas baseChart height="250"
+      [datasets]="data1"
+      [labels]="['January', 'February', 'March', 'April', 'May', 'June', 'July']"
+      [options]="lineOptions"
+      [chartType]="'line'"
+      [colors]="colors1">
+    </canvas>
+  </div>
+
+  <div style="height: 250px">
+    <canvas baseChart height="250"
+      [datasets]="data2"
+      [labels]="['Italy', 'UK', 'USA', 'Germany', 'France', 'Japan']"
+      [options]="barOptions"
+      [chartType]="'bar'"
+      [colors]="colors2">
+    </canvas>
+  </div>
+
+  <div style="height: 250px">
+    <canvas baseChart height="250"
+      [datasets]="data3"
+      [labels]="['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running']"
+      [options]="radarOptions"
+      [chartType]="'radar'"
+      [colors]="colors3">
+    </canvas>
+  </div>
+
+  <div style="height: 250px">
+    <canvas baseChart height="250"
+      [datasets]="data4"
+      [labels]="['Red', 'Green', 'Yellow', 'Grey', 'Blue']"
+      [options]="polarAreaOptions"
+      [chartType]="'polarArea'"
+      [colors]="colors4">
+    </canvas>
+  </div>
+
+  <div style="height: 250px">
+    <canvas baseChart height="250"
+      [datasets]="data5"
+      [labels]="['Red', 'Blue', 'Yellow']"
+      [options]="pieOptions"
+      [chartType]="'pie'"
+      [colors]="colors5">
+    </canvas>
+  </div>
+
+  <div style="height: 250px">
+    <canvas baseChart height="250"
+      [datasets]="data6"
+      [labels]="['Red', 'Blue', 'Yellow']"
+      [options]="doughnutOptions"
+      [chartType]="'doughnut'"
+      [colors]="colors6">
+    </canvas>
+  </div>
+</div>

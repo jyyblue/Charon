@@ -1,0 +1,88 @@
+<div>
+    <form [formGroup]="dataForm">
+        <div class="form-group">
+            <label class="form-label"><span class="red-text mr-1">*</span>Company name</label>
+            <input formControlName="company_name" name="company_name" type="text" class="form-control"
+                [ngClass]="{'is-invalid': submitted && f.company_name.errors }" (change)="showAddressDetail()"/>
+            <div *ngIf="submitted && f.company_name.errors" class="invalid-feedback">
+                <div *ngIf="f.company_name.errors.required">Please enter the company name</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Company registration number</label>
+            <input formControlName="company_reg_number" name="company_reg_number" type="text" class="form-control" (change)="showAddressDetail()">
+        </div>
+        <div class="form-group">
+            <label class="form-label"><span class="red-text mr-1">*</span>Postcode</label>
+            <input formControlName="postcode" name="postcode" type="text" class="form-control"
+                [ngClass]="{'is-invalid': submitted && f.postcode.errors }" (change)="showAddressDetail()"/>
+            <div *ngIf="submitted && f.postcode.errors" class="invalid-feedback">
+                <div *ngIf="f.postcode.errors.required">Please enter the Postcode</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label"><span class="red-text mr-1">*</span>Country</label>
+            <select formControlName="country" name="country" class="form-control"
+                [ngClass]="{'is-invalid': submitted && f.country.errors }">
+                <option value="" disabled selected>Select Country</option>
+                <option *ngFor="let country of countries" [value]="country.name">{{country.name}}</option>
+            </select>
+            <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                <div *ngIf="f.country.errors.required">Please enter your Company Registration number, or your company
+                    name and postcode to search for your company.</div>
+            </div>
+        </div>
+
+        <div *ngIf="fShowAddress">
+            <div class="form-group">
+                <label class="form-label"><span class="red-text mr-1">*</span>Address line 1</label>
+                <input formControlName="address1" name="address1" type="text" class="form-control"
+                    [ngClass]="{'is-invalid': submitted && f.address1.errors }" />
+                <div *ngIf="submitted && f.address1.errors" class="invalid-feedback">
+                    <div *ngIf="f.address1.errors.required">Please enter the Address line</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Address line 2</label>
+                <input formControlName="address2" name="address2" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="form-label"><span class="red-text mr-1">*</span>Town/City</label>
+                <input formControlName="city" name="city" type="text" class="form-control"
+                    [ngClass]="{'is-invalid': submitted && f.city.errors }" />
+                <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
+                    <div *ngIf="f.city.errors.required">Please enter the Town/City</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><span class="red-text mr-1">*</span>VAT number</label>
+                <input formControlName="vat" name="vat" type="text" class="form-control"
+                    [ngClass]="{'is-invalid': submitted && f.vat.errors }" />
+                <div *ngIf="submitted && f.vat.errors" class="invalid-feedback">
+                    <div *ngIf="f.vat.errors.required">Please enter the VAT number</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><span class="red-text mr-1">*</span>Head office phone number</label>
+                <input formControlName="head_phone_number" name="head_phone_number" type="text" class="form-control"
+                    [ngClass]="{'is-invalid': submitted && f.head_phone_number.errors }" />
+                <div *ngIf="submitted && f.head_phone_number.errors" class="invalid-feedback">
+                    <div *ngIf="f.head_phone_number.errors.required">Please enter the Head office phone number</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Website</label>
+                <input formControlName="web_url" name="web_url" type="text" class="form-control"
+                    [ngClass]="{'is-invalid': submitted && f.web_url.errors }" />
+                <div *ngIf="submitted && f.web_url.errors" class="invalid-feedback">
+                    <div *ngIf="f.web_url.errors.required">Please enter the Head office phone number</div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="d-flex align-items-center m-0">
+        <button type="button" class="btn btn-primary" (click)="onSubmit()" type="button">Continue</button>
+        <button type="button" class="btn" (click)="onBack()" type="button">Back</button>
+    </div>
+</div>

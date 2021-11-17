@@ -1,0 +1,202 @@
+<h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
+    <div>Edit Job</div>
+    <button type="button" class="btn btn-primary rounded-pill d-block"><span class="ion ion-md-add"></span>&nbsp; Update
+        Job</button>
+</h4>
+
+
+<div class="row">
+    <div class="col">
+        <div class="card mb-4">
+            <h6 class="card-header">
+                Pending => Pending Payment
+            </h6>
+            <div class="card-body">
+                <form [formGroup]="dataForm">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Invoice Date</label>
+                            <div class="input-group">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                                    formControlName="invoice_date" name="invoice_date"
+                                    (ngModelChange)="onDateChange($event)"
+                                    #d2="ngbDatepicker" >
+                                <div class="input-group-append">
+                                    <button class="input-group-text" (click)="d2.toggle()" type="button">
+                                        <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Target Payment Date</label>
+                            <input type="text" class="form-control" formControlName="payment_date" name="payment_date" disabled>
+                        </div>
+                        <div class="form-group col-md-4" *ngIf="f.invoice_date.value">
+                            <label class="form-label">Invoice Number</label>
+                            <input type="text" class="form-control" formControlName="invoice_number" name="invoice_number">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card mb-4">
+            <h6 class="card-header">
+                Processing Detail
+            </h6>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label class="form-label">Total Prifit</label>
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="form-label">Check Bank Detail</label>
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="form-label">Check VAT status</label>
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="form-label">Check Driver Price</label>
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="form-label">Docket off Hold</label>
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label class="form-label">Invoice Date</label>
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="form-label">Target Payment Date</label>
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="form-label">Invoice Number</label>
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="form-label">POD Attachment</label>
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="form-label">Upload POD</label>
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <h6 class="card-header">
+                Customer Info
+            </h6>
+            <div class="card-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Customer</label>
+                            <input type="text" class="form-control" placeholder="Last Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Docket Number</label>
+                            <input type="text" class="form-control" placeholder="First Name">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Job Date</label>
+                            <input type="email" class="form-control" placeholder="Email">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Vehicle Size</label>
+                            <input type="email" class="form-control" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Price (ex vat)</label>
+                            <input type="text" class="form-control" placeholder="CX Number">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">VAT</label>
+                            <input type="text" class="form-control" placeholder="CX Number">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Total Price (inc vat)</label>
+                            <input type="text" class="form-control" placeholder="CX Number">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <h6 class="card-header">
+                Driver Info
+            </h6>
+            <div class="card-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Driver</label>
+                            <input type="text" class="form-control" placeholder="First Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Call Sign</label>
+                            <input type="text" class="form-control" placeholder="Last Name">
+                        </div>
+
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Type</label>
+                            <input type="email" class="form-control" placeholder="Email">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">CX Number</label>
+                            <input type="text" class="form-control" placeholder="1234 Main St">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Price (ex vat)</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="form-label">VAT</label>
+                            <select class="custom-select">
+                                <option>Select state</option>
+                                <option>California</option>
+                                <option>Hawaii</option>
+                                <option>Florida</option>
+                                <option>Texas</option>
+                                <option>Massachusetts</option>
+                                <option>Alabama</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Total Price (inc. vat)</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

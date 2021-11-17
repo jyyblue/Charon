@@ -1,0 +1,88 @@
+import { ServiceBase } from './service-base.service';
+import { Injectable, OnDestroy } from '@angular/core';
+
+import { environment } from '../../../environments/environment';
+import { User } from '../models/user';
+import { of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
+import { debounceTime } from 'rxjs/operators';
+import { Profile } from '../models/profile.model';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { common as Const } from '../const/common';
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService extends ServiceBase {
+
+  constructor(protected toastrService: ToastrService, protected http: HttpClient) {
+    super(toastrService, http);
+  }
+
+  public getUserProfile(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/${params.username}`, params, null, false);
+  }
+
+  public getUserList(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/customer/list`, params, null, false);
+  }
+
+  public getCustomerDetail(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/customer/detail`, params, null, false);
+  }
+
+  public updateCustomerAccount(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/customer/update`, params, null, false);
+  }
+
+  public getTableData(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/customer/auth/getTableData`, params, null, false);
+  }
+
+  public saveTask(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/task/create`, params, null, false);
+  }
+
+  public getTaskList(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/task/list`, params, null, false);
+  }
+
+  public getDriverList(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/driver/list`, params, null, false);
+  }
+
+  public getTaskDetail(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/task/detail`, params, null, false);
+  }
+  
+  public updatePendingTask(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/task/updatePendingTask`, params, null, false);
+  }
+
+  public updatePendingPaymentTasks(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/task/updatePendingPaymentTasks`, params, null, false);
+  }
+
+  public disputeTask(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/task/disputeTask`, params, null, false);
+  }
+  
+  public resolveDisputeTask(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/task/resolveDisputeTask`, params, null, false);
+  }
+  
+  public getVehicleTypeList(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/verhicle/list`, params, null, false);
+  }
+  
+  /**
+   * call with Rxjs
+   */
+
+   getCustomerList(term: string = null): Observable<any[]> {
+    let params = {
+      'search': term
+    }
+    return this.postDataRxjs(`${environment.apiUrl}/admin/v1/user/list`, params, null, false);
+  }
+}

@@ -1,0 +1,21 @@
+.block-ui-white .block-ui-wrapper {
+  background: rgba(255, 255, 255, .8);
+  color: #444;
+  animation: block-ui-animation .3s;
+}
+.block-ui-white .block-ui-template {
+  top: 50%;
+}
+.dark-style .block-ui-white .block-ui-wrapper {
+  background: rgba(#22252B, 0.8);
+  color: #fff;
+}
+
+@keyframes block-ui-animation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

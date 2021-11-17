@@ -1,0 +1,32 @@
+<div class="ui-block">
+  <h3 class="ui-block-heading">ngx-image-cropper</h3>
+  <a target="_blank" href="https://github.com/Mawi137/ngx-image-cropper" class="ui-block-description">https://github.com/Mawi137/ngx-image-cropper</a>
+
+  <div class="no-ie10" data-name="ngx-image-cropper"></div>
+
+  <h4 class="ui-block-heading">Examples</h4>
+
+  <div class="cui-example" *ngIf="!appService.isIE10">
+    <div class="mb-4">
+      <label class="btn btn-primary btn-lg">
+        Upload image
+        <input type="file" (change)="fileChangeListener($event)" class="sr-only">
+      </label>
+    </div>
+    <div>
+      <div style="width: 400px;">
+        <image-cropper
+          #cropper
+          [maintainAspectRatio]="true"
+          [aspectRatio]="4/3"
+          format="png"
+          (imageCropped)="imageCropped($event)"
+        ></image-cropper>
+      </div>
+
+      <div *ngIf="croppedImage" class="mt-4">
+        <img [src]="croppedImage" style="max-width: 400px; max-height: 400px">
+      </div>
+    </div>
+  </div>
+</div>

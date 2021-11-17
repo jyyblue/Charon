@@ -1,0 +1,34 @@
+<sidenav [orientation]="orientation" [ngClass]="getClasses()">
+  <!-- Inner -->
+  <div class="sidenav-inner" [ngClass]="{ 'py-1': orientation !== 'horizontal' }">
+
+    <!-- Dashboards -->
+    <sidenav-router-link icon="ion ion-md-speedometer" route="/admin/dashboard" [active]="isMenuActive('/admin/dashboard')">Dashboard</sidenav-router-link>
+    
+    <sidenav-menu icon="fas fa-truck" text="Driver" [active]="isMenuActive('/admin/driver')" [open]="isMenuOpen('/admin/driver')">
+      <sidenav-router-link route="/admin/driver/list" [active]="isActive('/admin/driver/list')">Driver List</sidenav-router-link>
+      <sidenav-router-link route="/admin/driver/add" [active]="isActive('/admin/driver/add')">Add Driver</sidenav-router-link>
+    </sidenav-menu>
+
+    <sidenav-menu icon="fas fa-user-tie" text="Customer" [active]="isMenuActive('/admin/customer')" [open]="isMenuOpen('/admin/customer')">
+      <sidenav-router-link route="/admin/customer/list" [active]="isActive('/admin/customer/list')">Customer List</sidenav-router-link>
+      <sidenav-router-link route="/admin/customer/add" [active]="isActive('/admin/customer/add')">Add Customer</sidenav-router-link>
+    </sidenav-menu>
+
+    <sidenav-menu icon="fas fa-tasks" text="Job" [active]="isMenuActive('/admin/job')" [open]="isMenuOpen('/admin/job')">
+      <sidenav-router-link route="/admin/job/add" [active]="isActive('/admin/job/add')">Add Job</sidenav-router-link>
+      <sidenav-router-link route="/admin/job/list" [active]="isActive('/admin/job/list')">Job List</sidenav-router-link>
+      <sidenav-router-link route="/admin/job/list-pending" [active]="isActive('/admin/job/list-pending')">Pending Job</sidenav-router-link>
+      <sidenav-router-link route="/admin/job/list-pending-payment" [active]="isActive('/admin/job/list-pending-payment')">Pending Payment Job</sidenav-router-link>
+      <sidenav-router-link route="/admin/job/list-query" [active]="isActive('/admin/job/list-query')">Query Job</sidenav-router-link>
+      <sidenav-router-link route="/admin/job/list-complete" [active]="isActive('/admin/job/list-complete')">Completed Job</sidenav-router-link>
+    </sidenav-menu>
+    <sidenav-menu icon="fas fa-tasks" text="Import" [active]="isMenuActive('/admin/import')" [open]="isMenuOpen('/admin/import')">
+      <sidenav-router-link route="/admin/import/job" [active]="isActive('/admin/import/job')">Import Job</sidenav-router-link>
+    </sidenav-menu>
+
+    <!-- <sidenav-router-link icon="ion ion-ios-cash" route="/admin/transaction-history" [active]="isMenuActive('/admin/transaction-history')">Transaction History</sidenav-router-link>
+    <sidenav-router-link icon="ion ion-ios-phone-portrait" route="/admin/mobile-setting" [active]="isMenuActive('/admin/mobile-setting')">Mobile Setting</sidenav-router-link>
+    <sidenav-router-link icon="ion ion-ios-phone-portrait" route="/admin/ticket/list" [active]="isMenuActive('/admin/ticket/list')">Contact Ticket</sidenav-router-link> -->
+  </div>
+</sidenav>

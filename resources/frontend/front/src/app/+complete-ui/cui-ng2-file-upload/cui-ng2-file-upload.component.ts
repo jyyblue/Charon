@@ -1,0 +1,29 @@
+import { Component } from '@angular/core';
+import { FileUploader } from 'ng2-file-upload';
+
+@Component({
+  selector: 'cui-ng2-file-upload', // tslint:disable-line
+  templateUrl: './cui-ng2-file-upload.component.html',
+  styles: [`
+    :host ::ng-deep .ng2-file-upload-drop-zone {
+      border: 3px dashed rgba(24, 28, 33, 0.1);
+    }
+    :host ::ng-deep .ng2-file-upload-file-over {
+      border-color: rgba(24, 28, 33, 0.3);
+    }
+    .dark-style :host ::ng-deep .ng2-file-upload-drop-zone {
+      border: 3px dashed rgba(255, 255, 255, 0.15);
+    }
+    .dark-style :host ::ng-deep .ng2-file-upload-file-over {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+`]
+})
+export class CuiNg2FileUploadComponent {
+  uploader = new FileUploader({ url: 'https://evening-anchorage-3159.herokuapp.com/api/' });
+  hasBaseDropZoneOver = false;
+
+  fileOver(e: any) {
+    this.hasBaseDropZoneOver = e;
+  }
+}

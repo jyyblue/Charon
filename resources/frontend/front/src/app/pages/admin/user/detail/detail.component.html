@@ -1,0 +1,204 @@
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-google">
+                <i class="sidenav-icon fa fa-user"></i> Account Information
+            </div>
+            <div class="card-body">
+                <form [formGroup]="dataForm">
+                    <div class="form-group">
+                        <label class="form-label"> Account Number: </label>
+                        <input formControlName="account_number" name="account_number" type="text" class="form-control" [(value)]="user.account_number"
+                            [ngClass]="{'is-invalid': submitted && f.account_number.errors }">
+                        <div *ngIf="submitted && f.account_number.errors" class="invalid-feedback">
+                            <div *ngIf="f.account_number.errors.required">Account Number is Required</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"> User Name: </label>
+                        <input formControlName="name" name="name" type="text" class="form-control" [value]="user.name"
+                            [ngClass]="{'is-invalid': submitted && f.name.errors }">
+                        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                            <div *ngIf="f.name.errors.required">User Name is Required</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"> Password: </label>
+                        <input formControlName="password" name="password" type="text" class="form-control"
+                            [ngClass]="{'is-invalid': submitted && f.password.errors }">
+                        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                            <div *ngIf="f.password.errors.required">Password is Required</div>
+                        </div>
+                    </div>
+                </form>
+                <div class="d-flex align-items-center m-0">
+                    <button type="button" class="btn btn-primary" (click)="onSubmit()" type="button">Save</button>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header bg-primary">
+                <i class="sidenav-icon fa fa-home"></i> Company Information
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-5"> Company Name: </label>
+                    <p class="col-7"> {{ user != undefined ? user.company_name : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Company registration number : </label>
+                    <p class="col-7"> {{ user != undefined ? user.company_reg_number : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Country: </label>
+                    <p class="col-7"> {{ user != undefined ? user.country : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Postcode: </label>
+                    <p class="col-7"> {{ user != undefined ? user.postcode : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Town/City: </label>
+                    <p class="col-7"> {{ user != undefined ? user.city : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Address line 1: </label>
+                    <p class="col-7"> {{ user != undefined ? user.address1 : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Address line 2: </label>
+                    <p class="col-7"> {{ user != undefined ? user.address2 : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> VAT number: </label>
+                    <p class="col-7"> {{ user != undefined ? user.vat : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Head office phone number: </label>
+                    <p class="col-7"> {{ user != undefined ? user.head_phone_number : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Website: </label>
+                    <p class="col-7"> {{ user != undefined ? user.web_url : '' }} </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-secondary">
+                <i class="sidenav-icon fa fa-user-tie"></i> Personal Information
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-5"> First Name: </label>
+                    <p class="col-7"> {{ user != undefined ? user.first_name : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Last Name: </label>
+                    <p class="col-7"> {{ user != undefined ? user.last_name : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Email: </label>
+                    <p class="col-7"> {{ user != undefined ? user.email : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Home Phone: </label>
+                    <p class="col-7"> {{ user != undefined ? user.home_phone : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Mobile Number: </label>
+                    <p class="col-7"> {{ user != undefined ? user.mobile_phone : '' }} </p>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header bg-secondary">
+                <i class="sidenav-icon fa fa-user-tie"></i> Personal Information
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-5"> Interest services: </label>
+                    <div class="col-7" *ngIf="user != undefined">
+                        <p class="service-item" *ngFor="let item of user.services">{{ item }} </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Interest communications: </label>
+                    <div class="col-7" *ngIf="user != undefined">
+                        <p class="comm-item" *ngFor="let item of user.comm">{{ item }} </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Jobs to book per month: </label>
+                    <div class="col-7">
+                        <p class="book-item">
+                            {{ user != undefined ? user.book_class_title : '' }}
+                        </p>
+                    </div>
+                </div>
+                <div class="row" *ngIf="user != undefined">
+                    <label class="col has-account " *ngIf="user.has_account === 'yes'"> He or his company Has account
+                        before with us.</label>
+                    <label class="col has-account " *ngIf="user.has_account === 'no'"> He or his company create new
+                        account.</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card ">
+            <div class="card-header bg-vimeo">
+                <i class="sidenav-icon fa fa-dollar-sign"></i> Invoice Contact Information
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-5"> First Name: </label>
+                    <p class="col-7"> {{ user != undefined ? user.in_first_name : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Last Name: </label>
+                    <p class="col-7"> {{ user != undefined ? user.in_last_name : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Email: </label>
+                    <p class="col-7"> {{ user != undefined ? user.in_email : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Home Phone: </label>
+                    <p class="col-7"> {{ user != undefined ? user.in_home_phone : '' }} </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header bg-vimeo">
+                <i class="sidenav-icon fa fa-dollar-sign"></i> Invoice Address Information
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-5"> Country: </label>
+                    <p class="col-7"> {{ user != undefined ? user.in_country : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Postcode: </label>
+                    <p class="col-7"> {{ user != undefined ? user.in_postcode : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Town/City: </label>
+                    <p class="col-7"> {{ user != undefined ? user.in_city : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Address line 1: </label>
+                    <p class="col-7"> {{ user != undefined ? user.in_address1 : '' }} </p>
+                </div>
+                <div class="row">
+                    <label class="col-5"> Address line 2: </label>
+                    <p class="col-7"> {{ user != undefined ? user.in_address2 : '' }} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,416 @@
+<h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
+    <div>Add Job</div>
+    <button type="button" class="btn btn-primary rounded-pill d-block" (click)="saveTask()"><span class="ion ion-md-add"></span>&nbsp; Create
+        Job</button>
+</h4>
+
+<!-- 
+<div class="row">
+    <div class="col">
+        <div class="card mb-4">
+            <h6 class="card-header">
+                Total Profit: $
+            </h6>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="checkbank"
+                                (change)="onCheckChange($event)" [checked]="data.checkbank">
+                            <span class="custom-control-label">Check Bank Detail</span>
+                        </label>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="checkvat"
+                                (change)="onCheckChange($event)" [checked]="data.checkvat">
+                            <span class="custom-control-label">Check VAT status</span>
+                        </label>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="checkprice"
+                                (change)="onCheckChange($event)" [checked]="data.checkprice">
+                            <span class="custom-control-label">Check Driver Price</span>
+                        </label>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="checkoff"
+                                (change)="onCheckChange($event)" [checked]="data.checkoff">
+                            <span class="custom-control-label">Docket off Hold</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ -->
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <h6 class="card-header">
+                Customer Info
+            </h6>
+            <div class="card-body">
+                <form [formGroup]="dataForm">
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Customer</label>
+                            <ng-select [items]="customerOptions" bindLabel="dispName" bindValue="id"
+                                formControlName="customer_id" name="customer_id" [loading]="customerLoading"
+                                [ngClass]="{'is-invalid' : submitted && f.customer_id.errors }"
+                                (change)="changeCustomer($event)" [virtualScroll]="true" (scrollToEnd)="onScrollToEnd()"
+                                (search)="customerSearchFn($event)" (open)="customerOpen($event)">
+                                <ng-template ng-label-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['dispName']}}</span>
+                                </ng-template>
+
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['dispName']}}</span>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="f.customer_id.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.customer_id.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Docket Number</label>
+                            <input type="text" class="form-control" formControlName="docket" name="docket"
+                                [ngClass]="{'is-invalid' : submitted && f.docket.errors }">
+                            <div *ngIf="f.docket.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.docket.errors.required">Thie field is Required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Job Date</label>
+                            <div class="input-group">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                                    formControlName="job_date" name="job_date" #d="ngbDatepicker"
+                                    [ngClass]="{'is-invalid' : submitted && f.job_date.errors }" readonly>
+                                <div class="input-group-append">
+                                    <button class="input-group-text" (click)="d.toggle()" type="button">
+                                        <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div *ngIf="f.job_date.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.job_date.errors.required">Job Date Required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Vehicle Size</label>
+                            <ng-select [items]="vehicleOptions" bindLabel="name" bindValue="id"
+                                formControlName="vehicle_type" name="vehicle_type" [loading]="vehicleLoading"
+                                [ngClass]="{'is-invalid' : submitted && f.vehicle_type.errors }">
+                                <ng-template ng-label-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['name']}}</span>
+                                </ng-template>
+
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['name']}}</span>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="f.vehicle_type.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.vehicle_type.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Journey Price</label>
+                            <input type="number" class="form-control" formControlName="c_price"
+                                name="c_price"
+                                [ngClass]="{'is-invalid' : submitted && f.c_price.errors }">
+                            <div *ngIf="f.c_price.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.c_price.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Net Price</label>
+                            <input type="number" class="form-control" formControlName="c_net"
+                                name="c_net"
+                                [ngClass]="{'is-invalid' : submitted && f.c_net.errors }">
+                            <div *ngIf="f.c_net.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.c_net.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Docket Extra</label>
+                            <input type="number" class="form-control" formControlName="c_extra"
+                                name="c_extra"
+                                [ngClass]="{'is-invalid' : submitted && f.c_extra.errors }">
+                            <div *ngIf="f.c_extra.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.c_extra.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">VAT</label>
+                            <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
+                                formControlName="c_vat_code" name="c_vat_code" placeholder="Select VAT"
+                                [ngClass]="{'is-invalid' : submitted && f.c_vat_code.errors }">
+                                <ng-template ng-label-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['label']}}</span>
+                                </ng-template>
+
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['label']}}</span>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="f.c_vat_code.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.c_vat_code.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4" *ngIf="f.c_vat_code!=0">
+                            <label class="form-label">VAT Price</label>
+                            <input type="number" class="form-control" formControlName="c_vat"
+                                name="c_vat"
+                                [ngClass]="{'is-invalid' : submitted && f.c_vat.errors }">
+                            <div *ngIf="f.c_vat.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.c_vat.errors.required">This field Required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Total Price (inc vat)</label>
+                            <input type="number" class="form-control" formControlName="c_tprice"
+                                name="c_tprice"
+                                [ngClass]="{'is-invalid' : submitted && f.c_tprice.errors }">
+                            <div *ngIf="f.c_tprice.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.c_tprice.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="form-group">
+                    Journey
+                    <div class="btn-group">
+                        <button class="btn btn-primary" (click)="addJourney()">+</button>
+                        <button class="btn btn-secondary" (click)="removeJourney()">-</button>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <th>Source</th>
+                        <th>Destination</th>
+                    </tr>
+                    <tbody>
+                        <tr *ngFor="let item of journey">
+                            <td>
+                                <input type="text" class="form-control" [(ngModel)]="item['src']" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" [(ngModel)]="item['dst']" />
+                            </td>
+                        </tr>
+                    </tbody>
+                    <div [ngClass]="{'d-block' : submitted && journeyError }" class="invalid-feedback">
+                        <div>This field is Required</div>
+                    </div>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        <form [formGroup]="dataForm">
+            <div class="card mb-4">
+                <h6 class="card-header">
+                    Driver Info
+                </h6>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Driver</label>
+                            <ng-select [items]="driverOptions" bindLabel="dispName" bindValue="id"
+                                [loading]="driverLoading" formControlName="driver_id" name="driver_id"
+                                [ngClass]="{'is-invalid' : submitted && f.driver_id.errors }"
+                                (change)="changeDriver($event)" [virtualScroll]="true"
+                                (scrollToEnd)="onScrollToEndDriver()" (search)="driverSearchFn($event)"
+                                (open)="driverOpen($event)">
+                                <ng-template ng-label-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['dispName']}}</span>
+                                </ng-template>
+
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['dispName']}}</span>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="f.driver_id.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.driver_id.errors.required">Driver Required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Call Sign</label>
+                            <input type="text" class="form-control" formControlName="call_sign" name="call_sign"
+                                [ngClass]="{'is-invalid' : submitted && f.call_sign.errors }">
+                            <div *ngIf="f.call_sign.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.call_sign.errors.required">Call sign Required</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Type</label>
+                            <ng-select [items]="typeOptions" bindLabel="label" bindValue="value" formControlName="driver_type"
+                                placeholder="Select Type" [ngClass]="{'is-invalid' : submitted && f.driver_type.errors }">
+                                <ng-template ng-label-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['label']}}</span>
+                                </ng-template>
+
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['label']}}</span>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="f.driver_type.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.driver_type.errors.required">Type Required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6" *ngIf="f.driver_type.value==1">
+                            <label class="form-label">CX Number</label>
+                            <input type="text" class="form-control" formControlName="cx_number" name="cx_number">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Driver Journey Price</label>
+                            <input type="text" class="form-control" formControlName="d_price" name="d_price"
+                                [ngClass]="{'is-invalid' : submitted && f.d_price.errors }">
+                            <div *ngIf="f.d_price.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.d_price.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Driver Extras</label>
+                            <input type="text" class="form-control" formControlName="d_extra" name="d_extra"
+                                [ngClass]="{'is-invalid' : submitted && f.d_extra.errors }">
+                            <div *ngIf="f.d_extra.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.d_extra.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Net Price</label>
+                            <input type="text" class="form-control" formControlName="d_net" name="d_net"
+                                [ngClass]="{'is-invalid' : submitted && f.d_net.errors }">
+                            <div *ngIf="f.d_net.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.d_net.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">VAT</label>
+                            <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
+                                formControlName="d_vat_code" name="d_vat_code" placeholder="Select VAT"
+                                [ngClass]="{'is-invalid' : submitted && f.d_vat_code.errors }">
+                                <ng-template ng-label-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['label']}}</span>
+                                </ng-template>
+
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['label']}}</span>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="f.d_vat_code.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.d_vat_code.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4" *ngIf="f.d_vat_code!=0">
+                            <label class="form-label">VAT Price</label>
+                            <input type="text" class="form-control" formControlName="d_vat" name="d_vat"
+                                [ngClass]="{'is-invalid' : submitted && f.d_vat.errors }">
+                            <div *ngIf="f.d_vat.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.d_vat.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Total Price (inc. vat)</label>
+                            <input type="text" class="form-control" formControlName="d_tprice" name="d_tprice"
+                                [ngClass]="{'is-invalid' : submitted && f.d_tprice.errors }">
+                            <div *ngIf="f.d_tprice.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.d_tprice.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Invoice Date</label>
+                            <div class="input-group">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                                    formControlName="invoice_date" name="invoice_date"
+                                    (ngModelChange)="onDateChange($event)" #d2="ngbDatepicker">
+                                <div class="input-group-append">
+                                    <button class="input-group-text" (click)="d2.toggle()" type="button">
+                                        <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Target Payment Date</label>
+                            <input type="text" class="form-control" formControlName="payment_date" name="payment_date"
+                                disabled>
+                        </div>
+                        <div class="form-group col-md-4" *ngIf="f.invoice_date.value">
+                            <label class="form-label">Invoice Number</label>
+                            <input type="text" class="form-control" formControlName="invoice_number"
+                                name="invoice_number">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group w-100">
+                            <label class="form-label w-100">Upload POD</label>
+                            <div class="dropzone dropzone-container" [dropzone]="dropzoneConfig" (reset)="resetThumbnail()"
+                                (error)="onErrorThumb($event)" (success)="onSuccessThumb($event)"
+                                [ngClass]="{'is-invalid':  submitted && f.pod_file.errors }">
+                                <div class="dz-message needsclick">
+                                    Drop POD file here or click to upload
+                                    <span class="note needsclick">(Preview File would be removed after 20 second.)</span>
+                                </div>
+                            </div>
+                            <input class="form-control" formControlName="pod_file" type="hidden" name="pod_file"
+                                [ngClass]="{'is-invalid':  submitted && f.pod_file.errors }">
+                            <div *ngIf="submitted && f.pod_file.errors" class="invalid-feedback">
+                                <div *ngIf="f.pod_file.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Success</h4>
+            </div>
+            <div class="modal-body">
+                You created job successfully!
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="onCreateNew()">Create More</button>
+                <button type="button" class="btn btn-dark" (click)="onGoJobList()">Go Job List</button>
+            </div>
+        </div>
+    </div>
+</div>

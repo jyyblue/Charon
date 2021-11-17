@@ -1,0 +1,191 @@
+<h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
+    <div>Pending Payment Jobs</div>
+</h4>
+<!-- Filters -->
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-row align-items-center">
+        <div class="col-md mb-4">
+            <label class="form-label">Driver</label>
+            <select class="custom-select" [(ngModel)]="filterDriver">
+                <option *ngFor="let item of driverList" [value]="item.id">{{item.name}}</option>
+            </select>
+        </div>
+        <div class="col-md col-xl-2 mb-4">
+            <label class="form-label d-none d-md-block">&nbsp;</label>
+            <button type="button" class="btn btn-secondary btn-block" (click)="loadData()">Show</button>
+        </div>
+    </div>
+</div>
+<!-- / Filters -->
+
+<div class="card">
+
+    <!-- Table controls -->
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col">
+                Per page: &nbsp;
+                <select [(ngModel)]="perPage" (change)="update()"
+                    class="custom-select custom-select-sm d-inline-block w-auto">
+                    <option
+                        *ngFor="let limit of [{value: 10, name: 10}, {value: 20, name: 20}, {value: 30, name: 30}, {value: 40, name: 40}, {value: 50, name: 50}, {value: 1, name: 'All'}]"
+                        value="{{ limit.value }}">{{limit.name}}</option>
+                </select>
+            </div>
+            <div class="col">
+                <input type="text" [(ngModel)]="filterVal" (input)="currentPage = 1; update()"
+                    class="form-control form-control-sm d-inline-block w-auto float-sm-right" placeholder="Search...">
+            </div>
+            <div class="col" *ngIf="selectedTask.length > 0">
+                <div class="btn-group btn-group-sm float-right">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">Confirm Payment</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- / Table controls -->
+
+    <!-- Table -->
+    <hr class="border-light m-0">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered card-table">
+            <thead>
+                <tr>
+                    <th class="text-nowrap cursor-pointer">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" (change)="onSelectAll($event)"
+                                data-taskid="all" [indeterminate]="intermediate" [checked]="checkAll">
+                            <span class="custom-control-label"></span>
+                        </label>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('id')">
+                        Docket Number<i class="ion text-muted ml-2" *ngIf="sortBy=='id'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('email')">
+                        Customer<i class="ion text-muted ml-2" *ngIf="sortBy=='email'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                        Driver<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
+                        Invoice Date<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                        Driver Price<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                        Profit<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                        Status<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let task of taskData">
+                    <td class="text-nowrap cursor-pointer">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" (change)="onSelectTask($event)"
+                                value="{{task.id}}" [checked]="task.checked">
+                            <span class="custom-control-label"></span>
+                        </label>
+                    </td>
+                    <td class="align-middle">{{task.docket}}</td>
+                    <td class="align-middle">{{ task.customer.account_code }} - {{task.customer.company_name}}</td>
+                    <td class="align-middle"><a href="javascript:void(0)">{{ task.driver.call_sign }} - {{task.driver.email }}</a></td>
+                    <td class="align-middle">{{ task.invoice_date | date }}</td>
+                    <td class="align-middle"><a href="javascript:void(0)">{{task.d_tprice}}</a></td>
+                    <td class="align-middle"><a href="javascript:void(0)">{{task.profit}}</a></td>
+                    <td class="align-middle" [ngStyle]="{background: task._status ? task._status.color : '#fff'}"><a href="javascript:void(0)">{{task._status.name}}</a></td>
+                    <td class="text-center text-nowrap align-middle">
+                        <a (click)="editPendingTask(task.id)" class="btn btn-default btn-xs icon-btn md-btn-flat"
+                            ngbTooltip="Edit">
+                            <i class="ion ion-md-create"></i>
+                        </a>
+                        <div class="btn-group" ngbDropdown [placement]="!isRTL ? 'bottom-right' : 'bottom-left'">
+                            <button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat hide-arrow"
+                                ngbDropdownToggle ngbTooltip="Actions">
+                                <i class="ion ion-ios-settings"></i>
+                            </button>
+                            <div ngbDropdownMenu [class.dropdown-menu-right]="!isRTL">
+                                <a class="dropdown-item" (click)="viewProfile(task.name)">View Task</a>
+                                <a class="dropdown-item" href="javascript:void(0)">Ban task</a>
+                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- / Table -->
+
+    <!-- Pagination -->
+    <div class="card-body py-0">
+
+        <div class="row">
+            <div class="col-sm text-sm-left text-center pt-3">
+                <span class="text-muted" *ngIf="totalItems">Page {{ currentPage }} of {{ totalPages }}</span>
+            </div>
+            <div class="col-sm pt-3">
+                <ngb-pagination [collectionSize]="totalItems" [pageSize]="perPage" [(page)]="currentPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"
+                    (pageChange)="update()" size="sm" class="d-flex justify-content-center justify-content-sm-end m-0">
+                </ngb-pagination>
+            </div>
+        </div>
+
+    </div>
+    <!-- / Pagination -->
+</div>
+
+<div class="modal" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Payment</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="dataForm">
+                    <div class="form-group">
+                        <label class="form-label">Payment Date</label>
+                        <div class="input-group" [ngClass]="{'is-invalid': submitted && f.payment_date.errors }">
+                            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                                formControlName="payment_date" name="payment_date" #d2="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="input-group-text" (click)="d2.toggle()" type="button">
+                                    <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div *ngIf="submitted && f.payment_date.errors" class="invalid-feedback">
+                            <div *ngIf="f.payment_date.errors.required">This field is Required</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Payment Reference</label>
+                        <input type="text" class="form-control" formControlName="payment_reference" name="payment_reference"
+                            [ngClass]="{'is-invalid': submitted && f.payment_reference.errors }">
+                        <div *ngIf="submitted && f.payment_reference.errors" class="invalid-feedback">
+                            <div *ngIf="f.payment_reference.errors.required">This field is Required</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="onPaymentSubmit()">Submit</button>
+                <button type="button" class="btn btn-dark" (click)="onPaymentClose($event)">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

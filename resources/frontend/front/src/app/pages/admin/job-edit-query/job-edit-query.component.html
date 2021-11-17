@@ -1,0 +1,224 @@
+<h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
+    <div>Dispute Job</div>
+    
+</h4>
+<div class="row">
+    <div class="col-6">
+        <label class=""><strong>Docket: {{ task.docket }}</strong></label>
+    </div>
+    <div class="col-6">
+        <button class="btn float-right" [ngStyle]="{background: task._status ? task._status.color : '#fff'}" >{{ task._status ? task._status.name : '' }}</button>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col">
+        <div class="card mb-4">
+            <h6 class="card-header">
+                Pending Payment => Completed
+                <button *ngIf="task._status != null && task._status.id == 2" class="btn btn-warning float-right" data-toggle="modal" data-target="#resolveModal">Resolve</button>
+            </h6>
+            <div class="card-body">
+                <form [formGroup]="dataForm">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Payment Date</label>
+                            <div class="input-group" [ngClass]="{'is-invalid': submitted && f.payment_date.errors }">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                                    formControlName="payment_date" name="payment_date" #d2="ngbDatepicker" readonly>
+                                <div class="input-group-append">
+                                    <button class="input-group-text" (click)="d2.toggle()" type="button">
+                                        <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div *ngIf="submitted && f.payment_date.errors" class="invalid-feedback">
+                                <div *ngIf="f.payment_date.errors.required">This field is Required</div>
+                              </div>
+                        </div>
+                        
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Payment Reference</label>
+                            <input type="text" class="form-control" formControlName="payment_reference"
+                                name="payment_reference" [ngClass]="{'is-invalid': submitted && f.payment_reference.errors }">
+                            <div *ngIf="submitted && f.payment_reference.errors" class="invalid-feedback">
+                              <div *ngIf="f.payment_reference.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <button type="button" class="btn btn-primary rounded-pill d-block float-right" (click)="savePending()"><span
+                    class="ion ion-md-add"></span>&nbsp; Update
+                Job</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Customer</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped card-table">
+                    <tr>
+                        <td><strong>Company Name: </strong></td>
+                        <td>{{ task.customer? task.customer.company_name: '' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Company Email: </strong></td>
+                        <td>{{ task.customer? task.customer.company_email : '' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Company Phone: </strong></td>
+                        <td>{{ task.customer? task.customer.company_phone : '' }}</td>
+                    </tr>
+                    <hr>
+                    <tr>
+                        <td><strong>Journey Price</strong></td>
+                        <td>&pound;{{ task.c_price }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Docket Extra</strong></td>
+                        <td>&pound;{{ task.c_extra }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Net Price</strong></td>
+                        <td>&pound;{{ task.c_net }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Journey VAT</strong></td>
+                        <td>&pound;{{ task.c_vat }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Journey Total</strong></td>
+                        <td>&pound;{{ task.c_tprice }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Journey Total</strong><span class="text-danger small">*calculated</span></td>
+                        <td>&pound;{{ task.c_tprice }}</td>
+                    </tr>
+                </table>
+    
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Driver</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped card-table">
+    
+                    <tr>
+                        <td><strong>Company Name: </strong></td>
+                        <td>{{ task.driver ? task.driver.name : '' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Name: </strong></td>
+                        <td>{{ task.driver ? task.driver.last_name : '' }} {{ task.driver ? task.driver.first_name : '' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email: </strong></td>
+                        <td>{{ task.driver ? task.driver.email : '' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phone: </strong></td>
+                        <td>{{ task.driver ? task.driver.phone : '' }}</td>
+                    </tr>
+
+                    <hr>
+
+                    <tr>
+                        <td><strong>Driver Journey Price </strong></td>
+                        <td>&pound;{{ task.d_price }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Driver Extra </strong></td>
+                        <td>&pound;{{ task.d_extra }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Driver Net Price</strong></td>
+                        <td>&pound;{{ task.d_net }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Driver VAT</strong></td>
+                        <td>&pound;{{ task.d_vat }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Driver Total</strong></td>
+                        <td>&pound;{{ task.d_tprice }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Driver Total</strong><span class="text-danger small">*calculated</span></td>
+                        <td>&pound;{{ task.d_tprice }}</td>
+                    </tr>
+                </table>
+    
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Information</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped card-table">
+                        <tr>
+                        <td><strong>Profit</strong></td>
+                        <td>&pound;{{ task.d_price }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Job Date </strong></td>
+                        <td>{{ task.job_date | date }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vehicle Size</strong></td>
+                        <td>{{ task.vehicle_type }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Journey</strong></td>
+                        <td>{{ task.d_vat }}</td>
+                    </tr>
+                </table>
+    
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="resolveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h4 class="modal-title" id="myModalLabel">Resolve Job</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="disputeForm">
+                    <div class="form-group">
+                        <label class="form-label">Please note the reason of resolve</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea type="text" class="form-control" formControlName="description" name="description"
+                            [ngClass]="{'is-invalid': submitted2 && df.description.errors }"></textarea>
+
+                        <div *ngIf="submitted2 && df.description.errors" class="invalid-feedback">
+                            <div *ngIf="df.description.errors.required">This field is Required</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-warning" (click)="disputeTask()">Submit</button>
+                <button type="button" class="btn btn-dark" (click)="onDisputeClose()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

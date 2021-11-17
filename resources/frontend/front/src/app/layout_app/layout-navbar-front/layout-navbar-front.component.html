@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg align-items-lg-center container-p-x trans-nav" [ngClass]="currentBg()">
+
+  <!-- Brand -->
+  <a routerLink="/" class="navbar-brand">Customer Account</a>
+
+  <!-- Navbar toggle -->
+  <button class="navbar-toggler" type="button" (click)="isExpanded = !isExpanded">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="navbar-collapse collapse justify-content-stretch justify-content-center" [ngbCollapse]="!isExpanded">
+
+    <div class="navbar-nav align-items-lg-center">
+      <div class="demo-navbar-notifications nav-item mr-lg-3">
+        <a class="nav-link hide-arrow" href="javascript:void(0)">
+          <span class="align-middle">&nbsp; BOOK</span>
+        </a>
+      </div>
+
+      <div class="demo-navbar-messages nav-item mr-lg-3">
+        <a class="nav-link hide-arrow" href="javascript:void(0)">
+          <span class="align-middle">&nbsp; TRACK</span>
+        </a>
+      </div>
+
+      <div class="demo-navbar-messages nav-item mr-lg-3">
+        <a class="nav-link hide-arrow" href="javascript:void(0)">
+          <span class="align-middle">&nbsp; SERVICES</span>
+        </a>
+      </div>
+
+      <div class="demo-navbar-messages nav-item mr-lg-3">
+        <a class="nav-link hide-arrow" href="javascript:void(0)">
+          <span class="align-middle">&nbsp; BECOME A COURIER</span>
+        </a>
+      </div>
+
+      <div class="demo-navbar-messages nav-item mr-lg-3" (click)="login()">
+        <a class="nav-link hide-arrow" href="javascript:void(0)">
+          <span class="align-middle">&nbsp; SIGN IN</span>
+        </a>
+      </div>
+
+    </div>
+  </div>

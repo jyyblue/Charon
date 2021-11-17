@@ -1,0 +1,17 @@
+<sidenav [orientation]="orientation" [ngClass]="getClasses()">
+  <!-- Inner -->
+  <div class="sidenav-inner" [ngClass]="{ 'py-1': orientation !== 'horizontal' }">
+
+    <!-- Dashboards -->
+    <!-- <sidenav-router-link icon="ion ion-md-speedometer" route="/admin/dashboard" [active]="isMenuActive('/admin/dashboard')">Dashboard</sidenav-router-link> -->
+    <sidenav-router-link icon="ion ion-ios-chatbubbles" route="/customer/chat" [active]="isMenuActive('/customer/chat')">Message</sidenav-router-link>
+    
+    <!-- <sidenav-menu icon="ion ion-md-videocam" text="Training" [active]="isMenuActive('/admin/training')" [open]="isMenuOpen('/admin/training')">
+      <sidenav-router-link route="/admin/training/list" [active]="isActive('/admin/training/list')">Training List</sidenav-router-link>
+      <sidenav-router-link route="/admin/training/add" [active]="isActive('/admin/training/add')">Add Train</sidenav-router-link>
+    </sidenav-menu> -->
+    <!-- <sidenav-router-link icon="ion ion-ios-cash" route="/admin/transaction-history" [active]="isMenuActive('/admin/transaction-history')">Transaction History</sidenav-router-link>
+    <sidenav-router-link icon="ion ion-ios-phone-portrait" route="/admin/mobile-setting" [active]="isMenuActive('/admin/mobile-setting')">Mobile Setting</sidenav-router-link>
+    <sidenav-router-link icon="ion ion-ios-phone-portrait" route="/admin/ticket/list" [active]="isMenuActive('/admin/ticket/list')">Contact Ticket</sidenav-router-link> -->
+  </div>
+</sidenav>

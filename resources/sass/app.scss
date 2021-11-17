@@ -1,0 +1,27 @@
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+.page-sidebar-menu, .sub-menu{
+    list-style: none;
+}
+
+.color-require_account,
+.color-wrong_account,
+.color-wrong_content,
+.color-invisible,
+.color-empty_page,
+.color-wrong_purpose{
+    background: #fff088 !important;
+}
+.color-processing{
+    background: #cbe2f3 !important;
+}
+.color-declined{
+    background: #ff7979 !important;
+}
+.color-opened{
+    background: #85ff7d !important;
+}

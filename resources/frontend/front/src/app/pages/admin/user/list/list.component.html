@@ -1,0 +1,130 @@
+<div class="card mb-4">
+    <div class="card-body demo-vertical-spacing">
+        <h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
+            <div>User List</div>
+        </h4>
+    </div>
+</div>
+
+<!-- Filters -->
+<!-- <div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-row align-items-center">
+        <div class="col-md mb-4">
+            <label class="form-label">Gender</label>
+            <select class="custom-select" [(ngModel)]="filterGender">
+                <option *ngFor="let item of ['Any', 'Female', 'Male']" [value]="item">{{item}}</option>
+            </select>
+        </div>
+        <div class="col-md mb-4">
+            <label class="form-label">Free</label>
+            <select class="custom-select" [(ngModel)]="filterFree">
+                <option *ngFor="let item of ['Any', 'Free', 'Advanced']" [value]="item">
+                    {{item}}</option>
+            </select>
+        </div>
+        <div class="col-md col-xl-2 mb-4">
+            <label class="form-label d-none d-md-block">&nbsp;</label>
+            <button type="button" class="btn btn-primary btn-block">Show</button>
+        </div>
+    </div>
+</div> -->
+<!-- / Filters -->
+
+<div *ngIf="total !=0 || tried===false">
+    <!-- Table controls -->
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col">
+                Per page: &nbsp;
+                <select [(ngModel)]="perPage" (change)="getUserList()"
+                    class="custom-select custom-select-sm d-inline-block w-auto">
+                    <option *ngFor="let limit of [10, 20, 30, 40, 50]">{{limit}}</option>
+                </select>
+            </div>
+            <div class="col">
+            <input type="text"
+            [(ngModel)]="filterVal"
+            (input)="searchFilter();"
+            class="form-control form-control-sm d-inline-block w-auto float-sm-right"
+            placeholder="Search...">
+        </div>
+        </div>
+
+    </div>
+    <!-- / Table controls -->
+
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Company Name</th>
+                <th>Company Reg Number</th>
+                <th>VAT</th>
+                <th>Head Phone Number</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of listData; ; let i = index; let odd = odd">
+                <th>{{ i+1 }}</th>
+                <td>{{ item.last_name}} {{ item.first_name }}</td>
+                <td>{{ item.email }}</td>
+                <td>{{ item.home_phone }}</td>
+                <td>{{ item.company_name }}</td>
+                <td>{{ item.company_reg_number }}</td>
+                <td>{{ item.vat }}</td>
+                <td>{{ item.head_phone_number }}</td>
+                <td>
+                    <button *ngIf="item.user_id == NULL" class="btn btn-warning">Pending</button>
+                    <button *ngIf="item.user_id != NULL" class="btn btn-primary">Open</button>
+                </td>
+                <td>
+                    <a (click)="userDetail(item.id)" class="btn btn-default btn-xs icon-btn md-btn-flat" ngbTooltip="Show"><i class="ion ion-md-eye"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="card-body py-0">
+
+        <div class="row">
+            <div class="col-sm text-sm-left text-center pt-3">
+                <span class="text-muted" *ngIf="total">Page {{ page }} of {{ page }}</span>
+            </div>
+            <div class="col-sm pt-3">
+                <ngb-pagination class="d-flex justify-content-end" [collectionSize]="total" [(page)]="page" [maxSize]="3"
+                [ellipses]="true" [rotate]="true" [boundaryLinks]="true" (pageChange)="ChangePage()"></ngb-pagination>
+            </div>
+        </div>
+
+    </div>
+    <!-- / Pagination -->
+</div>
+<div *ngIf="total === 0 && tried === true">
+    <div class="card-body">
+        No User Data
+    </div>
+</div>
+<ng-template #deleteModal let-c="close" let-d="dismiss">
+    <div class="modal-header bg-danger">
+        <h5 class="modal-title">
+            Warning
+        </h5>
+        <button type="button" class="close" (click)="d('Cross click')">&times;</button>
+    </div>
+    <div class="modal-body">
+        <div class="form-row">
+            <p>Are you sure to delete this user?</p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="c('close')">Close</button>
+        <button type="button" class="btn btn-danger" (click)="c('delete')">Delete</button>
+    </div>
+</ng-template>

@@ -1,0 +1,33 @@
+<h4 class="font-weight-bold py-3 mb-4">
+  <span class="text-muted font-weight-light">UI elements /</span> Ngx Image Cropper
+</h4>
+
+<hr class="container-m-nx border-light mt-0 mb-4">
+
+<div class="alert alert-danger" *ngIf="appService.isIE10">
+  Ngx Image Cropper doesn't support IE10.
+</div>
+
+<div *ngIf="!appService.isIE10">
+  <div class="mb-4">
+    <label class="btn btn-primary btn-lg">
+      Upload image
+      <input type="file" (change)="fileChangeListener($event)" class="sr-only">
+    </label>
+  </div>
+  <div>
+    <div style="width: 400px;">
+      <image-cropper
+        #cropper
+        [maintainAspectRatio]="true"
+        [aspectRatio]="4/3"
+        format="png"
+        (imageCropped)="imageCropped($event)"
+      ></image-cropper>
+    </div>
+
+    <div *ngIf="croppedImage" class="mt-4">
+      <img [src]="croppedImage" style="max-width: 400px; max-height: 400px">
+    </div>
+  </div>
+</div>

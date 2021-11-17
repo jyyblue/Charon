@@ -1,0 +1,240 @@
+<div class="media align-items-center py-3 mb-3">
+    <div class="media-body ml-4">
+        <h4 class="font-weight-bold mb-0">{{userData.name}} <span
+                class="text-muted font-weight-normal">@{{userData.username}}</span></h4>
+        <div class="text-muted mb-2">ID: {{userData.id}}</div>
+        <a (click)="editCustomer()" class="btn btn-primary btn-sm">Edit</a>&nbsp;
+        <a href="javascript:void(0)" class="btn btn-default btn-sm icon-btn"><i class="ion ion-md-mail"></i></a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+
+            <!-- Table controls -->
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col">
+                        Per page: &nbsp;
+                        <select [(ngModel)]="perPage" (change)="update()"
+                            class="custom-select custom-select-sm d-inline-block w-auto">
+                            <option *ngFor="let limit of [10, 20, 30, 40, 50]">{{limit}}</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="text" [(ngModel)]="filterVal" (input)="currentPage = 1; update()"
+                            class="form-control form-control-sm d-inline-block w-auto float-sm-right"
+                            placeholder="Search...">
+                    </div>
+                </div>
+            </div>
+            <!-- / Table controls -->
+
+            <!-- Table -->
+            <hr class="border-light m-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered card-table">
+                    <thead>
+                        <tr>
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('id')">
+                                ID<i class="ion text-muted ml-2" *ngIf="sortBy=='id'"
+                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                            </th>
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('account')">
+                                Account<i class="ion text-muted ml-2" *ngIf="sortBy=='account'"
+                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                            </th>
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('email')">
+                                Email<i class="ion text-muted ml-2" *ngIf="sortBy=='email'"
+                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                            </th>
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
+                                Name<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
+                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                            </th>
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                                Latest activity<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                            </th>
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('verified')">
+                                Verified<i class="ion text-muted ml-2" *ngIf="sortBy=='verified'"
+                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                            </th>
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('role')">
+                                Role<i class="ion text-muted ml-2" *ngIf="sortBy=='role'"
+                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                            </th>
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('status')">
+                                Status<i class="ion text-muted ml-2" *ngIf="sortBy=='status'"
+                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of usersList">
+                            <td class="align-middle">{{user.id}}</td>
+                            <td class="align-middle"><a href="javascript:void(0)">{{user.account}}</a></td>
+                            <td class="align-middle">{{user.email}}</td>
+                            <td class="align-middle">{{user.name}}</td>
+                            <td class="align-middle">{{user.latestActivity}}</td>
+                            <td class="align-middle">
+                                <span class="ion"
+                                    [ngClass]="{'ion-md-checkmark text-primary': user.verified, 'ion-md-close text-light': !user.verified}"></span>
+                            </td>
+                            <td class="align-middle">
+                                <span *ngIf="user.role === 1">User</span>
+                                <span *ngIf="user.role === 2">Author</span>
+                                <span *ngIf="user.role === 3">Staff</span>
+                                <span *ngIf="user.role === 4">Admin</span>
+                            </td>
+                            <td class="align-middle">
+                                <span class="badge badge-outline-success" *ngIf="user.status === 1">Active</span>
+                                <span class="badge badge-outline-danger" *ngIf="user.status === 2">Banned</span>
+                                <span class="badge badge-outline-default" *ngIf="user.status === 3">Deleted</span>
+                            </td>
+                            <td class="text-center text-nowrap align-middle">
+                                <a href="javascript:void(0)" class="btn btn-default btn-xs icon-btn md-btn-flat"
+                                    ngbTooltip="Edit">
+                                    <i class="ion ion-md-create"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- / Table -->
+
+            <!-- Pagination -->
+            <div class="card-body py-0">
+
+                <div class="row">
+                    <div class="col-sm text-sm-left text-center pt-3">
+                        <span class="text-muted" *ngIf="totalItems">Page {{ currentPage }} of {{ totalPages }}</span>
+                    </div>
+                    <div class="col-sm pt-3">
+                        <ngb-pagination [collectionSize]="totalItems" [pageSize]="perPage" [(page)]="currentPage"
+                            (pageChange)="update()" size="sm"
+                            class="d-flex justify-content-center justify-content-sm-end m-0">
+                        </ngb-pagination>
+                    </div>
+                </div>
+
+            </div>
+            <!-- / Pagination -->
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="row no-gutters row-bordered">
+                <div class="d-flex col-md align-items-center">
+                    <a href="javascript:void(0)" class="card-body d-block text-body">
+                        <div class="text-muted small line-height-1">Complete Job</div>
+                        <div class="text-xlarge">{{formatInt(userData.posts)}}</div>
+                    </a>
+                </div>
+                <div class="d-flex col-md align-items-center">
+                    <a href="javascript:void(0)" class="card-body d-block text-body">
+                        <div class="text-muted small line-height-1">Profit</div>
+                        <div class="text-xlarge">{{formatInt(userData.followers)}}</div>
+                    </a>
+                </div>
+                <div class="d-flex col-md align-items-center">
+                    <a href="javascript:void(0)" class="card-body d-block text-body">
+                        <div class="text-muted small line-height-1">Drivers</div>
+                        <div class="text-xlarge">{{formatInt(userData.following)}}</div>
+                    </a>
+                </div>
+            </div>
+            <hr class="border-light m-0">
+            <div class="card-body">
+                <h6 class="mt-4 mb-3">Main info</h6>
+
+                <table class="table user-view-table m-0">
+                    <tbody>
+                        <tr>
+                            <td>Company Name:</td>
+                            <td>{{userData.username}}</td>
+                        </tr>
+                        <tr>
+                            <td>Account Code:</td>
+                            <td>{{userData.name}}</td>
+                        </tr>
+                        <tr>
+                            <td>Company E-mail:</td>
+                            <td>{{userData.email}}</td>
+                        </tr>
+                        <tr>
+                            <td>Company Telephone Number:</td>
+                            <td>{{userData.company}}</td>
+                        </tr>
+                        <tr *ngIf="userData.info.country">
+                            <td>Country:</td>
+                            <td>{{userData.info.country}}</td>
+                        </tr>
+                        <tr *ngIf="userData.info.country">
+                            <td>Address:</td>
+                            <td>{{userData.info.country}}</td>
+                        </tr>
+                        <tr *ngIf="userData.info.country">
+                            <td>City:</td>
+                            <td>{{userData.info.country}}</td>
+                        </tr>
+                        <tr *ngIf="userData.info.country">
+                            <td>State:</td>
+                            <td>{{userData.info.country}}</td>
+                        </tr>
+                        <tr *ngIf="userData.info.country">
+                            <td>ZipCode:</td>
+                            <td>{{userData.info.country}}</td>
+                        </tr>
+                        <tr>
+                            <td>Last Activity:</td>
+                            <td>{{userData.info.country}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h6 class="mt-4 mb-3">Key Contact Detail</h6>
+
+                <table class="table user-view-table m-0">
+                    <tbody>
+                        <tr *ngIf="userData.info.phone">
+                            <td>Contact Name:</td>
+                            <td>{{userData.info.phone}}</td>
+                        </tr>
+                        <tr >
+                            <td>Contact Phone:</td>
+                            <td>{{userData.info.phone}}</td>
+                        </tr>
+                        <tr >
+                            <td>Contact Email:</td>
+                            <td>{{userData.info.phone}}</td>
+                        </tr>                        
+                    </tbody>
+                </table>
+
+                <h6 class="mt-4 mb-3">POD Info</h6>
+
+                <table class="table user-view-table m-0">
+                    <tbody>
+                        <tr >
+                            <td>POD Email:</td>
+                            <td><a href="javascript:void(0)">{{userData.info.twitter}}</a></td>
+                        </tr>
+                        <tr >
+                            <td>Username:</td>
+                            <td><a href="javascript:void(0)">{{userData.info.twitter}}</a></td>
+                        </tr>
+                        <tr>
+                            <td>Password Name:</td>
+                            <td><a href="javascript:void(0)">{{userData.info.facebook}}</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

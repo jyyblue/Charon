@@ -1,0 +1,133 @@
+<h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
+    <div>Customers</div>
+</h4>
+<!-- Filters -->
+<div class="ui-bordered px-4 pt-4 mb-4">
+    <div class="form-row align-items-center">
+        <div class="col-md mb-4">
+            <label class="form-label">Status</label>
+            <select class="custom-select" [(ngModel)]="filterStatus">
+                <option *ngFor="let item of ['Any', 'Active', 'Banned', 'Deleted']" [value]="item">{{item}}</option>
+            </select>
+        </div>
+        <div class="col-md mb-4">
+            <label class="form-label">Latest activity</label>
+            <custom-daterange-picker2 [(ngModel)]="filterLatestActivity"></custom-daterange-picker2>
+        </div>
+        <div class="col-md col-xl-2 mb-4">
+            <label class="form-label d-none d-md-block">&nbsp;</label>
+            <button type="button" class="btn btn-secondary btn-block">Show</button>
+        </div>
+    </div>
+</div>
+<!-- / Filters -->
+
+
+<div class="card">
+
+    <!-- Table controls -->
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col">
+                Per page: &nbsp;
+                <select [(ngModel)]="perPage" (change)="update()"
+                    class="custom-select custom-select-sm d-inline-block w-auto">
+                    <option *ngFor="let limit of [10, 20, 30, 40, 50]">{{limit}}</option>
+                </select>
+            </div>
+            <div class="col">
+                <input type="text" [(ngModel)]="filterVal" (input)="currentPage = 1; update()"
+                    class="form-control form-control-sm d-inline-block w-auto float-sm-right" placeholder="Search...">
+            </div>
+        </div>
+
+    </div>
+    <!-- / Table controls -->
+
+    <!-- Table -->
+    <hr class="border-light m-0">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered card-table">
+            <thead>
+                <tr>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('id')">
+                        Company Code<i class="ion text-muted ml-2" *ngIf="sortBy=='id'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                        Company Name<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                        Company Phone<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('email')">
+                        Contact Email<i class="ion text-muted ml-2" *ngIf="sortBy=='email'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
+                        Contact Name<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
+                        Contact Phone<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                        Address<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of customerData">
+                    <td class="align-middle">{{user.account_code}}</td>
+                    <td class="align-middle">{{user.company_name}}</td>
+                    <td class="align-middle">{{user.company_phone}}</td>
+                    <td class="align-middle"><a href="javascript:void(0)">{{user.contact_email}}</a></td>
+                    <td class="align-middle"><a href="javascript:void(0)">{{user.contact_name}}</a></td>
+                    <td class="align-middle"><a href="javascript:void(0)">{{user.contact_phone}}</a></td>
+                    <td class="align-middle"><a href="javascript:void(0)">{{user.company_address}}</a></td>
+                    <td class="text-center text-nowrap align-middle">
+                        <a (click)="editCustomer(user.name)" class="btn btn-default btn-xs icon-btn md-btn-flat"
+                            ngbTooltip="Edit">
+                            <i class="ion ion-md-create"></i>
+                        </a>
+                        <div class="btn-group" ngbDropdown [placement]="!isRTL ? 'bottom-right' : 'bottom-left'">
+                            <button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat hide-arrow"
+                                ngbDropdownToggle ngbTooltip="Actions">
+                                <i class="ion ion-ios-settings"></i>
+                            </button>
+                            <div ngbDropdownMenu [class.dropdown-menu-right]="!isRTL">
+                                <a class="dropdown-item" (click)="viewProfile(user.name)">View profile</a>
+                                <a class="dropdown-item" href="javascript:void(0)">Ban user</a>
+                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- / Table -->
+
+    <!-- Pagination -->
+    <div class="card-body py-0">
+
+        <div class="row">
+            <div class="col-sm text-sm-left text-center pt-3">
+                <span class="text-muted" *ngIf="totalItems">Page {{ currentPage }} of {{ totalPages }}</span>
+            </div>
+            <div class="col-sm pt-3">
+                <ngb-pagination [collectionSize]="totalItems" [pageSize]="perPage" [(page)]="currentPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"
+                    (pageChange)="update()" size="sm" class="d-flex justify-content-center justify-content-sm-end m-0">
+                </ngb-pagination>
+            </div>
+        </div>
+
+    </div>
+    <!-- / Pagination -->
+</div>
