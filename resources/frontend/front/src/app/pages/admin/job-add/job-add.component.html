@@ -1,6 +1,7 @@
 <h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
     <div>Add Job</div>
-    <button type="button" class="btn btn-primary rounded-pill d-block" (click)="saveTask()"><span class="ion ion-md-add"></span>&nbsp; Create
+    <button type="button" class="btn btn-primary rounded-pill d-block" (click)="saveTask()"><span
+            class="ion ion-md-add"></span>&nbsp; Create
         Job</button>
 </h4>
 
@@ -52,16 +53,15 @@
  -->
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col">
         <div class="card mb-4">
             <h6 class="card-header">
                 Customer Info
             </h6>
             <div class="card-body">
                 <form [formGroup]="dataForm">
-
                     <div class="row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-3">
                             <label class="form-label">Customer</label>
                             <ng-select [items]="customerOptions" bindLabel="dispName" bindValue="id"
                                 formControlName="customer_id" name="customer_id" [loading]="customerLoading"
@@ -80,7 +80,7 @@
                                 <div *ngIf="f.customer_id.errors.required">This field is Required</div>
                             </div>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-3">
                             <label class="form-label">Docket Number</label>
                             <input type="text" class="form-control" formControlName="docket" name="docket"
                                 [ngClass]="{'is-invalid' : submitted && f.docket.errors }">
@@ -88,9 +88,7 @@
                                 <div *ngIf="f.docket.errors.required">Thie field is Required</div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-3">
                             <label class="form-label">Job Date</label>
                             <div class="input-group">
                                 <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
@@ -103,20 +101,20 @@
                                 </div>
                             </div>
                             <div *ngIf="f.job_date.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.job_date.errors.required">Job Date Required</div>
+                                <div *ngIf="f.job_date.errors.required">This field is Required</div>
                             </div>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-3">
                             <label class="form-label">Vehicle Size</label>
-                            <ng-select [items]="vehicleOptions" bindLabel="name" bindValue="id"
+                            <ng-select [items]="vehicleOptions" bindLabel="label" bindValue="value"
                                 formControlName="vehicle_type" name="vehicle_type" [loading]="vehicleLoading"
-                                [ngClass]="{'is-invalid' : submitted && f.vehicle_type.errors }">
+                                [ngClass]="{'is-invalid' : submitted && f.vehicle_type.errors }" (change)="changeVehicle()">
                                 <ng-template ng-label-tmp let-item="item">
-                                    <span class="ng-value-label">{{item['name']}}</span>
+                                    <span class="ng-value-label">{{item['label']}}</span>
                                 </ng-template>
 
                                 <ng-template ng-option-tmp let-item="item">
-                                    <span class="ng-value-label">{{item['name']}}</span>
+                                    <span class="ng-value-label">{{item['label']}}</span>
                                 </ng-template>
                             </ng-select>
                             <div *ngIf="f.vehicle_type.errors && submitted" class="invalid-feedback">
@@ -124,107 +122,236 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <label class="form-label">Journey Price</label>
-                            <input type="number" class="form-control" formControlName="c_price"
-                                name="c_price"
-                                [ngClass]="{'is-invalid' : submitted && f.c_price.errors }">
-                            <div *ngIf="f.c_price.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.c_price.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label class="form-label">Net Price</label>
-                            <input type="number" class="form-control" formControlName="c_net"
-                                name="c_net"
-                                [ngClass]="{'is-invalid' : submitted && f.c_net.errors }">
-                            <div *ngIf="f.c_net.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.c_net.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label class="form-label">Docket Extra</label>
-                            <input type="number" class="form-control" formControlName="c_extra"
-                                name="c_extra"
-                                [ngClass]="{'is-invalid' : submitted && f.c_extra.errors }">
-                            <div *ngIf="f.c_extra.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.c_extra.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <label class="form-label">VAT</label>
-                            <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
-                                formControlName="c_vat_code" name="c_vat_code" placeholder="Select VAT"
-                                [ngClass]="{'is-invalid' : submitted && f.c_vat_code.errors }">
-                                <ng-template ng-label-tmp let-item="item">
-                                    <span class="ng-value-label">{{item['label']}}</span>
-                                </ng-template>
-
-                                <ng-template ng-option-tmp let-item="item">
-                                    <span class="ng-value-label">{{item['label']}}</span>
-                                </ng-template>
-                            </ng-select>
-                            <div *ngIf="f.c_vat_code.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.c_vat_code.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-md-4" *ngIf="f.c_vat_code!=0">
-                            <label class="form-label">VAT Price</label>
-                            <input type="number" class="form-control" formControlName="c_vat"
-                                name="c_vat"
-                                [ngClass]="{'is-invalid' : submitted && f.c_vat.errors }">
-                            <div *ngIf="f.c_vat.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.c_vat.errors.required">This field Required</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label class="form-label">Total Price (inc vat)</label>
-                            <input type="number" class="form-control" formControlName="c_tprice"
-                                name="c_tprice"
-                                [ngClass]="{'is-invalid' : submitted && f.c_tprice.errors }">
-                            <div *ngIf="f.c_tprice.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.c_tprice.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                    </div>
                 </form>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            Journey
+                            <div class="btn-group">
+                                <button class="btn btn-primary" (click)="addJourney()">+</button>
+                                <button class="btn btn-secondary" (click)="removeJourney()">-</button>
+                            </div>
+                        </div>
+                        <table class="table">
+                            <tr>
+                                <th>Source</th>
+                                <th>Destination</th>
+                            </tr>
+                            <tbody>
+                                <tr *ngFor="let item of journey">
+                                    <td>
+                                        <input type="text" class="form-control" [(ngModel)]="item['src']" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" [(ngModel)]="item['dst']" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <div [ngClass]="{'d-block' : submitted && journeyError }" class="invalid-feedback">
+                                <div>This field is Required</div>
+                            </div>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <form [formGroup]="dataForm">
+                            <div class="row">
+                                <table class="table price-table mr-3 ml-3">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Journey Price</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">VAT</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">Total Price ( inc vat )</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" class="form-control" formControlName="c_price"
+                                                        name="c_price" (change)="changePrice()" step="0.1"
+                                                        [ngClass]="{'is-invalid' : submitted && f.c_price.errors }">
+                                                    <div *ngIf="f.c_price.errors && submitted" class="invalid-feedback">
+                                                        <div *ngIf="f.c_price.errors.required">This field is Required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        +
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
+                                                        formControlName="c_vat" name="c_vat" placeholder="Select VAT"
+                                                        (change)="changePrice($event)"
+                                                        [ngClass]="{'is-invalid' : submitted && f.c_vat.errors }">
+                                                        <ng-template ng-label-tmp let-item="item">
+                                                            <span class="ng-value-label">{{item['label']}}</span>
+                                                        </ng-template>
 
-                <div class="form-group">
-                    Journey
-                    <div class="btn-group">
-                        <button class="btn btn-primary" (click)="addJourney()">+</button>
-                        <button class="btn btn-secondary" (click)="removeJourney()">-</button>
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            <span class="ng-value-label">{{item['label']}}</span>
+                                                        </ng-template>
+                                                    </ng-select>
+                                                    <div *ngIf="f.c_vat.errors && submitted" class="invalid-feedback">
+                                                        <div *ngIf="f.c_vat.errors.required">This field is Required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        =
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input typ="number" step="0.1" class="form-control"
+                                                        formControlName="c_price_total" readonly />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Docket Extra</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">VAT</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">Total Price ( inc vat )</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" step="0.1" class="form-control"
+                                                        formControlName="c_extra" name="c_extra"
+                                                        [ngClass]="{'is-invalid' : submitted && f.c_extra.errors }"
+                                                        (change)="changePrice()">
+                                                    <div *ngIf="f.c_extra.errors && submitted" class="invalid-feedback">
+                                                        <div *ngIf="f.c_extra.errors.required">This field is Required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        +
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
+                                                        formControlName="c_extra_vat" name="c_extra_vat"
+                                                        placeholder="Select VAT" (change)="changePrice()"
+                                                        [ngClass]="{'is-invalid' : submitted && f.c_extra_vat.errors }">
+                                                        <ng-template ng-label-tmp let-item="item">
+                                                            <span class="ng-value-label">{{item['label']}}</span>
+                                                        </ng-template>
+
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            <span class="ng-value-label">{{item['label']}}</span>
+                                                        </ng-template>
+                                                    </ng-select>
+                                                    <div *ngIf="f.c_extra_vat.errors && submitted"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.c_extra_vat.errors.required">This field is Required</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        =
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input typ="number" step="0.1" class="form-control"
+                                                        formControlName="c_extra_total" readonly />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Net Price</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">VAT</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">Total Price ( inc vat )</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" step="0.1" class="form-control"
+                                                        formControlName="c_net" name="c_net" readonly>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        +
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <input type="number" step="0.1" class="form-control"
+                                                            formControlName="c_vat_total" name="c_vat_total" readonly>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        =
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" step="0.1" class="form-control"
+                                                        formControlName="c_tprice" name="c_tprice" readonly>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+
                     </div>
                 </div>
-                <table class="table">
-                    <tr>
-                        <th>Source</th>
-                        <th>Destination</th>
-                    </tr>
-                    <tbody>
-                        <tr *ngFor="let item of journey">
-                            <td>
-                                <input type="text" class="form-control" [(ngModel)]="item['src']" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" [(ngModel)]="item['dst']" />
-                            </td>
-                        </tr>
-                    </tbody>
-                    <div [ngClass]="{'d-block' : submitted && journeyError }" class="invalid-feedback">
-                        <div>This field is Required</div>
-                    </div>
-                </table>
             </div>
         </div>
-
     </div>
-    <div class="col-md-6">
+</div>
+<div class="row">
+    <div class="col">
         <form [formGroup]="dataForm">
             <div class="card mb-4">
                 <h6 class="card-header">
@@ -232,7 +359,7 @@
                 </h6>
                 <div class="card-body">
                     <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md">
                             <label class="form-label">Driver</label>
                             <ng-select [items]="driverOptions" bindLabel="dispName" bindValue="id"
                                 [loading]="driverLoading" formControlName="driver_id" name="driver_id"
@@ -249,24 +376,39 @@
                                 </ng-template>
                             </ng-select>
                             <div *ngIf="f.driver_id.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.driver_id.errors.required">Driver Required</div>
+                                <div *ngIf="f.driver_id.errors.required">This field is Required</div>
                             </div>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md">
                             <label class="form-label">Call Sign</label>
                             <input type="text" class="form-control" formControlName="call_sign" name="call_sign"
                                 [ngClass]="{'is-invalid' : submitted && f.call_sign.errors }">
                             <div *ngIf="f.call_sign.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.call_sign.errors.required">Call sign Required</div>
+                                <div *ngIf="f.call_sign.errors.required">This field is Required</div>
                             </div>
                         </div>
+                        <div class="form-group col-md">
+                            <label class="form-label">Vehicle Size</label>
+                            <ng-select [items]="vehicleOptions" bindLabel="label" bindValue="value"
+                                formControlName="driver_vehicle" placeholder="Select Type"
+                                [ngClass]="{'is-invalid' : submitted && f.driver_vehicle.errors }">
+                                <ng-template ng-label-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['label']}}</span>
+                                </ng-template>
 
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span class="ng-value-label">{{item['label']}}</span>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="f.driver_vehicle.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.driver_vehicle.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
                             <label class="form-label">Type</label>
-                            <ng-select [items]="typeOptions" bindLabel="label" bindValue="value" formControlName="driver_type"
-                                placeholder="Select Type" [ngClass]="{'is-invalid' : submitted && f.driver_type.errors }">
+                            <ng-select [items]="typeOptions" bindLabel="label" bindValue="value"
+                                formControlName="driver_type" placeholder="Select Type"
+                                [ngClass]="{'is-invalid' : submitted && f.driver_type.errors }">
                                 <ng-template ng-label-tmp let-item="item">
                                     <span class="ng-value-label">{{item['label']}}</span>
                                 </ng-template>
@@ -276,81 +418,31 @@
                                 </ng-template>
                             </ng-select>
                             <div *ngIf="f.driver_type.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.driver_type.errors.required">Type Required</div>
+                                <div *ngIf="f.driver_type.errors.required">This field is Required</div>
                             </div>
                         </div>
-
-                        <div class="form-group col-md-6" *ngIf="f.driver_type.value==1">
+                        <div class="form-group col-md" *ngIf="f.driver_type.value==1">
                             <label class="form-label">CX Number</label>
                             <input type="text" class="form-control" formControlName="cx_number" name="cx_number">
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label class="form-label">Driver Journey Price</label>
-                            <input type="text" class="form-control" formControlName="d_price" name="d_price"
-                                [ngClass]="{'is-invalid' : submitted && f.d_price.errors }">
-                            <div *ngIf="f.d_price.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.d_price.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label class="form-label">Driver Extras</label>
-                            <input type="text" class="form-control" formControlName="d_extra" name="d_extra"
-                                [ngClass]="{'is-invalid' : submitted && f.d_extra.errors }">
-                            <div *ngIf="f.d_extra.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.d_extra.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label class="form-label">Net Price</label>
-                            <input type="text" class="form-control" formControlName="d_net" name="d_net"
-                                [ngClass]="{'is-invalid' : submitted && f.d_net.errors }">
-                            <div *ngIf="f.d_net.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.d_net.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label class="form-label">VAT</label>
-                            <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
-                                formControlName="d_vat_code" name="d_vat_code" placeholder="Select VAT"
-                                [ngClass]="{'is-invalid' : submitted && f.d_vat_code.errors }">
-                                <ng-template ng-label-tmp let-item="item">
-                                    <span class="ng-value-label">{{item['label']}}</span>
-                                </ng-template>
-
-                                <ng-template ng-option-tmp let-item="item">
-                                    <span class="ng-value-label">{{item['label']}}</span>
-                                </ng-template>
-                            </ng-select>
-                            <div *ngIf="f.d_vat_code.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.d_vat_code.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-md-4" *ngIf="f.d_vat_code!=0">
-                            <label class="form-label">VAT Price</label>
-                            <input type="text" class="form-control" formControlName="d_vat" name="d_vat"
-                                [ngClass]="{'is-invalid' : submitted && f.d_vat.errors }">
-                            <div *ngIf="f.d_vat.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.d_vat.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label class="form-label">Total Price (inc. vat)</label>
-                            <input type="text" class="form-control" formControlName="d_tprice" name="d_tprice"
-                                [ngClass]="{'is-invalid' : submitted && f.d_tprice.errors }">
-                            <div *ngIf="f.d_tprice.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.d_tprice.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="form-row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md">
+                            <label class="form-label">Driver Job Ref / CX Ref</label>
+                            <input type="text" class="form-control" formControlName="job_ref" name="job_ref"
+                                [ngClass]="{'is-invalid' : submitted && f.job_ref.errors }">
+                            <div *ngIf="f.job_ref.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.job_ref.errors.required">Thie field is Required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md" *ngIf="f.invoice_date.value">
+                            <label class="form-label">Driver Invoice No or CX Invoice Number</label>
+                            <input type="text" class="form-control" formControlName="invoice_number"
+                                name="invoice_number">
+                        </div>
+                        <div class="form-group col-md">
                             <label class="form-label">Invoice Date</label>
                             <div class="input-group">
                                 <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
@@ -363,32 +455,236 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md">
+                            <label class="form-label">Date Invoice received</label>
+                            <div class="input-group">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                                    formControlName="invoice_received_date" name="invoice_received_date"
+                                    #d3="ngbDatepicker">
+                                <div class="input-group-append">
+                                    <button class="input-group-text" (click)="d3.toggle()" type="button">
+                                        <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
                             <label class="form-label">Target Payment Date</label>
                             <input type="text" class="form-control" formControlName="payment_date" name="payment_date"
                                 disabled>
                         </div>
-                        <div class="form-group col-md-4" *ngIf="f.invoice_date.value">
-                            <label class="form-label">Invoice Number</label>
-                            <input type="text" class="form-control" formControlName="invoice_number"
-                                name="invoice_number">
-                        </div>
+
                     </div>
+
                     <div class="form-row">
-                        <div class="form-group w-100">
-                            <label class="form-label w-100">Upload POD</label>
-                            <div class="dropzone dropzone-container" [dropzone]="dropzoneConfig" (reset)="resetThumbnail()"
-                                (error)="onErrorThumb($event)" (success)="onSuccessThumb($event)"
-                                [ngClass]="{'is-invalid':  submitted && f.pod_file.errors }">
-                                <div class="dz-message needsclick">
-                                    Drop POD file here or click to upload
-                                    <span class="note needsclick">(Preview File would be removed after 20 second.)</span>
-                                </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <table class="table price-table mr-3 ml-3">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Journey Price</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">VAT</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">Total Price ( inc vat )</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" class="form-control" formControlName="d_price"
+                                                        name="d_price" (change)="changePrice()" step="0.1"
+                                                        [ngClass]="{'is-invalid' : submitted && f.d_price.errors }">
+                                                    <div *ngIf="f.d_price.errors && submitted" class="invalid-feedback">
+                                                        <div *ngIf="f.d_price.errors.required">This field is Required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        +
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
+                                                        formControlName="d_vat" name="d_vat" placeholder="Select VAT"
+                                                        (change)="changePrice($event)"
+                                                        [ngClass]="{'is-invalid' : submitted && f.d_vat.errors }">
+                                                        <ng-template ng-label-tmp let-item="item">
+                                                            <span class="ng-value-label">{{item['label']}}</span>
+                                                        </ng-template>
+
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            <span class="ng-value-label">{{item['label']}}</span>
+                                                        </ng-template>
+                                                    </ng-select>
+                                                    <div *ngIf="f.d_vat.errors && submitted" class="invalid-feedback">
+                                                        <div *ngIf="f.d_vat.errors.required">This field is Required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        =
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input typ="number" step="0.1" class="form-control"
+                                                        formControlName="d_price_total" readonly />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Docket Extra</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">VAT</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">Total Price ( inc vat )</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" step="0.1" class="form-control"
+                                                        formControlName="d_extra" name="d_extra"
+                                                        [ngClass]="{'is-invalid' : submitted && f.d_extra.errors }"
+                                                        (change)="changePrice()">
+                                                    <div *ngIf="f.d_extra.errors && submitted" class="invalid-feedback">
+                                                        <div *ngIf="f.d_extra.errors.required">This field is Required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        +
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
+                                                        formControlName="d_extra_vat" name="d_extra_vat"
+                                                        placeholder="Select VAT" (change)="changePrice()"
+                                                        [ngClass]="{'is-invalid' : submitted && f.d_extra_vat.errors }">
+                                                        <ng-template ng-label-tmp let-item="item">
+                                                            <span class="ng-value-label">{{item['label']}}</span>
+                                                        </ng-template>
+
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            <span class="ng-value-label">{{item['label']}}</span>
+                                                        </ng-template>
+                                                    </ng-select>
+                                                    <div *ngIf="f.d_extra_vat.errors && submitted"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.d_extra_vat.errors.required">This field is Required</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        =
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input typ="number" step="0.1" class="form-control"
+                                                        formControlName="d_extra_total" readonly />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Net Price</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">VAT</label>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <label class="form-label">Total Price ( inc vat )</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" step="0.1" class="form-control"
+                                                        formControlName="d_net" name="d_net" readonly>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        +
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <input type="number" step="0.1" class="form-control"
+                                                            formControlName="d_vat_total" name="d_vat_total" readonly>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="form-control text-center border-0">
+                                                        =
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="number" step="0.1" class="form-control"
+                                                        formControlName="d_tprice" name="d_tprice" readonly>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            <input class="form-control" formControlName="pod_file" type="hidden" name="pod_file"
-                                [ngClass]="{'is-invalid':  submitted && f.pod_file.errors }">
-                            <div *ngIf="submitted && f.pod_file.errors" class="invalid-feedback">
-                                <div *ngIf="f.pod_file.errors.required">This field is Required</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group w-100">
+                                <label class="form-label w-100">Upload POD</label>
+                                <div class="dropzone dropzone-container" [dropzone]="dropzoneConfig"
+                                    (reset)="resetThumbnail()" (error)="onErrorThumb($event)"
+                                    (success)="onSuccessThumb($event)"
+                                    [ngClass]="{'is-invalid':  submitted && f.pod_file.errors }">
+                                    <div class="dz-message needsclick">
+                                        Drop POD file here or click to upload
+                                        <span class="note needsclick">(Preview File would be removed after 20
+                                            second.)</span>
+                                    </div>
+                                </div>
+                                <input class="form-control" formControlName="pod_file" type="hidden" name="pod_file"
+                                    [ngClass]="{'is-invalid':  submitted && f.pod_file.errors }">
+                                <div *ngIf="submitted && f.pod_file.errors" class="invalid-feedback">
+                                    <div *ngIf="f.pod_file.errors.required">This field is Required</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -398,7 +694,8 @@
     </div>
 </div>
 
-<div class="modal" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

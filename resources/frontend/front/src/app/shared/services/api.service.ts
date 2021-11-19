@@ -91,8 +91,8 @@ export class ApiService extends ServiceBase {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/task/resolveDisputeTask`, params, null, false);
   }
   
-  public getVehicleTypeList(params: any): Promise<any> {
-    return this.postData<any>(`${environment.apiUrl}/admin/v1/verhicle/list`, params, null, false);
+  public getJobOptions(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/job/options`, params, null, false);
   }
   
   /**

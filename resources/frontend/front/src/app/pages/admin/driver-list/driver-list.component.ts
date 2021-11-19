@@ -52,6 +52,7 @@ export class DriverListComponent implements OnInit {
     let params = {
       'page': this.currentPage,
       'pagesize': this.perPage,
+      'search': this.filterVal,
     };
     this.apiService.getDriverList(params).then((res) => {
       this.driverData = res.data;
@@ -116,10 +117,10 @@ export class DriverListComponent implements OnInit {
 
   viewProfile(userid) {
     console.log(userid);
-    this.router.navigate(['admin/driver/show', 1]);
+    this.router.navigate(['admin/driver/show', userid]);
   }
 
-  editDriver() {
-    this.router.navigate(['admin/driver/edit', 1]);
+  editDriver(userid) {
+    this.router.navigate(['admin/driver/edit', userid]);
   }
 }

@@ -2,7 +2,7 @@
     <div>Customers</div>
 </h4>
 <!-- Filters -->
-<div class="ui-bordered px-4 pt-4 mb-4">
+<!-- <div class="ui-bordered px-4 pt-4 mb-4">
     <div class="form-row align-items-center">
         <div class="col-md mb-4">
             <label class="form-label">Status</label>
@@ -19,7 +19,7 @@
             <button type="button" class="btn btn-secondary btn-block">Show</button>
         </div>
     </div>
-</div>
+</div> -->
 <!-- / Filters -->
 
 
@@ -82,11 +82,11 @@
                     <td class="align-middle">{{user.contact_email}}</td>
                     <td class="align-middle">{{user.contact_name}}</td>
                     <td class="text-center text-nowrap align-middle">
-                        <a (click)="editCustomer(user.name)" class="btn btn-default btn-xs icon-btn md-btn-flat"
+                        <a (click)="editCustomer(user.id)" class="btn btn-default  icon-btn md-btn-flat"
                             ngbTooltip="Edit">
                             <i class="ion ion-md-create"></i>
                         </a>
-                        <a (click)="viewProfile(user.name)" class="btn btn-default btn-xs icon-btn md-btn-flat"
+                        <a (click)="viewProfile(user.id)" class="btn btn-default  icon-btn md-btn-flat"
                             ngbTooltip="Edit">
                             <i class="ion ion-md-eye"></i>
                         </a>                        

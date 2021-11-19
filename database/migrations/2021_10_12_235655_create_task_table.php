@@ -21,27 +21,36 @@ class CreateTaskTable extends Migration
             $table->bigInteger('vehicle_type')->nullable();
 
             $table->float('c_price')->default(0.0);
+            $table->integer('c_vat')->default(0);
+            $table->float('c_price_total')->default(0.0);
             $table->float('c_extra')->default(0.0);
+            $table->integer('c_extra_vat')->default(0);
+            $table->float('c_extra_total')->default(0.0);
             $table->float('c_net')->default(0.0);
-            $table->float('c_vat')->default(0.0);
-            $table->integer('c_vat_code')->default(0);
+            $table->integer('c_vat_total')->default(0);
             $table->float('c_tprice')->default(0.0);
 
             $table->bigInteger('driver_id');
+            $table->string('job_ref')->nullable();
             $table->string('call_sign')->nullable();
-            $table->bigInteger('driver_type')->nullable();
-
+            $table->integer('driver_type')->nullable();
+            $table->integer('driver_vehicle')->nullable();
+            
             $table->float('d_price')->default(0.0);
+            $table->integer('d_vat')->default(0);
+            $table->float('d_price_total')->default(0.0);
             $table->float('d_extra')->default(0.0);
+            $table->integer('d_extra_vat')->default(0);
+            $table->float('d_extra_total')->default(0.0);
             $table->float('d_net')->default(0.0);
-            $table->float('d_vat')->default(0.0);
-            $table->integer('d_vat_code')->default(0);
+            $table->integer('d_vat_total')->default(0);
             $table->float('d_tprice')->default(0.0);
             
             $table->string('source')->nullable();
             $table->string('destination')->nullable();
             $table->float('distance')->default(0.0);
             $table->string('invoice_date')->nullable();
+            $table->string('invoice_received_date')->nullable();
             $table->string('invoice_number')->nullable();
             $table->string('target_payment_date')->nullable();
             $table->string('payment_date')->nullable();

@@ -15,6 +15,7 @@ class DriverTypeSeeder extends Seeder
     public function run()
     {
         //
+        DB::table('driver_type')->truncate();
         DB::table('driver_type')->insert([
             'name' => 'CX',
             'description' => 'require cx number',

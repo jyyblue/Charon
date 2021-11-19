@@ -12,7 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CustomerOpen;
 use App\Models\DriverType;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Driver\DriverCreateRequest;
 use App\Http\Requests\Driver\DriverUpdateRequest;
 use App\Models\Vat;
@@ -39,8 +39,13 @@ class DriverController extends Controller
 
         $all = Driver::with(['driver_type']);
         if ($search != '') {
-            $all = Driver::whereRaw('LOWER(`email`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
-                ->orWhereRaw(' LOWER(`call_sign`) LIKE ? ', ['%' . trim(strtolower($search)) . '%']);
+            $all = $all->leftJoin('driver_type', 'driver_type.id', '=', 'driver.type')->
+            whereRaw('LOWER(`driver`.`subcontractor`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+            ->orWhereRaw(' LOWER(`driver_type`.`name`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+            ->orWhereRaw(' LOWER(`cx_number`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+            ->orWhereRaw(' LOWER(`call_sign`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+                ->orWhereRaw(' LOWER(`phone_number`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+                ->orWhereRaw(' LOWER(`email`) LIKE ? ', ['%' . trim(strtolower($search)) . '%']);
         }
         $count = $all->count();
         $all = $all->select(['*', DB::raw('CONCAT(call_sign, "-", IFNULL(email, "") ) AS dispName')])->skip($skip)->take($pageSize)->get();
@@ -246,8 +251,7 @@ class DriverController extends Controller
         $password = $request->get('password', '123456');
         $hash_password = bcrypt($password);
         try {
-            $driver = Driver::find($driver_id);
-
+            DB::beginTransaction();
             $user = new User(
                 [
                     'name' => $name,
@@ -260,7 +264,7 @@ class DriverController extends Controller
             );
             $user->save();
             $user = User::where('email', $email)->first();
-            $driver->update([
+            $driver = Driver::create([
                 'user_id' => $user->id,
                 'subcontractor' => $subcontractor,
                 'name' => $name,
@@ -284,13 +288,14 @@ class DriverController extends Controller
                 'payee_name' => $payee_name,
             ]);
             $driver->save();
-
+            DB::commit();
             $ret['code'] = 200;
             $ret['pass'] = $user;
 
             $ret['message'] = 'insert sucessfully';
             return response()->json($ret, 200);
         } catch (\Exception $e) {
+            DB::rollBack();
             throw $e;
             // $ret['code'] = 400;
             // $ret['message'] = $e;

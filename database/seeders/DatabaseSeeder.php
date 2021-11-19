@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             DriverTypeSeeder::class,
             VatSeeder::class,
             TaskStatusSeeder::class,
+            VehicelTypeSeeder::class,
         ]);
     }
 }

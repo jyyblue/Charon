@@ -125,16 +125,16 @@ class ImportData implements ShouldQueue
                 'vehicle_type' => $vehicle->id,
                 'job_date' => $date,
 
-                'c_price' => (float)$row[6],
-                'c_extra' => (float)$row[7],
+                'c_price_total' => (float)$row[6],
+                'c_extra_total' => (float)$row[7],
                 'c_net' => (float)$row[8],
-                'c_vat' => (float)$row[9],
+                'c_vat_total' => (float)$row[9],
                 'c_tprice' => (float)$row[10],
 
-                'd_price' => (float)$row[13],
-                'd_extra' => (float)$row[14],
+                'd_price_total' => (float)$row[13],
+                'd_extra_total' => (float)$row[14],
                 'd_net' => (float)$row[15],
-                'd_vat' => (float)$row[16],
+                'd_vat_total' => (float)$row[16],
                 'd_tprice' => (float)$row[17],
 
                 'profit' => (float)$row[10] - (float)$row[17],

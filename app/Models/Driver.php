@@ -20,6 +20,7 @@ class Driver extends Model
         'call_sign',
         'type',
         'cx_number',
+        'vehicle',
         'address',
         'address2',
         'city',
@@ -40,6 +41,11 @@ class Driver extends Model
     public function driver_type()
     {
         return $this->hasOne( DriverType::class, 'id', 'type');
+    }
+
+    public function vehicle_size()
+    {
+        return $this->hasOne( VehicleType::class, 'id', 'vehicle');
     }
 
     public function user() {

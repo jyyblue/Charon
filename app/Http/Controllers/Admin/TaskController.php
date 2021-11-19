@@ -18,6 +18,10 @@ use App\Mail\DriverDisputeMail;
 use App\Mail\DriverPaymentCompleteMail;
 use App\Mail\DriverResolveMail;
 use App\Models\Driver;
+use App\Models\DriverType;
+use App\Models\Vat;
+use App\Models\VehicleType;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -317,6 +321,18 @@ class TaskController extends Controller
             ]
         );
         $ret['code'] = 200;
+        return response()->json($ret, 200);
+    }
+
+    public function getOptions(Request $request)
+    {
+        $vehicel_type = VehicleType::select([DB::raw('id as value'), DB::raw('name as label')])->get();
+        $driver_type = DriverType::select([DB::raw('id as value'), DB::raw('name as label')])->get();
+        $vat_type = Vat::select([DB::raw('id as value'), DB::raw('name as label')])->get();
+        $ret['code'] = 200;
+        $ret['driver_type'] = $driver_type;
+        $ret['vat_type'] = $vat_type;
+        $ret['vehicle_type'] = $vehicel_type;
         return response()->json($ret, 200);
     }
 }

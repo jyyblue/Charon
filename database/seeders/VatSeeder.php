@@ -15,6 +15,7 @@ class VatSeeder extends Seeder
     public function run()
     {
         //
+        DB::table('vat')->truncate();
         DB::table('vat')->insert([
             'name' => '0%',
             'description' => '',

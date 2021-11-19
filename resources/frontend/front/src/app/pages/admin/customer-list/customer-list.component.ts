@@ -53,6 +53,7 @@ export class CustomerListComponent implements OnInit {
     let params = {
       'page': this.currentPage,
       'pagesize': this.perPage,
+      'search': this.filterVal
     };
     this.apiService.getUserList(params).then((res) => {
       this.customerData = res.data;
@@ -116,10 +117,10 @@ export class CustomerListComponent implements OnInit {
 
   viewProfile(userid) {
     console.log(userid);
-    this.router.navigate(['admin/customer/show', 1]);
+    this.router.navigate(['admin/customer/show', userid]);
   }
 
-  editCustomer() {
-    this.router.navigate(['admin/customer/edit', 1]);
+  editCustomer(userid) {
+    this.router.navigate(['admin/customer/edit', userid]);
   }
 }

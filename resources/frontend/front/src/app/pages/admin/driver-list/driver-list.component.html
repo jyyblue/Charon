@@ -2,7 +2,7 @@
     <div>Drivers</div>
 </h4>
 <!-- Filters -->
-<div class="ui-bordered px-4 pt-4 mb-4">
+<!-- <div class="ui-bordered px-4 pt-4 mb-4">
     <div class="form-row align-items-center">
         <div class="col-md mb-4">
             <label class="form-label">Status</label>
@@ -19,7 +19,7 @@
             <button type="button" class="btn btn-secondary btn-block">Show</button>
         </div>
     </div>
-</div>
+</div> -->
 <!-- / Filters -->
 
 
@@ -89,7 +89,7 @@
                 <tr *ngFor="let user of driverData">
                     <td class="align-middle">{{user.id}}</td>
                     <td class="align-middle">{{user.subcontractor}}</td>
-                    <td class="align-middle"> {{user.type? user.type.name : ''}} </td>
+                    <td class="align-middle"> {{user.driver_type? user.driver_type.name : ''}} </td>
                     <td class="align-middle"> {{user.cx_number}} </td>
                     <td class="align-middle"> {{user.call_sign}} </td>
                     <td class="align-middle">{{user.phone_number}}</td>
@@ -97,11 +97,11 @@
                     <td class="align-middle">{{user.email}}</td>
 
                     <td class="text-center text-nowrap align-middle">
-                        <a (click)="editDriver(user.name)" class="btn btn-default btn-xs icon-btn md-btn-flat"
+                        <a (click)="editDriver(user.id)" class="btn btn-default  icon-btn md-btn-flat"
                             ngbTooltip="Edit">
                             <i class="ion ion-md-create"></i>
                         </a>
-                        <a (click)="viewProfile(user.name)" class="btn btn-default btn-xs icon-btn md-btn-flat"
+                        <a (click)="viewProfile(user.id)" class="btn btn-default  icon-btn md-btn-flat"
                             ngbTooltip="View">
                             <i class="ion ion-md-eye"></i>
                         </a>

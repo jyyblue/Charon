@@ -26,7 +26,7 @@ class DriverCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => ['required', Rule::unique('user', 'email')],
+            'email' => ['required', Rule::unique('users', 'email')],
         ];
     }
 

@@ -44,7 +44,8 @@ Route::prefix('admin')->group(function () {
                 Route::post('/task/updatePendingPaymentTasks', 'TaskController@updatePendingPaymentTasks')->name('admin.task.updatePendingPaymentTasks');
                 Route::post('/task/disputeTask', 'TaskController@disputeTask')->name('admin.task.disputeTask');
                 Route::post('/task/resolveDisputeTask', 'TaskController@resolveDisputeTask')->name('admin.task.resolveDisputeTask');
-                
+                Route::post('/job/options', 'TaskController@getOptions')->name('admin.vehicel.list');
+               
                 // Driver 
                 Route::post('/driver/list', 'DriverController@getList')->name('admin.driver.list');
                 Route::post('/driver/detail', 'DriverController@getDetail')->name('admin.driver.detail');
@@ -52,7 +53,6 @@ Route::prefix('admin')->group(function () {
                 Route::post('/driver/store', 'DriverController@store')->name('admin.driver.store');
                 Route::post('/driver/options', 'DriverController@getOptions')->name('admin.driver.options');
 
-                Route::post('/verhicle/list', 'CustomerController@getVehicleList')->name('admin.vehicel.list');
             });
         });
     });

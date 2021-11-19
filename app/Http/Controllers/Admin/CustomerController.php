@@ -38,6 +38,9 @@ class CustomerController extends Controller
         if($search != '') {
             $all = Customer::whereRaw('LOWER(`company_name`) LIKE ? ',['%'.trim(strtolower($search)).'%'])
             ->orWhereRaw(' LOWER(`account_code`) LIKE ? ', ['%'.trim(strtolower($search)).'%'])
+            ->orWhereRaw(' LOWER(`company_phone`) LIKE ? ', ['%'.trim(strtolower($search)).'%'])
+            ->orWhereRaw(' LOWER(`contact_email`) LIKE ? ', ['%'.trim(strtolower($search)).'%'])
+            ->orWhereRaw(' LOWER(`contact_name`) LIKE ? ', ['%'.trim(strtolower($search)).'%'])
             ;
         }
         $count = $all->count();
@@ -246,10 +249,5 @@ class CustomerController extends Controller
             // $ret['message'] = $e;
             // return response()->json($ret, 200);
         }
-    }
-
-    public function getVehicleList(Request $request) {
-        $all = VehicleType::get();
-        return response()->json($all, 200);
     }
 }

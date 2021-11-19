@@ -56,7 +56,7 @@ export class DriverAddComponent implements OnInit {
       phone_number: [null, Validators.required],
       call_sign: [null, Validators.required],
       type: [null, Validators.required],
-      cx_number: [null, Validators.required],
+      cx_number: [null, []],
       address: [null, Validators.required],
       address2: [null, []],
       city: [null, Validators.required],

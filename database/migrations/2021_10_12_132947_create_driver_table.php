@@ -23,14 +23,15 @@ class CreateDriverTable extends Migration
             $table->string('email')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('call_sign')->nullable();
-            $table->bigInteger('type')->nullable();
+            $table->integer('type')->nullable();
             $table->string('cx_number')->nullable();
+            $table->integer('vehicle')->nullable();
             $table->string('address')->nullable();
             $table->string('address2')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('postcode')->nullable();
-            $table->bigInteger('vat')->nullable();
+            $table->integer('vat')->nullable();
             $table->string('vat_number')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('bank_sort_code')->nullable();

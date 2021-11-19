@@ -15,6 +15,7 @@ class TaskStatusSeeder extends Seeder
     public function run()
     {
         //
+        DB::table('task_status')->truncate();
         DB::table('task_status')->insert([
             'name' => 'Pending',
             'color' => '#ffc107',

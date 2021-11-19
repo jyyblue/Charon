@@ -15,6 +15,7 @@ declare var $: any;
   selector: 'app-job-add',
   templateUrl: './job-add.component.html',
   styles: [
+    '.price-table td{ padding: 0px; border:none;}'
   ],
   styleUrls: [
     '../../../../vendor/libs/ng-select/ng-select.scss',
@@ -47,17 +48,9 @@ export class JobAddComponent implements OnInit {
   journey=[];
   journeyError = false;
 
-  typeOptions = [
-    { value: 1, label: 'CX' },
-    { value: 2, label: 'PAYE' },
-    { value: 3, label: 'SE' },
-    { value: 4, label: 'Company' },
-  ];
+  typeOptions = [];
 
-  vatOptions = [
-    { value: 1, label: '0%' },
-    { value: 2, label: '20%' },
-  ];
+  vatOptions = [];
 
   model: NgbDateStruct = {
     year: now.getFullYear(),
@@ -116,29 +109,40 @@ export class JobAddComponent implements OnInit {
     }
     this.loadCustomer();
     this.loadDriver();
-    this.loadVehicleList();
+    this.loadOptions();
     this.dataForm = this.formBuilder.group({
       customer_id: [null, Validators.required],
       docket: ['', Validators.required],
       job_date: [this.model, Validators.required],
       vehicle_type: [null, Validators.required],
-      c_price: [null, Validators.required],
-      c_net: [null, []],
+      c_price: [0, Validators.required],
       c_vat: [null, []],
-      c_vat_code: [null, []],
-      c_extra: [null, []],
-      c_tprice: [null, Validators.required],
+      c_price_total: [0, []],
+      c_extra: [0, []],
+      c_extra_vat: [null, []],
+      c_extra_total: [0, []],
+      c_net: [0, []],
+      c_vat_total: [0,[]],
+      c_tprice: [0, Validators.required],
+
       driver_id: [null, Validators.required],
+      job_ref: [null, Validators.required],
       call_sign: [null, Validators.required],
       driver_type: [null, Validators.required],
       cx_number: [null, []],
-      d_price: [null, Validators.required],
-      d_net: [null, []],
-      d_extra: [null, []],
+      driver_vehicle: [null, []],
+      d_price: [0, Validators.required],
       d_vat: [null, []],
-      d_vat_code: [null, []],
-      d_tprice: [null, Validators.required],
+      d_price_total: [0, []],
+      d_extra: [0, []],
+      d_extra_vat: [null, []],
+      d_extra_total: [0, []],
+      d_net: [0, []],
+      d_vat_total: [0,[]],
+      d_tprice: [0, Validators.required],
+
       invoice_date: [null, []],
+      invoice_received_date: [null, []],
       payment_date: [null, []],
       invoice_number: [null, []],
       pod_file: [null, []],
@@ -167,28 +171,48 @@ export class JobAddComponent implements OnInit {
       invoiceDate = invoice_date.year + "-" + invoice_date.month + "-" + invoice_date.day;
     }
 
+    let invoice_received_date = this.f.invoice_received_date.value; 
+    let invoiceReceivedDate = '';
+    if(invoice_received_date != undefined) {
+      invoiceReceivedDate = invoice_received_date.year + "-" + invoice_received_date.month + "-" + invoice_received_date.day;
+    }
+
+
     let params = {
       'docket': this.f.docket.value,
       'customer_id': this.f.customer_id.value,
       'job_date': jd,
       'vehicle_type': this.f.vehicle_type.value,
+
       'c_price': this.f.c_price.value,
-      'c_net': this.f.c_net.value,
       'c_vat': this.f.c_vat.value,
-      'c_vat_code': this.f.c_vat_code.value,
+      'c_price_total': this.f.c_price_total.value,
       'c_extra': this.f.c_extra.value,
+      'c_extra_vat': this.f.c_extra_vat.value,
+      'c_extra_total': this.f.c_extra_total.value,
+      'c_net': this.f.c_net.value,
+      'c_vat_total': this.f.c_vat_total.value,
       'c_tprice': this.f.c_tprice.value,
+
       'driver_id': this.f.driver_id.value,
+      'job_ref': this.f.job_ref.value,
       'call_sign': this.f.call_sign.value,
       'driver_type': this.f.driver_type.value,
       'cx_number': this.f.cx_number.value,
+      'driver_vehicle': this.f.driver_vehicle.value,
+
       'd_price': this.f.d_price.value,
-      'd_net': this.f.d_net.value,
-      'd_extra': this.f.d_extra.value,
       'd_vat': this.f.d_vat.value,
-      'd_vat_code': this.f.d_vat_code.value,
+      'd_price_total': this.f.d_price_total.value,
+      'd_extra': this.f.d_extra.value,
+      'd_extra_vat': this.f.d_extra_vat.value,
+      'd_extra_total': this.f.d_extra_total.value,
+      'd_net': this.f.d_net.value,
+      'd_vat_total': this.f.d_vat_total.value,
       'd_tprice': this.f.d_tprice.value,
+
       'invoice_date': invoiceDate,
+      'invoice_received_date': invoiceReceivedDate,
       'payment_date': this.f.payment_date.value,
       'invoice_number': this.f.invoice_number.value,
       'pod_file': this.f.pod_file.value,
@@ -241,23 +265,34 @@ export class JobAddComponent implements OnInit {
       docket: ['', Validators.required],
       job_date: [this.model, Validators.required],
       vehicle_type: [null, Validators.required],
-      c_price: [null, Validators.required],
-      c_net: [null, []],
+      c_price: [0, Validators.required],
       c_vat: [null, []],
-      c_vat_code: [null, []],
-      c_extra: [null, []],
-      c_tprice: [null, Validators.required],
+      c_price_total: [0, []],
+      c_extra: [0, []],
+      c_extra_vat: [null, []],
+      c_extra_total: [0, []],
+      c_net: [0, []],
+      c_vat_total: [0,[]],
+      c_tprice: [0, Validators.required],
+
       driver_id: [null, Validators.required],
+      job_ref: [null, Validators.required],
       call_sign: [null, Validators.required],
       driver_type: [null, Validators.required],
       cx_number: [null, []],
-      d_price: [null, Validators.required],
-      d_net: [null, []],
-      d_extra: [null, []],
+      driver_vehicle: [null, []],
+      d_price: [0, Validators.required],
       d_vat: [null, []],
-      d_vat_code: [null, []],
-      d_tprice: [null, Validators.required],
+      d_price_total: [0, []],
+      d_extra: [0, []],
+      d_extra_vat: [null, []],
+      d_extra_total: [0, []],
+      d_net: [0, []],
+      d_vat_total: [0,[]],
+      d_tprice: [0, Validators.required],
+
       invoice_date: [null, []],
+      invoice_received_date: [null, []],
       payment_date: [null, []],
       invoice_number: [null, []],
       pod_file: [null, []],
@@ -395,10 +430,12 @@ export class JobAddComponent implements OnInit {
     }
   }
 
-  loadVehicleList() {
+  loadOptions() {
     this.vehicleLoading = true;
-    this.apiService.getVehicleTypeList(null).then(res => {
-      this.vehicleOptions = res;
+    this.apiService.getJobOptions(null).then(res => {
+      this.vehicleOptions = res.vehicle_type;
+      this.typeOptions = res.driver_type;
+      this.vatOptions = res.vat_type;
       this.vehicleLoading = false;
     });
   }
@@ -459,4 +496,73 @@ export class JobAddComponent implements OnInit {
     console.log(err);
   }
 
+  // 
+  changePrice(e) {
+    // customer price 
+    let c_price = parseFloat(this.f.c_price.value);
+    let c_vat = this.f.c_vat.value;
+    let c_vat_percent = 0;
+    if(c_vat == 2) {
+      c_vat_percent = 0.2;
+    }
+    let c_vat_price = c_vat_percent * c_price;
+    let c_price_total =  c_price + c_vat_price;
+    this.f.c_price_total.setValue(c_price_total);
+
+    let c_extra = parseFloat(this.f.c_extra.value);
+    let c_extra_vat = this.f.c_extra_vat.value;
+    let c_extra_vat_percent = 0;
+    if(c_extra_vat == 2) {
+      c_extra_vat_percent = 0.2;
+    }
+    let c_extra_vat_price = c_extra_vat_percent * c_extra;
+    let c_extra_total = c_extra + c_extra_vat_price;
+    this.f.c_extra_total.setValue(c_extra_total);
+
+    let c_net = c_price + c_extra;
+    this.f.c_net.setValue(c_net);
+
+    let c_vat_total = c_vat_price + c_extra_vat_price;
+    this.f.c_vat_total.setValue(c_vat_total);
+
+    let c_tprice = c_price_total + c_extra_total;
+    this.f.c_tprice.setValue(c_tprice);
+
+    // driver price 
+    let d_price = parseFloat(this.f.d_price.value);
+    let d_vat = this.f.d_vat.value;
+    let d_vat_percent = 0;
+    if(d_vat == 2) {
+      d_vat_percent = 0.2;
+    }
+    let d_vat_price = d_vat_percent * d_price;
+    let d_price_total =  d_price + d_vat_price;
+    this.f.d_price_total.setValue(d_price_total);
+
+    let d_extra = parseFloat(this.f.d_extra.value);
+    let d_extra_vat = this.f.d_extra_vat.value;
+    let d_extra_vat_percent = 0;
+    if(d_extra_vat == 2) {
+      d_extra_vat_percent = 0.2;
+    }
+    let d_extra_vat_price = d_extra_vat_percent * d_extra;
+    let d_extra_total = d_extra + d_extra_vat_price;
+    this.f.d_extra_total.setValue(d_extra_total);
+
+    let d_net = d_price + d_extra;
+    this.f.d_net.setValue(d_net);
+
+    let d_vat_total = d_vat_price + d_extra_vat_price;
+    this.f.d_vat_total.setValue(d_vat_total);
+
+    let d_tprice = d_price_total + d_extra_total;
+    this.f.d_tprice.setValue(d_tprice);
+
+  }
+
+  //
+  changeVehicle() {
+    let vehicleType = this.f.vehicle_type.value;
+    this.f.driver_vehicle.setValue(vehicleType);
+  }
 }
