@@ -33,8 +33,9 @@ Route::prefix('admin')->group(function () {
                 Route::post('/user/importDriver', 'ImportController@importDriver')->name('admin.url.import.driver');
                 
                 Route::post('/customer/detail', 'CustomerController@getCustomerDetail')->name('admin.url.get');
-                Route::post('/customer/update', 'CustomerController@updateCustomerAccount')->name('admin.url.add');
-
+                Route::post('/customer/update', 'CustomerController@updateCustomerAccount')->name('admin.customer.update');
+                Route::post('/customer/store', 'CustomerController@storeCustomerAccount')->name('admin.customer.store');
+                
                 
                 Route::post('/task/create', 'TaskController@create')->name('admin.task.saveTask');
                 Route::post('/task/list', 'TaskController@getTaskList')->name('admin.task.list');
@@ -46,6 +47,10 @@ Route::prefix('admin')->group(function () {
                 
                 // Driver 
                 Route::post('/driver/list', 'DriverController@getList')->name('admin.driver.list');
+                Route::post('/driver/detail', 'DriverController@getDetail')->name('admin.driver.detail');
+                Route::post('/driver/update', 'DriverController@update')->name('admin.driver.update');
+                Route::post('/driver/store', 'DriverController@store')->name('admin.driver.store');
+                Route::post('/driver/options', 'DriverController@getOptions')->name('admin.driver.options');
 
                 Route::post('/verhicle/list', 'CustomerController@getVehicleList')->name('admin.vehicel.list');
             });

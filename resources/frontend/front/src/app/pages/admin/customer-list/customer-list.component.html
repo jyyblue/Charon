@@ -52,7 +52,7 @@
             <thead>
                 <tr>
                     <th class="text-nowrap cursor-pointer" (click)="setSort('id')">
-                        Company Code<i class="ion text-muted ml-2" *ngIf="sortBy=='id'"
+                        Account Number<i class="ion text-muted ml-2" *ngIf="sortBy=='id'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
                     <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
@@ -60,7 +60,7 @@
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
                     <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Company Phone<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                        Telephone  Phone<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
                     <th class="text-nowrap cursor-pointer" (click)="setSort('email')">
@@ -71,14 +71,6 @@
                         Contact Name<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
-                        Contact Phone<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
-                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
-                    </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Address<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
-                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
-                    </th>
                     <th></th>
                 </tr>
             </thead>
@@ -87,26 +79,17 @@
                     <td class="align-middle">{{user.account_code}}</td>
                     <td class="align-middle">{{user.company_name}}</td>
                     <td class="align-middle">{{user.company_phone}}</td>
-                    <td class="align-middle"><a href="javascript:void(0)">{{user.contact_email}}</a></td>
-                    <td class="align-middle"><a href="javascript:void(0)">{{user.contact_name}}</a></td>
-                    <td class="align-middle"><a href="javascript:void(0)">{{user.contact_phone}}</a></td>
-                    <td class="align-middle"><a href="javascript:void(0)">{{user.company_address}}</a></td>
+                    <td class="align-middle">{{user.contact_email}}</td>
+                    <td class="align-middle">{{user.contact_name}}</td>
                     <td class="text-center text-nowrap align-middle">
                         <a (click)="editCustomer(user.name)" class="btn btn-default btn-xs icon-btn md-btn-flat"
                             ngbTooltip="Edit">
                             <i class="ion ion-md-create"></i>
                         </a>
-                        <div class="btn-group" ngbDropdown [placement]="!isRTL ? 'bottom-right' : 'bottom-left'">
-                            <button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat hide-arrow"
-                                ngbDropdownToggle ngbTooltip="Actions">
-                                <i class="ion ion-ios-settings"></i>
-                            </button>
-                            <div ngbDropdownMenu [class.dropdown-menu-right]="!isRTL">
-                                <a class="dropdown-item" (click)="viewProfile(user.name)">View profile</a>
-                                <a class="dropdown-item" href="javascript:void(0)">Ban user</a>
-                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
-                            </div>
-                        </div>
+                        <a (click)="viewProfile(user.name)" class="btn btn-default btn-xs icon-btn md-btn-flat"
+                            ngbTooltip="Edit">
+                            <i class="ion ion-md-eye"></i>
+                        </a>                        
                     </td>
                 </tr>
             </tbody>

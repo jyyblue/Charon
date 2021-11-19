@@ -149,19 +149,19 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label class="form-label">Username</label>
-                            <input type="text" class="form-control" formControlName="pod_username" name="pod_username"
-                                [ngClass]="{'is-invalid': submitted && f.pod_username.errors }">
-                            <div *ngIf="submitted && f.pod_username.errors" class="invalid-feedback">
-                                <div *ngIf="f.pod_username.errors.required">Username Required</div>
+                            <input type="text" class="form-control" formControlName="pod_name" name="pod_name"
+                                [ngClass]="{'is-invalid': submitted && f.pod_name.errors }">
+                            <div *ngIf="submitted && f.pod_name.errors" class="invalid-feedback">
+                                <div *ngIf="f.pod_name.errors.required">Username Required</div>
                             </div>
                         </div>
 
                         <div class="form-group col-md-4">
                             <label class="form-label">Password</label>
-                            <input type="text" class="form-control" formControlName="pod_pwd" name="pod_pwd"
-                                [ngClass]="{'is-invalid': submitted && f.pod_pwd.errors }">
-                            <div *ngIf="submitted && f.pod_pwd.errors" class="invalid-feedback">
-                                <div *ngIf="f.pod_pwd.errors.required">Password Required</div>
+                            <input type="text" class="form-control" formControlName="pod_password" name="pod_password"
+                                [ngClass]="{'is-invalid': submitted && f.pod_password.errors }">
+                            <div *ngIf="submitted && f.pod_password.errors" class="invalid-feedback">
+                                <div *ngIf="f.pod_password.errors.required">Password Required</div>
                             </div>
                         </div>
                     </div>

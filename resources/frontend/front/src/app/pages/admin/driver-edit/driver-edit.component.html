@@ -6,8 +6,8 @@
 
 <div class="media align-items-center py-3 mb-3">
     <div class="media-body ml-4">
-        <h4 class="font-weight-bold mb-0">User name <span class="text-muted font-weight-normal">@username</span></h4>
-        <div class="text-muted mb-2">ID: userid</div>
+        <h4 class="font-weight-bold mb-0">User name <span class="text-muted font-weight-normal">@ {{ data? data.name : '' }}</span></h4>
+        <div class="text-muted mb-2">ID: {{ data ? data.id: '' }}</div>
     </div>
 </div>
 
@@ -25,7 +25,7 @@
                             <input type="text" class="form-control" formControlName="first_name" name="first_name"
                                 [ngClass]="{'is-invalid': submitted && f.first_name.errors }">
                             <div *ngIf="submitted && f.first_name.errors" class="invalid-feedback">
-                                <div *ngIf="f.first_name.errors.required">First Name Required</div>
+                                <div *ngIf="f.first_name.errors.required">This field is Required</div>
                             </div>
                         </div>
                         <div class="form-group col-md-6">
@@ -33,7 +33,25 @@
                             <input type="text" class="form-control" formControlName="last_name" name="last_name"
                                 [ngClass]="{'is-invalid': submitted && f.last_name.errors }">
                             <div *ngIf="submitted && f.last_name.errors" class="invalid-feedback">
-                                <div *ngIf="f.last_name.errors.required">Last Name Required</div>
+                                <div *ngIf="f.last_name.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" formControlName="name" name="name"
+                                [ngClass]="{'is-invalid': submitted && f.name.errors }">
+                            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                                <div *ngIf="f.name.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Subcontractor</label>
+                            <input type="text" class="form-control" formControlName="subcontractor" name="subcontractor"
+                                [ngClass]="{'is-invalid': submitted && f.subcontractor.errors }">
+                            <div *ngIf="submitted && f.subcontractor.errors" class="invalid-feedback">
+                                <div *ngIf="f.subcontractor.errors.required">This field is Required</div>
                             </div>
                         </div>
                     </div>
@@ -43,16 +61,16 @@
                             <input type="email" class="form-control" formControlName="email" name="email"
                                 [ngClass]="{'is-invalid' : submitted && f.email.errors }">
                             <div *ngIf="f.email.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.email.errors.required">Email Required</div>
+                                <div *ngIf="f.email.errors.required">This field is Required</div>
                             </div>
                         </div>
                         <div class="form-group col-md-6">
                             <label class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" placeholder="(___) ___-____" formControlName="phone"
-                                name="phone" [textMask]="phoneMaskOptions"
-                                [ngClass]="{'is-invalid' : submitted && f.phone.errors }">
-                            <div *ngIf="f.phone.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.phone.errors.required">Phone Required</div>
+                            <input type="text" class="form-control" placeholder="(___) ___-____" formControlName="phone_number"
+                                name="phone_number" [textMask]="phoneMaskOptions"
+                                [ngClass]="{'is-invalid' : submitted && f.phone_number.errors }">
+                            <div *ngIf="f.phone_number.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.phone_number.errors.required">This field is Required</div>
                             </div>
                         </div>
                     </div>
@@ -62,15 +80,14 @@
                             <input type="text" class="form-control" formControlName="call_sign" name="call_sign"
                                 [ngClass]="{'is-invalid' : submitted && f.call_sign.errors }">
                             <div *ngIf="f.call_sign.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.call_sign.errors.required">Call Sign Required</div>
+                                <div *ngIf="f.call_sign.errors.required">This field is Required</div>
                             </div>
                         </div>
 
                         <div class="form-group col-md-4">
                             <label class="form-label">Type</label>
                             <ng-select [items]="typeOptions" bindLabel="label" bindValue="value" formControlName="type"
-                                [disabled]="disabled"
-                                [ngClass]="{'is-invalid' : submitted && f.type.errors }">
+                                placeholder="Select Type" [ngClass]="{'is-invalid' : submitted && f.type.errors }">
                                 <ng-template ng-label-tmp let-item="item">
                                     <span class="ng-value-label">{{item['label']}}</span>
                                 </ng-template>
@@ -80,9 +97,12 @@
                                 </ng-template>
                             </ng-select>
                             <div *ngIf="f.type.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.type.errors.required">Type Required</div>
+                                <div *ngIf="f.type.errors.required">This field is Required</div>
                             </div>
                         </div>
+
+
+
                         <div class="form-group col-md-4" *ngIf="f.type.value==1">
                             <label class="form-label">CX Number</label>
                             <input type="text" class="form-control" formControlName="cx_number" name="cx_number">
@@ -91,15 +111,15 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label class="form-label">Address</label>
-                            <input type="text" class="form-control" placeholder="1234 Main St" formControlName="address"
+                            <input type="text" class="form-control" placeholder="" formControlName="address"
                                 name="address" [ngClass]="{'is-invalid' : submitted && f.address.errors }">
                             <div *ngIf="f.address.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.address.errors.required">Address Required</div>
+                                <div *ngIf="f.address.errors.required">This field is Required</div>
                             </div>
                         </div>
                         <div class="form-group col-md-6">
                             <label class="form-label">Address 2</label>
-                            <input type="text" class="form-control" placeholder="Apartment, studio, or floor"
+                            <input type="text" class="form-control" placeholder=""
                                 formControlName="address2" name="address2">
                         </div>
                     </div>
@@ -109,7 +129,7 @@
                             <input type="text" class="form-control" formControlName="city" name="city"
                                 [ngClass]="{'is-invalid' : submitted && f.city.errors }">
                             <div *ngIf="f.city.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.city.errors.required">City Required</div>
+                                <div *ngIf="f.city.errors.required">This field is Required</div>
                             </div>
                         </div>
                         <div class="form-group col-md-4">
@@ -117,7 +137,7 @@
                             <input type="text" class="form-control" formControlName="state" name="state"
                                 [ngClass]="{'is-invalid' : submitted && f.state.errors }">
                             <div *ngIf="f.state.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.state.errors.required">State Required</div>
+                                <div *ngIf="f.state.errors.required">This field is Required</div>
                             </div>
                         </div>
                         <div class="form-group col-md-2">
@@ -125,7 +145,7 @@
                             <input type="text" class="form-control" formControlName="postcode" name="postcode"
                                 [ngClass]="{'is-invalid' : submitted && f.postcode.errors }">
                             <div *ngIf="f.postcode.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.postcode.errors.required">Postcode Required</div>
+                                <div *ngIf="f.postcode.errors.required">This field is Required</div>
                             </div>
                         </div>
                     </div>
@@ -153,7 +173,7 @@
                                 </ng-template>
                             </ng-select>
                             <div *ngIf="f.vat.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.vat.errors.required">VAT Required</div>
+                                <div *ngIf="f.vat.errors.required">This field is Required</div>
                             </div>
 
                         </div>
@@ -163,29 +183,40 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label class="form-label">Bank Name</label>
                             <input type="text" class="form-control" formControlName="bank_name" name="bank_name"
                                 [ngClass]="{'is-invalid' : submitted && f.bank_name.errors }">
                             <div *ngIf="f.bank_name.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.bank_name.errors.required">Bank Name Required</div>
+                                <div *ngIf="f.bank_name.errors.required">This field is Required</div>
                             </div>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label class="form-label">Bank Sort Code</label>
-                            <input type="text" class="form-control" formControlName="bank_code" name="bank_code"
-                                [ngClass]="{'is-invalid' : submitted && f.bank_code.errors }">
-                            <div *ngIf="f.bank_code.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.bank_code.errors.required">Bank Sort Code Required</div>
+                            <input type="text" class="form-control" formControlName="bank_sort_code" name="bank_sort_code"
+                                [ngClass]="{'is-invalid' : submitted && f.bank_sort_code.errors }">
+                            <div *ngIf="f.bank_sort_code.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.bank_sort_code.errors.required">This field is Required</div>
                             </div>
                         </div>
-                        <div class="form-group col-md-4">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
                             <label class="form-label">Bank Account Number</label>
                             <input type="text" class="form-control" formControlName="bank_account_number"
                                 name="bank_account_number"
                                 [ngClass]="{'is-invalid' : submitted && f.bank_account_number.errors }">
                             <div *ngIf="f.bank_account_number.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.bank_account_number.errors.required">Bank Account Number Required</div>
+                                <div *ngIf="f.bank_account_number.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Payee Name</label>
+                            <input type="text" class="form-control" formControlName="payee_name" name="payee_name"
+                                [ngClass]="{'is-invalid' : submitted && f.payee_name.errors }">
+                            <div *ngIf="f.payee_name.errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f.payee_name.errors.required">This field is Required</div>
                             </div>
                         </div>
                     </div>

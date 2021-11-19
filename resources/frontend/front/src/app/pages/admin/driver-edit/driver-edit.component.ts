@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { ApiService } from 'src/app/shared/services/api.service';
 
 @Component({
   selector: 'app-driver-edit',
   templateUrl: './driver-edit.component.html',
   styles: [
+  ],
+  styleUrls: [
+    '../../../../vendor/libs/ng-select/ng-select.scss',
   ]
 })
 export class DriverEditComponent implements OnInit {
@@ -19,71 +24,61 @@ export class DriverEditComponent implements OnInit {
   };
   disabled = false;
 
-  typeOptions = [
-    { value: 1, label: 'CX' },
-    { value: 2, label: 'PAYE' },
-    { value: 3, label: 'SE' },
-    { value: 4, label: 'Company' },
-  ];
+  typeOptions = [];
 
-  vatOptions = [
-    { value: 1, label: '0%' },
-    { value: 2, label: '20%' },
-  ];
+  vatOptions = [];
 
+  userid;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-  ) { }
-
-  ngOnInit(): void {
-    let userid = this.route.snapshot.params['id'];
+    private apiService: ApiService,
+    private toastrService: ToastrService,
+    private router: Router,
+  ) { 
+    this.userid = this.route.snapshot.params['id'];
     this.getData();
   }
 
-  getData() {
-    setTimeout(() => {
-      this.data = {
-        id: 1,
-        first_name: 'First Name',
-        last_name: 'First Name',
-        email: 'First Name',
-        phone: 'First Name',
-        type: 1,
-        cx_number: 'First Name',
-        call_sign: 'First Name',
-        address: 'First Name',
-        address2: 'First Name',
-        city: 'First Name',
-        state: 'First Name',
-        postcode: 'First Name',
-        vat: 2,
-        vat_number: 'First Name',
-        bank_name: 'First Name',
-        bank_code: 'First Name',
-        bank_account_number: 'First Name',
-      };
+  ngOnInit(): void {
+  }
 
-      this.dataForm = this.formBuilder.group({
-        first_name: [this.data.first_name, Validators.required],
-        last_name: [this.data.last_name, Validators.required],
-        email: [this.data.email, [Validators.required, Validators.email]],
-        phone: [this.data.phone, Validators.required],
-        type: [this.data.type, Validators.required],
-        cx_number: [this.data.cx_number, []],
-        call_sign: [this.data.call_sign, Validators.required],
-        address: [this.data.address, Validators.required],
-        address2: [this.data.address2, []],
-        city: [this.data.city, Validators.required],
-        state: [this.data.state, Validators.required],
-        postcode: [this.data.postcode, Validators.required],
-        vat: [this.data.vat, Validators.required],
-        vat_number: [this.data.vat_number, []],
-        bank_name: [this.data.bank_name, Validators.required],
-        bank_code: [this.data.bank_code, Validators.required],
-        bank_account_number: [this.data.bank_account_number, Validators.required],
-      });
-    }, 2000);
+  getData() {
+    let params = {
+      'user_id': this.userid,
+    }
+    this.apiService.getDriverDetail(params).then(res => {
+      let code = res.code;
+      if(code == 200) {
+        this.typeOptions = res.driver_type;
+        this.vatOptions = res.vat_type;
+        this.data = res.data;
+        this.dataForm = this.formBuilder.group({
+          subcontractor: [this.data.subcontractor, Validators.required],
+          name: [this.data.name, Validators.required],
+          first_name: [this.data.first_name, Validators.required],
+          last_name: [this.data.last_name, Validators.required],
+          email: [this.data.email, [Validators.required, Validators.email]],
+          phone_number: [this.data.phone_number, Validators.required],
+          call_sign: [this.data.call_sign, Validators.required],
+          type: [this.data.type, Validators.required],
+          cx_number: [this.data.cx_number, Validators.required],
+          address: [this.data.address, Validators.required],
+          address2: [this.data.address2, []],
+          city: [this.data.city, Validators.required],
+          state: [this.data.state, Validators.required],
+          postcode: [this.data.postcode, Validators.required],
+          vat: [this.data.vat, Validators.required],
+          vat_number: [this.data.vat_number, []],
+          bank_name: [this.data.bank_name, Validators.required],
+          bank_sort_code: [this.data.bank_sort_code, Validators.required],
+          bank_account_number: [this.data.bank_account_number, Validators.required],
+          payee_name: [this.data.payee_name, Validators.required],
+        });
+      }
+    }).catch(err => {
+      let status = err.status;
+    });
   }
 
   get f(): any { return this.dataForm.controls; }
@@ -96,6 +91,53 @@ export class DriverEditComponent implements OnInit {
       return;
     }
 
+    let params = {
+      'user_id': this.userid,
+      'subcontractor':this.f.subcontractor.value,
+      'name': this.f.name.value,
+      'first_name':this.f.first_name.value,
+      'last_name': this.f.last_name.value,
+      'email': this.f.email.value,
+      'phone_number': this.f.phone_number.value,
+      'call_sign': this.f.call_sign.value,
+      'type': this.f.type.value,
+      'cx_number': this.f.cx_number.value,
+      'address': this.f.address.value,
+      'address2': this.f.address2.value,
+      'city': this.f.city.value,
+      'state': this.f.state.value,
+      'postcode': this.f.postcode.value,
+      'vat': this.f.vat.value,
+      'vat_number': this.f.vat_number.value,
+      'bank_name': this.f.bank_name.value,
+      'bank_sort_code':this.f.bank_sort_code.value,
+      'bank_account_number': this.f.bank_account_number.value,
+      'payee_name': this.f.payee_name.value,
+    };
+
+    console.log(params);
+    this.apiService.updateDriver(params).then(res => {
+      let code = res.code;
+      if(code == 200) {
+        let message = res.message;
+        this.toastrService.success(message);
+      }else{
+        let message = res.message;
+        this.toastrService.error(message);
+      }
+    }).catch(err => {
+      console.log(err);
+      let status = err.status;
+      if(status == 422) {
+        // upprocessable error validation error in server side
+        let error = err.error;
+        let message = error.message;
+        let errors = error.errors;
+        this.toastrService.error(message);
+      }else{
+        this.toastrService.error('Something wrong');
+      }
+    })
     return;
   }
 }

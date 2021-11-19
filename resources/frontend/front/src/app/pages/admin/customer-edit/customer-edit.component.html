@@ -23,14 +23,14 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label class="form-label">Account Code</label>
-                            <input type="text" class="form-control" formControlName="company_code" name="company_code"
-                                [ngClass]="{'is-invalid': submitted && f.company_code.errors }">
-                            <div *ngIf="submitted && f.company_code.errors" class="invalid-feedback">
-                                <div *ngIf="f.company_code.errors.required">Account Code Required</div>
+                            <input type="text" class="form-control" formControlName="account_code" name="account_code"
+                                [ngClass]="{'is-invalid': submitted && f.account_code.errors }">
+                            <div *ngIf="submitted && f.account_code.errors" class="invalid-feedback">
+                                <div *ngIf="f.account_code.errors.required">Account Code Required</div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="form-group col-md-6">
                             <label class="form-label">Company Telephone Number </label>
                             <input type="text" class="form-control" placeholder="(___) ___-____"
@@ -158,10 +158,10 @@
 
                         <div class="form-group col-md-4">
                             <label class="form-label">Password</label>
-                            <input type="text" class="form-control" formControlName="pod_pwd" name="pod_pwd"
-                                [ngClass]="{'is-invalid': submitted && f.pod_pwd.errors }">
-                            <div *ngIf="submitted && f.pod_pwd.errors" class="invalid-feedback">
-                                <div *ngIf="f.pod_pwd.errors.required">Password Required</div>
+                            <input type="text" class="form-control" formControlName="pod_password" name="pod_password"
+                                [ngClass]="{'is-invalid': submitted && f.pod_password.errors }">
+                            <div *ngIf="submitted && f.pod_password.errors" class="invalid-feedback">
+                                <div *ngIf="f.pod_password.errors.required">Password Required</div>
                             </div>
                         </div>
                     </div>

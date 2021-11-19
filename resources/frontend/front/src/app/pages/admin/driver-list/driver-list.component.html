@@ -55,20 +55,8 @@
                         ID<i class="ion text-muted ml-2" *ngIf="sortBy=='id'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('email')">
-                        Email<i class="ion text-muted ml-2" *ngIf="sortBy=='email'"
-                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
-                    </th>
                     <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
                         Name<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
-                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
-                    </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
-                        Phone<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
-                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
-                    </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Call Sign<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
                     <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
@@ -80,38 +68,43 @@
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
                     <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Payee Name<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                        Call Sign<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
+                        Phone<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('email')">
+                        Email<i class="ion text-muted ml-2" *ngIf="sortBy=='email'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+
+
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let user of driverData">
                     <td class="align-middle">{{user.id}}</td>
-                    <td class="align-middle">{{user.email}}</td>
                     <td class="align-middle">{{user.subcontractor}}</td>
-                    <td class="align-middle">{{user.phone_number}}</td>
-                    <td class="align-middle"> {{user.call_sign}} </td>
                     <td class="align-middle"> {{user.type? user.type.name : ''}} </td>
                     <td class="align-middle"> {{user.cx_number}} </td>
-                    <td class="align-middle"> {{user.payee_name}} </td>
+                    <td class="align-middle"> {{user.call_sign}} </td>
+                    <td class="align-middle">{{user.phone_number}}</td>
+
+                    <td class="align-middle">{{user.email}}</td>
+
                     <td class="text-center text-nowrap align-middle">
                         <a (click)="editDriver(user.name)" class="btn btn-default btn-xs icon-btn md-btn-flat"
                             ngbTooltip="Edit">
                             <i class="ion ion-md-create"></i>
                         </a>
-                        <div class="btn-group" ngbDropdown [placement]="!isRTL ? 'bottom-right' : 'bottom-left'">
-                            <button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat hide-arrow"
-                                ngbDropdownToggle ngbTooltip="Actions">
-                                <i class="ion ion-ios-settings"></i>
-                            </button>
-                            <div ngbDropdownMenu [class.dropdown-menu-right]="!isRTL">
-                                <a class="dropdown-item" (click)="viewProfile(user.name)">View profile</a>
-                                <a class="dropdown-item" href="javascript:void(0)">Ban user</a>
-                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
-                            </div>
-                        </div>
+                        <a (click)="viewProfile(user.name)" class="btn btn-default btn-xs icon-btn md-btn-flat"
+                            ngbTooltip="View">
+                            <i class="ion ion-md-eye"></i>
+                        </a>
                     </td>
                 </tr>
             </tbody>

@@ -35,6 +35,10 @@ export class ApiService extends ServiceBase {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/customer/update`, params, null, false);
   }
 
+  public storeCustomerAccount(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/customer/store`, params, null, false);
+  }
+  
   public getTableData(params: any): Promise<any> {
     return this.postData<any>(`${environment.apiUrl}/customer/auth/getTableData`, params, null, false);
   }
@@ -49,6 +53,22 @@ export class ApiService extends ServiceBase {
 
   public getDriverList(params: any): Promise<any> {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/driver/list`, params, null, false);
+  }
+
+  public getDriverDetail(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/driver/detail`, params, null, false);
+  }
+  
+  public getDriverOptions(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/driver/options`, params, null, false);
+  }
+
+  public updateDriver(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/driver/update`, params, null, false);
+  }
+
+  public storeDriver(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/driver/store`, params, null, false);
   }
 
   public getTaskDetail(params: any): Promise<any> {

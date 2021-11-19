@@ -37,8 +37,12 @@ class Driver extends Model
     /**
      * Get the type.
      */
-    public function type()
+    public function driver_type()
     {
         return $this->hasOne( DriverType::class, 'id', 'type');
+    }
+
+    public function user() {
+        return $this->hasOne(User::class,'id', 'user_id');
     }
 }
