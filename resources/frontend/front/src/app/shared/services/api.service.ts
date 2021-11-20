@@ -74,6 +74,14 @@ export class ApiService extends ServiceBase {
   public getTaskDetail(params: any): Promise<any> {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/task/detail`, params, null, false);
   }
+
+  public updateTask(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/task/update`, params, null, false);
+  }
+
+  public downloadPodFile(params: any): Promise<any> {
+    return this.getData<any>(`${environment.apiUrl}/admin/v1/task/downloadpod`, params, null);
+  }
   
   public updatePendingTask(params: any): Promise<any> {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/task/updatePendingTask`, params, null, false);

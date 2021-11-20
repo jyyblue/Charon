@@ -75,4 +75,8 @@ class Task extends Model
     public function _status() {
         return $this->hasOne(TaskStatus::class, 'id', 'status');
     }
+
+    public function distances() {
+        return $this->hasMany(TaskDistance::class, 'task_id', 'id');
+    }
 }

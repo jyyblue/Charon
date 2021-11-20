@@ -22,6 +22,7 @@ use App\Models\DriverType;
 use App\Models\Vat;
 use App\Models\VehicleType;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {
@@ -35,14 +36,19 @@ class TaskController extends Controller
         // $this->middleware('auth:api');
     }
 
-    public function create(Request $request) {
-        try{
+    public function create(Request $request)
+    {
+        try {
             $pending_status = constants('status.pending');
             $data = $request->except('journey');
             $journey = $request->get('journey', []);
             $docket = $request->get('docket', '');
             $task = Task::where('docket', $docket)->first();
-            if(!empty($task)) {
+            $c_tprice = $request->get('c_tprice', 0);
+            $d_tprice = $request->get('d_tprice', 0);
+            $profit = (float)$c_tprice - (float)$d_tprice;
+            $data['profit'] = $profit;
+            if (!empty($task)) {
                 $ret['code'] = 410;
                 $ret['msg'] = 'Same docket number already exist';
                 return response()->json($ret, 200);
@@ -54,9 +60,9 @@ class TaskController extends Controller
             foreach ($journey as $key => $item) {
                 $taskDistance = new TaskDistance;
                 $taskDistance->create([
-                    'task_id'=> $task->id,
+                    'task_id' => $task->id,
                     'source' => $item['src'],
-                    'destination'=> $item['dst'],
+                    'destination' => $item['dst'],
                 ]);
             }
 
@@ -65,15 +71,51 @@ class TaskController extends Controller
                 [
                     'task_id' => $task->id,
                     'status' => $pending_status,
-                    'description' =>'created job',
+                    'description' => 'created job',
                     'worker' => 'system'
                 ]
             );
-            
+
             $ret['code'] = 200;
             $ret['data'] = $task;
             return response()->json($ret, 200);
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $request->except(['journey', 'id']);
+            $journey = $request->get('journey', []);
+            $id = $request->get('id', '');
+
+            $c_tprice = $request->get('c_tprice', 0);
+            $d_tprice = $request->get('d_tprice', 0);
+            $profit = (float)$c_tprice - (float)$d_tprice;
+            $data['profit'] = $profit;
+
+            $task = Task::where('id', $id)->first();
+            $task->update($data);
+
+            $task = Task::where('id', $id)->first();
+            TaskDistance::where('task_id', $id)->delete();
+            foreach ($journey as $key => $item) {
+                $taskDistance = new TaskDistance;
+                $taskDistance->create([
+                    'task_id' => $task->id,
+                    'source' => $item['src'],
+                    'destination' => $item['dst'],
+                ]);
+            }
+            DB::commit();
+            $ret['code'] = 200;
+            $ret['data'] = $task;
+            return response()->json($ret, 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
             throw $e;
         }
     }
@@ -130,7 +172,7 @@ class TaskController extends Controller
     public function getTaskDetail(Request $request)
     {
         $taskid = $request->get('taskid', '');
-        $task = Task::with(['customer', 'driver', '_status'])->find($taskid);
+        $task = Task::with(['customer', 'driver', '_status', 'distances'])->find($taskid);
         if ($task) {
             $ret['code'] = 200;
             $ret['data'] = $task;
@@ -159,7 +201,7 @@ class TaskController extends Controller
             ]);
             // send mail to driver for receive invoice
             $driver_email = $task->driver ? $task->driver['email'] : '';
-            if(!empty($driver_email)) {
+            if (!empty($driver_email)) {
                 $data = [
                     'docket' => $task->docket,
                     'company_name' => $task->customer['company_name'],
@@ -195,10 +237,10 @@ class TaskController extends Controller
         try {
             $taskids = $request->get('taskids', []);
             $driver_ids = $request->get('driver_ids', []);
-            if(count($driver_ids) > 1) {
+            if (count($driver_ids) > 1) {
                 $ret['code'] = 201;
                 $ret['message'] = 'You select more than one user!';
-                return response()->json($ret, 200); 
+                return response()->json($ret, 200);
             }
             $driver_id = $driver_ids[0];
             $payment_date = $request->get('payment_date', '');
@@ -228,7 +270,7 @@ class TaskController extends Controller
                 ];
                 array_push($task_data, $item);
             };
-            if(!empty($driver_email)) {
+            if (!empty($driver_email)) {
                 $data = [
                     'payment_reference' => $payment_reference,
                     'payment_date' => $payment_date,
@@ -267,7 +309,7 @@ class TaskController extends Controller
 
         // send mail to driver for receive invoice
         $driver_email = $task->driver ? $task->driver['email'] : '';
-        if(!empty($driver_email)) {
+        if (!empty($driver_email)) {
             $data = [
                 'docket' => $task->docket,
                 'company_name' => $task->customer['company_name'],
@@ -287,15 +329,16 @@ class TaskController extends Controller
         return response()->json($ret, 200);
     }
 
-    public function resolveDisputeTask(Request $request) {
+    public function resolveDisputeTask(Request $request)
+    {
         $taskid = $request->get('taskid', 0);
         $description = $request->get('description', '');
         $query = constants('status.query');
-        $last_status = TaskStatusHistory::where('task_id', $taskid)->where('status','<>', $query)->orderby('id', 'DESC')->first();
-        
-        if(!empty($last_status)) {
+        $last_status = TaskStatusHistory::where('task_id', $taskid)->where('status', '<>', $query)->orderby('id', 'DESC')->first();
+
+        if (!empty($last_status)) {
             $last_status = $last_status->status;
-        }else{
+        } else {
             $last_status = constants('status.pending');
         }
 
@@ -304,7 +347,7 @@ class TaskController extends Controller
             'status' => $last_status, // pending payment status
         ]);
         $driver_email = $task->driver ? $task->driver['email'] : '';
-        if(!empty($driver_email)) {
+        if (!empty($driver_email)) {
             $data = [
                 'docket' => $task->docket,
                 'company_name' => $task->customer['company_name'],
@@ -334,5 +377,13 @@ class TaskController extends Controller
         $ret['vat_type'] = $vat_type;
         $ret['vehicle_type'] = $vehicel_type;
         return response()->json($ret, 200);
+    }
+    public function downloadPodFile(Request $request)
+    {
+        $filename = $request->get('filename', '');
+        $directory = "public/job/attachments/";
+        //PDF file is stored under project/public/download/info.pdf
+        $file = public_path() . "/storage/job/attachments/".$filename;
+        return response()->download($file);
     }
 }

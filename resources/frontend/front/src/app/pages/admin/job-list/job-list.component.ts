@@ -83,10 +83,10 @@ export class JobListComponent implements OnInit {
 
   viewProfile(userid) {
     console.log(userid);
-    this.router.navigate(['admin/job/show', 1]);
+    this.router.navigate(['admin/job/show', userid]);
   }
 
-  editDriver() {
-    this.router.navigate(['admin/job/edit', 1]);
+  editDriver(userid) {
+    this.router.navigate(['admin/job/edit', userid]);
   }
 }

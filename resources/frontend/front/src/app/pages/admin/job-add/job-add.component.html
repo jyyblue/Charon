@@ -193,7 +193,7 @@
                                                 <div class="form-group">
                                                     <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
                                                         formControlName="c_vat" name="c_vat" placeholder="Select VAT"
-                                                        (change)="changePrice($event)"
+                                                        (change)="changePrice()"
                                                         [ngClass]="{'is-invalid' : submitted && f.c_vat.errors }">
                                                         <ng-template ng-label-tmp let-item="item">
                                                             <span class="ng-value-label">{{item['label']}}</span>
@@ -517,7 +517,7 @@
                                                 <div class="form-group">
                                                     <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
                                                         formControlName="d_vat" name="d_vat" placeholder="Select VAT"
-                                                        (change)="changePrice($event)"
+                                                        (change)="changePrice()"
                                                         [ngClass]="{'is-invalid' : submitted && f.d_vat.errors }">
                                                         <ng-template ng-label-tmp let-item="item">
                                                             <span class="ng-value-label">{{item['label']}}</span>
@@ -668,11 +668,19 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group w-100">
-                                <label class="form-label w-100">Upload POD</label>
+                            <div class="mb-2" *ngIf="data.pod_file">
+                                <a  href="{{ downloadurl }}?filename={{ data.pod_file }}" class="btn btn-info rounded-pill">Download</a>
+                            </div>
+                            
+                            <div class="form-group w-100 bg-periscope-dark p-3">
+                                <div class="d-flex mb-2">
+                                    <label class="form-label w-100">Upload POD</label>
+                                    <button class="btn btn-primary" (click)="onReset()">Reset</button>
+                                </div>
                                 <div class="dropzone dropzone-container" [dropzone]="dropzoneConfig"
                                     (reset)="resetThumbnail()" (error)="onErrorThumb($event)"
                                     (success)="onSuccessThumb($event)"
+                                    [disabled]="disableDropZone"
                                     [ngClass]="{'is-invalid':  submitted && f.pod_file.errors }">
                                     <div class="dz-message needsclick">
                                         Drop POD file here or click to upload

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('admin')->group(function () {
+    Route::get('/v1/task/downloadpod', 'App\Http\Controllers\Admin\TaskController@downloadPodFile')->name('admin.task.download');
 
     Route::prefix('auth')->group(function () {
         Route::post('/login', 'App\Http\Controllers\Auth\LoginController@login')->name('admin.dev.login');
@@ -38,8 +39,12 @@ Route::prefix('admin')->group(function () {
                 
                 
                 Route::post('/task/create', 'TaskController@create')->name('admin.task.saveTask');
+                Route::post('/task/update', 'TaskController@update')->name('admin.task.update');
+                
                 Route::post('/task/list', 'TaskController@getTaskList')->name('admin.task.list');
                 Route::post('/task/detail', 'TaskController@getTaskDetail')->name('admin.task.detail');
+                // Route::get('/task/downloadpod', 'TaskController@downloadPodFile')->name('admin.task.download');
+                
                 Route::post('/task/updatePendingTask', 'TaskController@updatePendingTask')->name('admin.task.updatePendingTask');
                 Route::post('/task/updatePendingPaymentTasks', 'TaskController@updatePendingPaymentTasks')->name('admin.task.updatePendingPaymentTasks');
                 Route::post('/task/disputeTask', 'TaskController@disputeTask')->name('admin.task.disputeTask');

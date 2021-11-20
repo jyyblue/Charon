@@ -33,7 +33,7 @@ class CustomerController extends Controller
         $page = $request->get('page', 1);
         $skip = ($page - 1) * $pageSize;
         $search = $request->get('search', '');
-    
+        $user_id = $request->get('user_id', 0);
         $all = Customer::where('id', '>', 0);
         if($search != '') {
             $all = Customer::whereRaw('LOWER(`company_name`) LIKE ? ',['%'.trim(strtolower($search)).'%'])

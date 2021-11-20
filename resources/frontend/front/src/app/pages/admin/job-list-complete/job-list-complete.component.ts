@@ -80,9 +80,8 @@ export class JobListCompleteComponent implements OnInit {
     this.update();
   }
 
-  viewProfile(userid) {
-    console.log(userid);
-    this.router.navigate(['admin/job/show', 1]);
+  viewProfile(taskid) {
+    this.router.navigate(['admin/job/show', taskid]);
   }
 
   editPendingTask(taskid) {

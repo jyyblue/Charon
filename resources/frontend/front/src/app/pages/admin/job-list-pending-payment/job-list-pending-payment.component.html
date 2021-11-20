@@ -109,21 +109,14 @@
                     <td class="align-middle"><a href="javascript:void(0)">{{task.profit}}</a></td>
                     <td class="align-middle" [ngStyle]="{background: task._status ? task._status.color : '#fff'}"><a href="javascript:void(0)">{{task._status.name}}</a></td>
                     <td class="text-center text-nowrap align-middle">
-                        <a (click)="editPendingTask(task.id)" class="btn btn-default btn-xs icon-btn md-btn-flat"
+                        <a (click)="editPendingTask(task.id)" class="btn btn-default icon-btn md-btn-flat"
                             ngbTooltip="Edit">
                             <i class="ion ion-md-create"></i>
                         </a>
-                        <div class="btn-group" ngbDropdown [placement]="!isRTL ? 'bottom-right' : 'bottom-left'">
-                            <button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat hide-arrow"
-                                ngbDropdownToggle ngbTooltip="Actions">
-                                <i class="ion ion-ios-settings"></i>
-                            </button>
-                            <div ngbDropdownMenu [class.dropdown-menu-right]="!isRTL">
-                                <a class="dropdown-item" (click)="viewProfile(task.name)">View Task</a>
-                                <a class="dropdown-item" href="javascript:void(0)">Ban task</a>
-                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
-                            </div>
-                        </div>
+                        <a (click)="viewProfile(task.id)" class="btn btn-default icon-btn md-btn-flat"
+                            ngbTooltip="Edit">
+                            <i class="ion ion-md-eye"></i>
+                        </a>
                     </td>
                 </tr>
             </tbody>

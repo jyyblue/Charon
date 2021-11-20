@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/shared/services/api.service';
+import { AuthServiceService } from 'src/app/shared/services/auth-service.service';
 import { NgbDateStruct, NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
@@ -27,9 +28,11 @@ export class JobAddComponent implements OnInit {
   @ViewChild(DropzoneComponent, { static: false }) componentRef?: DropzoneComponent;
   @ViewChild(DropzoneDirective, { static: false }) directiveRef?: DropzoneDirective;
 
-
+  disableDropZone = false;
   dataForm: FormGroup;
-  data: any;
+  data = {
+    pod_file: ''
+  };
 
   customerOptions = [];
   customerLoading = false;
@@ -65,8 +68,9 @@ export class JobAddComponent implements OnInit {
     private calendar: NgbCalendar,
     private toastrService: ToastrService,
     private router: Router,
+    private authService: AuthServiceService,
   ) {
-    const token = "this.authService.getToken()";
+    const token = this.authService.getToken();
     this.dropzoneConfig = {
       url: `${environment.apiUrl}/admin/v1/user/upload`,
       headers: {
@@ -101,12 +105,6 @@ export class JobAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.data = {
-      checkvat: true,
-      checkprice: false,
-      checkbank: true,
-      checkoff: false,
-    }
     this.loadCustomer();
     this.loadDriver();
     this.loadOptions();
@@ -496,8 +494,13 @@ export class JobAddComponent implements OnInit {
     console.log(err);
   }
 
+  onReset(): void {
+    this.directiveRef.reset();
+    this.disableDropZone = false;
+    this.dataForm.patchValue({ 'pod_file': '' });
+  }
   // 
-  changePrice(e) {
+  changePrice() {
     // customer price 
     let c_price = parseFloat(this.f.c_price.value);
     let c_vat = this.f.c_vat.value;

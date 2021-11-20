@@ -91,6 +91,7 @@ export class DriverAddComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.dataForm.invalid) {
+      this.toastrService.error('Enter valid values');
       return;
     }
 

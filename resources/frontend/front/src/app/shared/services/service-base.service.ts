@@ -36,7 +36,7 @@ export class ServiceBase {
       params = {};
     }
     params['auth_token'] = token;
-    let headers = {'Api-Request-Signature': 'mobile-app-request'};
+    let headers = {'Authorization': token};
 
     return this.http
       .get<T>(url, {

@@ -11,15 +11,15 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900" rel="stylesheet">
-
-    <!-- Icon fonts -->
+    
+    <!-- for product -->
+    
     <link rel="stylesheet" href="/assets/angular/assets/vendor/fonts/fontawesome.css">
     <link rel="stylesheet" href="/assets/angular/assets/vendor/fonts/ionicons.css">
     <link rel="stylesheet" href="/assets/angular/assets/vendor/fonts/linearicons.css">
     <link rel="stylesheet" href="/assets/angular/assets/vendor/fonts/open-iconic.css">
     <link rel="stylesheet" href="/assets/angular/assets/vendor/fonts/pe-icon-7-stroke.css">
 
-    <!-- Core stylesheets -->
     <link rel="stylesheet" href="/assets/angular/vendor/styles/bootstrap.css" class="theme-settings-bootstrap-css">
     <link rel="stylesheet" href="/assets/angular/vendor/styles/appwork.css" class="theme-settings-appwork-css">
     <link rel="stylesheet" href="/assets/angular/vendor/styles/theme-corporate.css" class="theme-settings-theme-css">
@@ -29,10 +29,10 @@
     <script src="/assets/angular/assets/vendor/js/material-ripple.js"></script>
     <script src="/assets/angular/assets/vendor/js/layout-helpers.js"></script>
 
-
+    <!-- for product  -->
     <!-- for dev -->
-<!-- 
-    <link rel="stylesheet" href="/assets/vendor/fonts/fontawesome.css">
+
+    <!-- <link rel="stylesheet" href="/assets/vendor/fonts/fontawesome.css">
     <link rel="stylesheet" href="/assets/vendor/fonts/ionicons.css">
     <link rel="stylesheet" href="/assets/vendor/fonts/linearicons.css">
     <link rel="stylesheet" href="/assets/vendor/fonts/open-iconic.css">
@@ -104,5 +104,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.7/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> -->
 
-  <script src="/assets/angular/runtime.d10702d68649bdcac3b0.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.886766c896dbef5ab292.js" defer></script><script src="/assets/angular/main.24bebc4354b52222ae59.js" defer></script></body>
+  <script src="/assets/angular/runtime.e27069b1229d06cae739.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.886766c896dbef5ab292.js" defer></script><script src="/assets/angular/main.faa436091b48886be012.js" defer></script></body>
 </html>
