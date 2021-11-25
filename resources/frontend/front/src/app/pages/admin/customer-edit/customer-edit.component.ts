@@ -109,6 +109,7 @@ export class CustomerEditComponent implements OnInit {
       if(code == 200) {
         let message = res.message;
         this.toastrService.success(message);
+        this.router.navigate(['admin/customer/list']);
       }else{
         let message = res.message;
         this.toastrService.error(message);

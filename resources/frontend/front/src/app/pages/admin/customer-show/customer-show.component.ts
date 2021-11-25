@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from 'src/app/app.service';
 import * as numeral from 'numeral';
+import { ApiService } from 'src/app/shared/services/api.service';
 
 @Component({
   selector: 'app-customer-show',
@@ -17,57 +18,55 @@ export class CustomerShowComponent implements OnInit {
     private appService: AppService,
     private http: HttpClient, 
     private router: Router,
+    private apiService: ApiService,
     private route: ActivatedRoute,
     ) {
     this.appService.pageTitle = 'View user - Pages';
-    this.loadData();
+    // this.loadData();
   }
   ngOnInit(): void {
     this.user_id = this.route.snapshot.params['id'];
+    this.getData();
   }
   userData = {
-    avatar: '5-small.png',
-    name: 'Nelle Maxwell',
-    username: 'nmaxwell',
-    email: 'nmaxwell@mail.com',
-    company: 'Company Ltd.',
-    id: 3425433,
-    registered: '01/23/2017',
-    latestActivity: '01/23/2018',
-    verified: true,
-    role: 1,
-    status: 1,
+    id:null,
+    company_name: null,
+    account_code: null,
+    company_email: null,
+    company_phone: null,
+    company_address: null,
+    company_address2: null,
+    company_city: null,
+    company_state: null,
+    company_postcode: null,
 
-    permissions: [
-      { module: 'Users', read: true, write: false, create: false, delete: false },
-      { module: 'Articles', read: true, write: true, create: true, delete: false },
-      { module: 'Staff', read: false, write: false, create: false, delete: false }
-    ],
+    contact_email: null,
+    contact_name: null,
+    contact_phone: null,
 
-    // Statistics
-    posts: 25,
-    followers: 534,
-    following: 236,
-
-    info: {
-      birthday: 'May 3, 1995',
-      country: 'Canada',
-      languages: ['English'],
-      phone: '+0 (123) 456 7891',
-      website: '',
-      music: ['Rock', 'Alternative', 'Electro', 'Drum & Bass', 'Dance'],
-      movies: [
-        'The Green Mile', 'Pulp Fiction', 'Back to the Future', 'WALL·E',
-        'Django Unchained', 'The Truman Show', 'Home Alone', 'Seven Pounds'
-      ],
-
-      twitter: 'https://twitter.com/user',
-      facebook: 'https://www.facebook.com/user',
-      google: '',
-      linkedin: '',
-      instagram: 'https://www.instagram.com/user'
-    }
+    pod_email: null,
+    pod_name: null,
+    pod_password: null,
+    
+    posts:null,
+    followers: null,
+    following:null,
   };
+  getData() {
+    let params = {
+      'userid': this.user_id,
+    }
+    this.apiService.getCustomerDetail(params).then(res => {
+      let code = res.code;
+      if(code == 200) {
+        this.userData = res.data;
+      }else{
+
+      }
+    }).catch(err => {
+
+    })
+  }
 
   formatInt(v) {
     return numeral(v).format('0,0');
@@ -156,6 +155,6 @@ export class CustomerShowComponent implements OnInit {
   }
 
   editCustomer() {
-    this.router.navigate(['admin/customer/edit', 1]);
+    this.router.navigate(['admin/customer/edit', this.user_id]);
   }
 }

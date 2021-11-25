@@ -119,25 +119,31 @@ export class JobAddComponent implements OnInit {
       c_extra: [0, []],
       c_extra_vat: [null, []],
       c_extra_total: [0, []],
+      c_extra_0: [0, []],
+      c_extra_vat_0: [null, []],
+      c_extra_total_0: [0, []],
       c_net: [0, []],
       c_vat_total: [0,[]],
       c_tprice: [0, Validators.required],
 
-      driver_id: [null, Validators.required],
-      job_ref: [null, Validators.required],
-      call_sign: [null, Validators.required],
-      driver_type: [null, Validators.required],
+      driver_id: [null, []],
+      job_ref: [null, []],
+      call_sign: [null, []],
+      driver_type: [null, []],
       cx_number: [null, []],
       driver_vehicle: [null, []],
-      d_price: [0, Validators.required],
+      d_price: [0, []],
       d_vat: [null, []],
       d_price_total: [0, []],
       d_extra: [0, []],
       d_extra_vat: [null, []],
       d_extra_total: [0, []],
+      d_extra_0: [0, []],
+      d_extra_vat_0: [null, []],
+      d_extra_total_0: [0, []],
       d_net: [0, []],
       d_vat_total: [0,[]],
-      d_tprice: [0, Validators.required],
+      d_tprice: [0, []],
 
       invoice_date: [null, []],
       invoice_received_date: [null, []],
@@ -186,8 +192,11 @@ export class JobAddComponent implements OnInit {
       'c_vat': this.f.c_vat.value,
       'c_price_total': this.f.c_price_total.value,
       'c_extra': this.f.c_extra.value,
-      'c_extra_vat': this.f.c_extra_vat.value,
+      'c_extra_vat': 2,
       'c_extra_total': this.f.c_extra_total.value,
+      'c_extra_0': this.f.c_extra_0.value,
+      'c_extra_vat_0': 1,
+      'c_extra_total_0': this.f.c_extra_total_0.value,
       'c_net': this.f.c_net.value,
       'c_vat_total': this.f.c_vat_total.value,
       'c_tprice': this.f.c_tprice.value,
@@ -203,8 +212,11 @@ export class JobAddComponent implements OnInit {
       'd_vat': this.f.d_vat.value,
       'd_price_total': this.f.d_price_total.value,
       'd_extra': this.f.d_extra.value,
-      'd_extra_vat': this.f.d_extra_vat.value,
+      'd_extra_vat': 2,
       'd_extra_total': this.f.d_extra_total.value,
+      'd_extra_0': this.f.d_extra_0.value,
+      'd_extra_vat_0': 1,
+      'd_extra_total_0': this.f.d_extra_total_0.value,
       'd_net': this.f.d_net.value,
       'd_vat_total': this.f.d_vat_total.value,
       'd_tprice': this.f.d_tprice.value,
@@ -269,25 +281,31 @@ export class JobAddComponent implements OnInit {
       c_extra: [0, []],
       c_extra_vat: [null, []],
       c_extra_total: [0, []],
+      c_extra_0: [0, []],
+      c_extra_vat_0: [null, []],
+      c_extra_total_0: [0, []],
       c_net: [0, []],
       c_vat_total: [0,[]],
       c_tprice: [0, Validators.required],
 
-      driver_id: [null, Validators.required],
-      job_ref: [null, Validators.required],
-      call_sign: [null, Validators.required],
-      driver_type: [null, Validators.required],
+      driver_id: [null, []],
+      job_ref: [null, []],
+      call_sign: [null, []],
+      driver_type: [null, []],
       cx_number: [null, []],
       driver_vehicle: [null, []],
-      d_price: [0, Validators.required],
+      d_price: [0, []],
       d_vat: [null, []],
       d_price_total: [0, []],
       d_extra: [0, []],
       d_extra_vat: [null, []],
       d_extra_total: [0, []],
+      d_extra_0: [0, []],
+      d_extra_vat_0: [null, []],
+      d_extra_total_0: [0, []],
       d_net: [0, []],
       d_vat_total: [0,[]],
-      d_tprice: [0, Validators.required],
+      d_tprice: [0, []],
 
       invoice_date: [null, []],
       invoice_received_date: [null, []],
@@ -504,7 +522,7 @@ export class JobAddComponent implements OnInit {
     // customer price 
     let c_price = parseFloat(this.f.c_price.value);
     let c_vat = this.f.c_vat.value;
-    let c_vat_percent = 0;
+    let c_vat_percent = 0.2;
     if(c_vat == 2) {
       c_vat_percent = 0.2;
     }
@@ -513,22 +531,28 @@ export class JobAddComponent implements OnInit {
     this.f.c_price_total.setValue(c_price_total);
 
     let c_extra = parseFloat(this.f.c_extra.value);
-    let c_extra_vat = this.f.c_extra_vat.value;
-    let c_extra_vat_percent = 0;
-    if(c_extra_vat == 2) {
-      c_extra_vat_percent = 0.2;
-    }
+    let c_extra_vat_percent = 0.2;
+
     let c_extra_vat_price = c_extra_vat_percent * c_extra;
+
+    let c_extra_0 = parseFloat(this.f.c_extra_0.value);
+    let c_extra_vat_percent_0 = 0;
+
+    let c_extra_vat_price_0 = c_extra_vat_percent_0 * c_extra_0;
+
     let c_extra_total = c_extra + c_extra_vat_price;
     this.f.c_extra_total.setValue(c_extra_total);
+
+    let c_extra_total_0 = c_extra_0 + c_extra_vat_price_0;
+    this.f.c_extra_total_0.setValue(c_extra_total_0);
 
     let c_net = c_price + c_extra;
     this.f.c_net.setValue(c_net);
 
-    let c_vat_total = c_vat_price + c_extra_vat_price;
+    let c_vat_total = c_vat_price + c_extra_vat_price + c_extra_vat_price_0;
     this.f.c_vat_total.setValue(c_vat_total);
 
-    let c_tprice = c_price_total + c_extra_total;
+    let c_tprice = c_price_total + c_extra_total + c_extra_total_0;
     this.f.c_tprice.setValue(c_tprice);
 
     // driver price 
@@ -543,24 +567,27 @@ export class JobAddComponent implements OnInit {
     this.f.d_price_total.setValue(d_price_total);
 
     let d_extra = parseFloat(this.f.d_extra.value);
-    let d_extra_vat = this.f.d_extra_vat.value;
-    let d_extra_vat_percent = 0;
-    if(d_extra_vat == 2) {
-      d_extra_vat_percent = 0.2;
-    }
+    let d_extra_vat_percent = 0.2;
+
     let d_extra_vat_price = d_extra_vat_percent * d_extra;
     let d_extra_total = d_extra + d_extra_vat_price;
     this.f.d_extra_total.setValue(d_extra_total);
 
+    let d_extra_0 = parseFloat(this.f.d_extra_0.value);
+    let d_extra_vat_percent_0 = 0;
+
+    let d_extra_vat_price_0 = d_extra_vat_percent_0 * d_extra_0;
+    let d_extra_total_0 = d_extra_0 + d_extra_vat_price_0;
+    this.f.d_extra_total_0.setValue(d_extra_total_0);
+
     let d_net = d_price + d_extra;
     this.f.d_net.setValue(d_net);
 
-    let d_vat_total = d_vat_price + d_extra_vat_price;
+    let d_vat_total = d_vat_price + d_extra_vat_price + d_extra_vat_price_0;
     this.f.d_vat_total.setValue(d_vat_total);
 
-    let d_tprice = d_price_total + d_extra_total;
+    let d_tprice = d_price_total + d_extra_total + d_extra_total_0;
     this.f.d_tprice.setValue(d_tprice);
-
   }
 
   //

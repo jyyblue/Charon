@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { AuthServiceService } from 'src/app/shared/services/auth-service.service';
@@ -70,6 +70,7 @@ export class JobEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthServiceService,
+    private readonly changeDetectorRef: ChangeDetectorRef
   ) {
     const token = this.authService.getToken();
     this.dropzoneConfig = {
@@ -104,7 +105,9 @@ export class JobEditComponent implements OnInit {
         </div>`
     };
   }
-
+  ngAfterViewChecked(): void {
+    this.changeDetectorRef.detectChanges();
+  }
   ngOnInit(): void {
     this.taskid = this.route.snapshot.params['id'];
     this.getJob();
@@ -120,25 +123,31 @@ export class JobEditComponent implements OnInit {
       c_extra: [0, []],
       c_extra_vat: [null, []],
       c_extra_total: [0, []],
+      c_extra_0: [0, []],
+      c_extra_vat_0: [null, []],
+      c_extra_total_0: [0, []],
       c_net: [0, []],
       c_vat_total: [0,[]],
       c_tprice: [0, Validators.required],
 
-      driver_id: [null, Validators.required],
-      job_ref: [null, Validators.required],
-      call_sign: [null, Validators.required],
-      driver_type: [null, Validators.required],
+      driver_id: [null, []],
+      job_ref: [null, []],
+      call_sign: [null, []],
+      driver_type: [null, []],
       cx_number: [null, []],
       driver_vehicle: [null, []],
-      d_price: [0, Validators.required],
+      d_price: [0, []],
       d_vat: [null, []],
       d_price_total: [0, []],
       d_extra: [0, []],
       d_extra_vat: [null, []],
       d_extra_total: [0, []],
+      d_extra_0: [0, []],
+      d_extra_vat_0: [null, []],
+      d_extra_total_0: [0, []],
       d_net: [0, []],
       d_vat_total: [0,[]],
-      d_tprice: [0, Validators.required],
+      d_tprice: [0, []],
 
       invoice_date: [null, []],
       invoice_received_date: [null, []],
@@ -156,28 +165,39 @@ export class JobEditComponent implements OnInit {
     }
     this.apiService.getTaskDetail(params).then(res => {
       let code = res.code;
+      
       if(code == 200) {
         this.data = res.data;
-        let jd = moment(this.data.job_date);
-        let job_date = {
-          year: jd.year(),
-          month: jd.month() + 1,
-          day: jd.date()
-        };
-
-        let iv = moment(this.data.invoice_date);
-        let invoice_date =  {
-          year: iv.year(),
-          month: iv.month() + 1,
-          day: iv.date()
+        let job_date = null;
+        if(this.data.job_date != undefined) {
+          let jd = moment(this.data.job_date);
+          job_date = {
+            year: jd.year(),
+            month: jd.month() + 1,
+            day: jd.date()
+          };
         }
 
-        let ird = moment(this.data.invoice_received_date);
-        let invoice_received_date = {
-          year: ird.year(),
-          month: ird.month() + 1,
-          day: ird.date()
+        let invoice_date = null;
+        if(this.data.invoice_date != undefined) {
+          let iv = moment(this.data.invoice_date);
+          invoice_date =  {
+            year: iv.year(),
+            month: iv.month() + 1,
+            day: iv.date()
+          }
         }
+
+        let invoice_received_date = null;
+        if(this.data.invoice_received_date != undefined) {
+          let ird = moment(this.data.invoice_received_date);
+          invoice_received_date = {
+            year: ird.year(),
+            month: ird.month() + 1,
+            day: ird.date()
+          }
+        }
+
         this.dataForm = this.formBuilder.group({
           customer_id: [this.data.customer_id, Validators.required],
           docket: [ this.data.docket, Validators.required],
@@ -189,25 +209,33 @@ export class JobEditComponent implements OnInit {
           c_extra: [ this.data.c_extra, []],
           c_extra_vat: [ this.data.c_extra_vat, []],
           c_extra_total: [this.data.c_extra_total, []],
+
+          c_extra_0: [ this.data.c_extra_0, []],
+          c_extra_vat_0: [ this.data.c_extra_vat_0, []],
+          c_extra_total_0: [this.data.c_extra_total_0, []],
+
           c_net: [ this.data.c_net, []],
           c_vat_total: [ this.data.c_vat_total,[]],
           c_tprice: [ this.data.c_tprice, Validators.required],
     
-          driver_id: [this.data.driver_id, Validators.required],
-          job_ref: [this.data.job_ref, Validators.required],
-          call_sign: [ this.data.call_sign, Validators.required],
-          driver_type: [ this.data.driver_type, Validators.required],
-          cx_number: [ this.data.driver.cx_number, []],
-          driver_vehicle: [ this.data.driver_vehicle, []],
-          d_price: [ this.data.d_price, Validators.required],
+          driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
+          job_ref: [this.data.job_ref, []],
+          call_sign: [ this.data.call_sign, []],
+          driver_type: [ this.data.driver_type, []],
+          cx_number: [ this.data.driver ?  this.data.driver.cx_number : '', []],
+          driver_vehicle: [ this.data.driver_vehicle ? this.data.driver_vehicle : '', []],
+          d_price: [ this.data.d_price ? this.data.d_price: 0, []],
           d_vat: [ this.data.d_vat, []],
-          d_price_total: [ this.data.d_price_total, []],
-          d_extra: [ this.data.d_extra, []],
+          d_price_total: [ this.data.d_price_total ? this.data.d_price_total : 0, []],
+          d_extra: [ this.data.d_extra ? this.data.d_extra : 0, []],
           d_extra_vat: [ this.data.d_extra_vat, []],
-          d_extra_total: [ this.data.d_extra_total, []],
-          d_net: [ this.data.d_net, []],
-          d_vat_total: [ this.data.d_vat_total,[]],
-          d_tprice: [ this.data.d_tprice, Validators.required],
+          d_extra_total: [ this.data.d_extra_total ? this.data.d_extra_total : 0, []],
+          d_extra_0: [ this.data.d_extra_0 ? this.data.d_extra_0 : 0, []],
+          d_extra_vat_0: [ this.data.d_extra_vat_0, []],
+          d_extra_total_0: [ this.data.d_extra_total_0 ? this.data.d_extra_total_0 : 0, []],
+          d_net: [ this.data.d_net ? this.data.d_net : 0, []],
+          d_vat_total: [ this.data.d_vat_total ? this.data.d_vat_total : 0,[]],
+          d_tprice: [ this.data.d_tprice ? this.data.d_tprice : 0, []],
     
           invoice_date: [invoice_date, []],
           invoice_received_date: [invoice_received_date, []],
@@ -215,6 +243,7 @@ export class JobEditComponent implements OnInit {
           invoice_number: [ this.data.invoice_number, []],
           pod_file: [null, []],
         });
+
         let customer = this.data.customer;
         let dispName = customer.account_code + '-' + customer.company_name;
         customer['dispName'] = dispName;
@@ -223,24 +252,27 @@ export class JobEditComponent implements OnInit {
         ];
 
         let driver = this.data.driver;
-        let ddispName = driver.call_sign + '-' + driver.email;
-        driver['dispName'] = ddispName;
-        this.driverOptions = [
-          driver
-        ];
+        if(driver) {
+          let ddispName = driver.call_sign + '-' + driver.email;
+          driver['dispName'] = ddispName;
+          this.driverOptions = [
+            driver
+          ];
+        }
         this.loadCustomer();
         this.loadDriver();
 
         // load journey
         let distances = this.data.distances;
-        if(distances.length > 0)
-        distances.forEach(item => {
-          let newItem = {
-            'src': item.source,
-            'dst': item.destination,
-          }
-          this.journey.push(newItem);
-        });
+        if(distances.length > 0){
+          distances.forEach(item => {
+            let newItem = {
+              'src': item.source,
+              'dst': item.destination,
+            }
+            this.journey.push(newItem);
+          });
+        }
       }
     }).catch(err => {
 
@@ -250,9 +282,11 @@ export class JobEditComponent implements OnInit {
   updateTask() {
     this.submitted = true;
     if(this.validateJourney()) {
+      console.log('validate journey fail');
       return;
     }
     if(this.dataForm.invalid){
+      console.log('validate form fail');
       return;
     }
     let job_date = this.f.job_date.value; 
@@ -285,8 +319,12 @@ export class JobEditComponent implements OnInit {
       'c_vat': this.f.c_vat.value,
       'c_price_total': this.f.c_price_total.value,
       'c_extra': this.f.c_extra.value,
-      'c_extra_vat': this.f.c_extra_vat.value,
+      'c_extra_vat': 2,
       'c_extra_total': this.f.c_extra_total.value,
+      'c_extra_0': this.f.c_extra_0.value,
+      'c_extra_vat_0': 1,
+      'c_extra_total_0': this.f.c_extra_total_0.value,
+
       'c_net': this.f.c_net.value,
       'c_vat_total': this.f.c_vat_total.value,
       'c_tprice': this.f.c_tprice.value,
@@ -302,8 +340,12 @@ export class JobEditComponent implements OnInit {
       'd_vat': this.f.d_vat.value,
       'd_price_total': this.f.d_price_total.value,
       'd_extra': this.f.d_extra.value,
-      'd_extra_vat': this.f.d_extra_vat.value,
+      'd_extra_vat': 2,
       'd_extra_total': this.f.d_extra_total.value,
+      'd_extra_0': this.f.d_extra_0.value,
+      'd_extra_vat_0': 1,
+      'd_extra_total_0': this.f.d_extra_total_0.value,
+
       'd_net': this.f.d_net.value,
       'd_vat_total': this.f.d_vat_total.value,
       'd_tprice': this.f.d_tprice.value,
@@ -384,7 +426,6 @@ export class JobEditComponent implements OnInit {
     if (item != undefined) {
       this.dataForm
     }
-    console.log(item);
   }
 
   onScrollToEnd() {
@@ -428,7 +469,6 @@ export class JobEditComponent implements OnInit {
       let code = res.code;
       if(code == 200) {
         this.driverOptions = this.driverOptions.concat(res.data);
-        console.log(this.driverOptions);
         this.driverTotal = res.total;
       }
     }).catch(err => {
@@ -490,15 +530,11 @@ export class JobEditComponent implements OnInit {
 
   addJourney() {
     this.journey.push({'src': '', 'dst': ''});
-    console.log(this.journey);
   }
 
   removeJourney() {
-    console.log(this.journey.length);
     if(this.journey.length > 0){
-
       this.journey.splice(this.journey.length -1 , 1);
-      console.log(this.journey);
     }
   }
   /**
@@ -508,7 +544,6 @@ export class JobEditComponent implements OnInit {
   onDateChange(date: NgbDateStruct) {
     let invoice_date: NgbDate = new NgbDate(date.year, date.month, date.day);
     let payment_date = this.calendar.getNext(invoice_date, 'd', 30);
-    console.log(payment_date);
     let pd = payment_date.year + "-" + payment_date.month + "-" + payment_date.day;
     let str = moment(pd).format('YYYY-MM-DD')
     this.dataForm.patchValue({ 'payment_date': str });
@@ -533,16 +568,13 @@ export class JobEditComponent implements OnInit {
   }
 
   onSuccessThumb(data): void {
-    console.log(data);
     const ret = data[1];
     this.dataForm.patchValue({ 'pod_file': ret.filename });
     this.disableDropZone = true;
   }
 
   onErrorThumb(err): void {
-    console.log(err);
     const ret = err[1];
-    console.log(err);
   }
 
   onReset(): void {
@@ -564,22 +596,24 @@ export class JobEditComponent implements OnInit {
     this.f.c_price_total.setValue(c_price_total);
 
     let c_extra = parseFloat(this.f.c_extra.value);
-    let c_extra_vat = this.f.c_extra_vat.value;
-    let c_extra_vat_percent = 0;
-    if(c_extra_vat == 2) {
-      c_extra_vat_percent = 0.2;
-    }
+    let c_extra_vat_percent = 0.2;
     let c_extra_vat_price = c_extra_vat_percent * c_extra;
     let c_extra_total = c_extra + c_extra_vat_price;
     this.f.c_extra_total.setValue(c_extra_total);
 
+    let c_extra_0 = parseFloat(this.f.c_extra_0.value);
+    let c_extra_vat_percent_0 = 0;
+    let c_extra_vat_price_0 = c_extra_vat_percent_0 * c_extra_0;
+    let c_extra_total_0 = c_extra_0 + c_extra_vat_price_0;
+    this.f.c_extra_total_0.setValue(c_extra_total_0);
+
     let c_net = c_price + c_extra;
     this.f.c_net.setValue(c_net);
 
-    let c_vat_total = c_vat_price + c_extra_vat_price;
+    let c_vat_total = c_vat_price + c_extra_vat_price + c_extra_vat_price_0;
     this.f.c_vat_total.setValue(c_vat_total);
 
-    let c_tprice = c_price_total + c_extra_total;
+    let c_tprice = c_price_total + c_extra_total + c_extra_total_0;
     this.f.c_tprice.setValue(c_tprice);
 
     // driver price 
@@ -594,22 +628,25 @@ export class JobEditComponent implements OnInit {
     this.f.d_price_total.setValue(d_price_total);
 
     let d_extra = parseFloat(this.f.d_extra.value);
-    let d_extra_vat = this.f.d_extra_vat.value;
-    let d_extra_vat_percent = 0;
-    if(d_extra_vat == 2) {
-      d_extra_vat_percent = 0.2;
-    }
+    let d_extra_vat_percent = 0.2;
     let d_extra_vat_price = d_extra_vat_percent * d_extra;
     let d_extra_total = d_extra + d_extra_vat_price;
     this.f.d_extra_total.setValue(d_extra_total);
 
+    let d_extra_0 = parseFloat(this.f.d_extra_0.value);
+    let d_extra_vat_percent_0 = 0;
+    let d_extra_vat_price_0 = d_extra_vat_percent_0 * d_extra_0;
+    let d_extra_total_0 = d_extra_0 + d_extra_vat_price_0;
+    this.f.d_extra_total_0.setValue(d_extra_total_0);
+
+
     let d_net = d_price + d_extra;
     this.f.d_net.setValue(d_net);
 
-    let d_vat_total = d_vat_price + d_extra_vat_price;
+    let d_vat_total = d_vat_price + d_extra_vat_price + d_extra_vat_price_0;
     this.f.d_vat_total.setValue(d_vat_total);
 
-    let d_tprice = d_price_total + d_extra_total;
+    let d_tprice = d_price_total + d_extra_total + d_extra_total_0;
     this.f.d_tprice.setValue(d_tprice);
 
   }

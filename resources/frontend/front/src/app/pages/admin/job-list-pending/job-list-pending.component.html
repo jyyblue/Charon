@@ -11,13 +11,12 @@
             <div class="col">
                 Per page: &nbsp;
                 <select [(ngModel)]="perPage" (change)="update()"
-                    class="custom-select custom-select-sm d-inline-block w-auto">
+                    class="form-control custom-select-sm d-inline-block w-auto">
                     <option *ngFor="let limit of [10, 20, 30, 40, 50]">{{limit}}</option>
                 </select>
-            </div>
-            <div class="col">
+
                 <input type="text" [(ngModel)]="filterVal" (input)="currentPage = 1; update()"
-                    class="form-control form-control-sm d-inline-block w-auto float-sm-right" placeholder="Search...">
+                    class="form-control form-control-sm d-inline-block w-auto" placeholder="Search...">
             </div>
         </div>
 
@@ -71,11 +70,11 @@
                 <tr *ngFor="let task of taskData">
                     <td class="align-middle">{{task.docket}}</td>
                     <td class="align-middle">{{ task.customer.account_code }} - {{task.customer.company_name}}</td>
-                    <td class="align-middle">{{ task.driver.call_sign }} - {{task.driver.email}}</td>
+                    <td class="align-middle">{{ task.driver ? task.driver.call_sign: '' }} - {{task.driver?task.driver.email:''}}</td>
                     <td class="align-middle">{{task.invoice_date | date}}</td>
-                    <td class="align-middle"><a href="javascript:void(0)">{{task.invoice_number}}</a></td>
-                    <td class="align-middle"><a href="javascript:void(0)">{{task.d_tprice}}</a></td>
-                    <td class="align-middle"><a href="javascript:void(0)">{{task.profit}}</a></td>
+                    <td class="align-middle">{{task.invoice_number}}</td>
+                    <td class="align-middle">{{task.d_tprice}}</td>
+                    <td class="align-middle">{{task.profit}}</td>
                     <td class="align-middle" [ngStyle]="{background: task._status ? task._status.color : '#fff'}"><a href="javascript:void(0)">{{task._status.name}}</a></td>
                     <td class="text-center text-nowrap align-middle">
                         <a (click)="editPendingTask(task.id)" class="btn btn-default icon-btn md-btn-flat"

@@ -38,16 +38,16 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <!-- <div class="form-group col-md-6">
                             <label class="form-label">Name</label>
                             <input type="text" class="form-control" formControlName="name" name="name"
                                 [ngClass]="{'is-invalid': submitted && f.name.errors }">
                             <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
                                 <div *ngIf="f.name.errors.required">This field is Required</div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group col-md-6">
-                            <label class="form-label">Subcontractor</label>
+                            <label class="form-label">Subcontractor Name</label>
                             <input type="text" class="form-control" formControlName="subcontractor" name="subcontractor"
                                 [ngClass]="{'is-invalid': submitted && f.subcontractor.errors }">
                             <div *ngIf="submitted && f.subcontractor.errors" class="invalid-feedback">
@@ -155,7 +155,7 @@
         <div class="col-md-6">
             <div class="card mb-4">
                 <h6 class="card-header">
-                    Bank Detail
+                    VAT Detail
                 </h6>
                 <div class="card-body">
                     <div class="form-row">
@@ -182,6 +182,13 @@
                             <input type="text" class="form-control" formControlName="vat_number" name="vat_number">
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <h6 class="card-header">
+                    Bank Detail
+                </h6>
+                <div class="card-body">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label class="form-label">Bank Name</label>

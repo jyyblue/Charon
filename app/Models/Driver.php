@@ -51,4 +51,8 @@ class Driver extends Model
     public function user() {
         return $this->hasOne(User::class,'id', 'user_id');
     }
+
+    public function vat_item() {
+        return $this->hasOne( Vat::class, 'id', 'vat');
+    }
 }

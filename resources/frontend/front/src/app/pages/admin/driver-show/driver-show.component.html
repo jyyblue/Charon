@@ -1,7 +1,7 @@
 <div class="media align-items-center py-3 mb-3">
     <div class="media-body ml-4">
-        <h4 class="font-weight-bold mb-0">{{userData.name}} <span
-                class="text-muted font-weight-normal">@{{userData.username}}</span></h4>
+        <h4 class="font-weight-bold mb-0">Driver Detail <span
+                class="text-muted font-weight-normal">@{{userData.subcontractor}}</span></h4>
         <div class="text-muted mb-2">ID: {{userData.id}}</div>
         <a (click)="editDriver()" class="btn btn-primary btn-sm">Edit</a>&nbsp;
         <a href="javascript:void(0)" class="btn btn-default btn-sm icon-btn"><i class="ion ion-md-mail"></i></a>
@@ -33,95 +33,99 @@
             </div>
             <hr class="border-light m-0">
             <div class="card-body">
-                <h6 class="mt-4 mb-3">Personal info</h6>
+                <h6 class="mt-4 mb-3">Personal Information</h6>
 
                 <table class="table user-view-table m-0">
                     <tbody>
                         <tr>
-                            <td>Username:</td>
-                            <td>{{userData.username}}</td>
+                            <td>First Name:</td>
+                            <td>{{userData.first_name }}</td>
                         </tr>
                         <tr>
-                            <td>Name:</td>
-                            <td>{{userData.name}}</td>
+                            <td>Last Name:</td>
+                            <td>{{userData.last_name }}</td>
                         </tr>
                         <tr>
-                            <td>E-mail:</td>
+                            <td>Subcontractor Name:</td>
+                            <td>{{userData.subcontractor}}</td>
+                        </tr>
+                        <tr>
+                            <td>Email:</td>
                             <td>{{userData.email}}</td>
                         </tr>
                         <tr>
+                            <td>Phone Number:</td>
+                            <td>{{userData.phone_number}}</td>
+                        </tr>
+                        
+                        <tr>
                             <td>Call Sign:</td>
-                            <td>{{userData.company}}</td>
+                            <td>{{userData.call_sign}}</td>
                         </tr>
                         <tr>
                             <td>Type:</td>
-                            <td>{{userData.company}}</td>
+                            <td>{{userData.driver_type ? userData.driver_type.name : ''}}</td>
                         </tr>
                         <tr>
                             <td>CX Number:</td>
-                            <td>{{userData.company}}</td>
-                        </tr>
-                        <tr *ngIf="userData.info.country">
-                            <td>Country:</td>
-                            <td>{{userData.info.country}}</td>
-                        </tr>
-                        <tr *ngIf="userData.info.country">
-                            <td>Address:</td>
-                            <td>{{userData.info.country}}</td>
-                        </tr>
-                        <tr *ngIf="userData.info.country">
-                            <td>City:</td>
-                            <td>{{userData.info.country}}</td>
-                        </tr>
-                        <tr *ngIf="userData.info.country">
-                            <td>State:</td>
-                            <td>{{userData.info.country}}</td>
-                        </tr>
-                        <tr *ngIf="userData.info.country">
-                            <td>ZipCode:</td>
-                            <td>{{userData.info.country}}</td>
+                            <td>{{userData.cx_number}}</td>
                         </tr>
                         <tr>
-                            <td>Last Activity:</td>
-                            <td>{{userData.info.country}}</td>
+                            <td>Address:</td>
+                            <td>{{userData.address }} {{ userData.address2 }}</td>
+                        </tr>
+                        <tr>
+                            <td>City:</td>
+                            <td>{{userData.city }}</td>
+                        </tr>
+                        <tr>
+                            <td>State:</td>
+                            <td>{{userData.state}}</td>
+                        </tr>
+                        <tr >
+                            <td>Post Code:</td>
+                            <td>{{userData.postcode}}</td>
                         </tr>
                     </tbody>
                 </table>
-                <h6 class="mt-4 mb-3">Contacts</h6>
+
+                <h6 class="mt-4 mb-3">VAT Detail</h6>
 
                 <table class="table user-view-table m-0">
                     <tbody>
-                        <tr *ngIf="userData.info.phone">
-                            <td>Phone:</td>
-                            <td>{{userData.info.phone}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h6 class="mt-4 mb-3">Bank Information</h6>
-
-                <table class="table user-view-table m-0">
-                    <tbody>
-                        <tr *ngIf="userData.info.twitter">
+                        <tr>
                             <td>VAT:</td>
-                            <td><a href="javascript:void(0)">{{userData.info.twitter}}</a></td>
+                            <td>{{ userData.vat_item? userData.vat_item.name : '' }}</td>
                         </tr>
-                        <tr *ngIf="userData.info.twitter">
+                        <tr *ngIf="userData.vat==2">
                             <td>VAT Number:</td>
-                            <td><a href="javascript:void(0)">{{userData.info.twitter}}</a></td>
+                            <td>{{userData.vat_number}}</td>
                         </tr>
-                        <tr *ngIf="userData.info.facebook">
+
+                    </tbody>
+                </table>
+
+                <h6 class="mt-4 mb-3">Bank Detail</h6>
+
+                <table class="table user-view-table m-0">
+                    <tbody>
+                        <tr>
                             <td>Bank Name:</td>
-                            <td><a href="javascript:void(0)">{{userData.info.facebook}}</a></td>
+                            <td>{{userData.bank_name}}</td>
                         </tr>
-                        <tr *ngIf="userData.info.google">
+                        <tr>
                             <td>Bank Sort Code:</td>
-                            <td><a href="javascript:void(0)">{{userData.info.google}}</a></td>
+                            <td>{{userData.bank_sort_code}}</td>
                         </tr>
-                        <tr *ngIf="userData.info.linkedin">
+                        <tr>
                             <td>Bank Account Number:</td>
-                            <td><a href="javascript:void(0)">{{userData.info.linkedin}}</a></td>
+                            <td>{{userData.bank_account_number}}</td>
                         </tr>
+                        <tr>
+                            <td>Payee Name:</td>
+                            <td>{{userData.payee_name}}</td>
+                        </tr>                        
+                        
                     </tbody>
                 </table>
 
@@ -130,7 +134,9 @@
     </div>
     <div class="col-md-6">
         <div class="card">
-
+            <div class="card-header">
+                <h6 class="mt-4 mb-3">Job</h6>
+            </div>
             <!-- Table controls -->
             <div class="card-body">
 

@@ -48,7 +48,7 @@ class DriverController extends Controller
                 ->orWhereRaw(' LOWER(`email`) LIKE ? ', ['%' . trim(strtolower($search)) . '%']);
         }
         $count = $all->count();
-        $all = $all->select(['*', DB::raw('CONCAT(call_sign, "-", IFNULL(email, "") ) AS dispName')])->skip($skip)->take($pageSize)->get();
+        $all = $all->select(['driver.*', DB::raw('CONCAT(call_sign, "-", IFNULL(email, "") ) AS dispName')])->skip($skip)->take($pageSize)->get();
         $ret['code'] = 200;
         $ret['total'] = $count;
         $ret['data'] = $all;
@@ -81,7 +81,7 @@ class DriverController extends Controller
     public function getDetail(Request $request)
     {
         $userid = $request->get('user_id', '');
-        $user = Driver::with('user')->find($userid);
+        $user = Driver::with(['user', 'driver_type', 'vat_item'])->find($userid);
         $driver_type = DriverType::select([DB::raw('id as value'), DB::raw('name as label')])->get();
         $vat_type = Vat::select([DB::raw('id as value'), DB::raw('name as label')])->get();
         if ($user) {

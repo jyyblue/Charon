@@ -45,8 +45,8 @@
     <link rel="stylesheet" href="/vendor/styles/uikit.css">
 
     <script src="/assets/vendor/js/material-ripple.js"></script>
-    <script src="/assets/vendor/js/layout-helpers.js"></script>
-     -->
+    <script src="/assets/vendor/js/layout-helpers.js"></script> -->
+    
     <!-- for dev -->
     <!-- Theme settings -->
     <!-- This file MUST be included after core stylesheets and layout-helpers.js in the <head> section -->
@@ -104,5 +104,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.7/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> -->
 
-  <script src="/assets/angular/runtime.e27069b1229d06cae739.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.886766c896dbef5ab292.js" defer></script><script src="/assets/angular/main.faa436091b48886be012.js" defer></script></body>
+  <script src="/assets/angular/runtime.3a162285aa20d365c767.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.886766c896dbef5ab292.js" defer></script><script src="/assets/angular/main.faa436091b48886be012.js" defer></script></body>
 </html>

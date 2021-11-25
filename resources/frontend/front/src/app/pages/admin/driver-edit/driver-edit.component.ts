@@ -55,14 +55,14 @@ export class DriverEditComponent implements OnInit {
         this.data = res.data;
         this.dataForm = this.formBuilder.group({
           subcontractor: [this.data.subcontractor, Validators.required],
-          name: [this.data.name, Validators.required],
+          // name: [this.data.name, Validators.required],
           first_name: [this.data.first_name, Validators.required],
           last_name: [this.data.last_name, Validators.required],
           email: [this.data.email, [Validators.required, Validators.email]],
           phone_number: [this.data.phone_number, Validators.required],
           call_sign: [this.data.call_sign, Validators.required],
           type: [this.data.type, Validators.required],
-          cx_number: [this.data.cx_number, Validators.required],
+          cx_number: [this.data.cx_number, []],
           address: [this.data.address, Validators.required],
           address2: [this.data.address2, []],
           city: [this.data.city, Validators.required],
@@ -88,13 +88,14 @@ export class DriverEditComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.dataForm.invalid) {
+      console.log('form invalid');
       return;
     }
 
     let params = {
       'user_id': this.userid,
       'subcontractor':this.f.subcontractor.value,
-      'name': this.f.name.value,
+      // 'name': this.f.name.value,
       'first_name':this.f.first_name.value,
       'last_name': this.f.last_name.value,
       'email': this.f.email.value,
@@ -115,12 +116,12 @@ export class DriverEditComponent implements OnInit {
       'payee_name': this.f.payee_name.value,
     };
 
-    console.log(params);
     this.apiService.updateDriver(params).then(res => {
       let code = res.code;
       if(code == 200) {
         let message = res.message;
         this.toastrService.success(message);
+        this.router.navigate(['admin/driver/list']);
       }else{
         let message = res.message;
         this.toastrService.error(message);

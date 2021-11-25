@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as numeral from 'numeral';
 import { AppService } from 'src/app/app.service';
+import { ApiService } from 'src/app/shared/services/api.service';
 
 @Component({
   selector: 'app-driver-show',
@@ -11,62 +12,63 @@ import { AppService } from 'src/app/app.service';
 })
 export class DriverShowComponent implements OnInit {
 
-  private user_id = null;
+  private userid = null;
   constructor(
     private appService: AppService,
     private http: HttpClient, 
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private apiService: ApiService,
     ) {
     this.appService.pageTitle = 'View Driver - Pages';
-    this.loadData();
+    // this.loadData();
   }
   ngOnInit(): void {
-    this.user_id = this.route.snapshot.params['id'];
+    this.userid = this.route.snapshot.params['id'];
+    this.getData();
   }
   userData = {
-    avatar: '5-small.png',
-    name: 'Nelle Maxwell',
-    username: 'nmaxwell',
-    email: 'nmaxwell@mail.com',
-    company: 'Company Ltd.',
-    id: 3425433,
-    registered: '01/23/2017',
-    latestActivity: '01/23/2018',
-    verified: true,
-    role: 1,
-    status: 1,
-
-    permissions: [
-      { module: 'Users', read: true, write: false, create: false, delete: false },
-      { module: 'Articles', read: true, write: true, create: true, delete: false },
-      { module: 'Staff', read: false, write: false, create: false, delete: false }
-    ],
-
-    // Statistics
-    posts: 25,
-    followers: 534,
-    following: 236,
-
-    info: {
-      birthday: 'May 3, 1995',
-      country: 'Canada',
-      languages: ['English'],
-      phone: '+0 (123) 456 7891',
-      website: '',
-      music: ['Rock', 'Alternative', 'Electro', 'Drum & Bass', 'Dance'],
-      movies: [
-        'The Green Mile', 'Pulp Fiction', 'Back to the Future', 'WALL·E',
-        'Django Unchained', 'The Truman Show', 'Home Alone', 'Seven Pounds'
-      ],
-
-      twitter: 'https://twitter.com/user',
-      facebook: 'https://www.facebook.com/user',
-      google: '',
-      linkedin: '',
-      instagram: 'https://www.instagram.com/user'
-    }
+    id: null,
+    subcontractor: null,
+    first_name:null,
+    last_name: null,
+    email:null,
+    phone_number:null,
+    call_sign:null,
+    type:null,
+    cx_number:null,
+    address: null,
+    address2: null,
+    city: null,
+    state: null,
+    postcode: null,
+    vat: null,
+    vat_number: null,
+    bank_name: null,
+    bank_sort_code: null,
+    bank_account_number: null,
+    payee_name: null,
+    driver_type: null,
+    vat_item: null,
+    posts:null,
+    followers: null,
+    following:null,
   };
+  getData() {
+    let params = {
+      'user_id': this.userid,
+    }
+    this.apiService.getDriverDetail(params).then(res => {
+      let code = res.code;
+      if(code == 200) {
+        // this.typeOptions = res.driver_type;
+        // this.vatOptions = res.vat_type;
+        this.userData = res.data;
+      }
+    }).catch(err => {
+      let status = err.status;
+    });
+  }
 
   formatInt(v) {
     return numeral(v).format('0,0');
@@ -155,6 +157,6 @@ export class DriverShowComponent implements OnInit {
   }
 
   editDriver() {
-    this.router.navigate(['admin/driver/edit', 1]);
+    this.router.navigate(['admin/driver/edit', this.userid]);
   }
 }
