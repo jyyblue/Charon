@@ -114,7 +114,7 @@ export class JobAddComponent implements OnInit {
       job_date: [this.model, Validators.required],
       vehicle_type: [null, Validators.required],
       c_price: [0, Validators.required],
-      c_vat: [null, []],
+      c_vat: [null, [Validators.required]],
       c_price_total: [0, []],
       c_extra: [0, []],
       c_extra_vat: [null, []],
@@ -276,7 +276,7 @@ export class JobAddComponent implements OnInit {
       job_date: [this.model, Validators.required],
       vehicle_type: [null, Validators.required],
       c_price: [0, Validators.required],
-      c_vat: [null, []],
+      c_vat: [null, [Validators.required]],
       c_price_total: [0, []],
       c_extra: [0, []],
       c_extra_vat: [null, []],
@@ -325,7 +325,9 @@ export class JobAddComponent implements OnInit {
   onCheckChange(event) {
     let checked = event.target.checked;
     let id = event.target.id;
-    this.data[id] = checked;
+    // this.data[id] = checked;
+    // this.dataForm[id].setValue(checked);
+    // console.log(this.dataForm[id].getValue());
   }
 
   loadCustomer(key = '') {

@@ -198,3 +198,11 @@ ngb-typeahead-window .dropdown-item {
   flex: 0 1 auto;
   width: 100% !important;
 }
+
+.ng-select.custom .ng-select-container  {            
+  background:#ffc107!important;
+}
+.job-list-table tr:hover{
+  background: #aec7b38c !important; 
+  cursor:pointer
+}

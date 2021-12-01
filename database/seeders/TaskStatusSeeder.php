@@ -18,7 +18,7 @@ class TaskStatusSeeder extends Seeder
         DB::table('task_status')->truncate();
         DB::table('task_status')->insert([
             'name' => 'Pending',
-            'color' => '#ffc107',
+            'color' => '#e37d15',
             'description' => 'when we have loaded it in but waiting for their invoice',
         ]);
         DB::table('task_status')->insert([
@@ -28,7 +28,12 @@ class TaskStatusSeeder extends Seeder
         ]);
         DB::table('task_status')->insert([
             'name' => 'Pending Payment',
-            'color' => '#17a2b8',
+            'color' => '#ffc107',
+            'description' => 'when added driver data and ready to insert invoice data.',
+        ]);
+        DB::table('task_status')->insert([
+            'name' => 'Completed Pending Payment',
+            'color' => '#47a2b8',
             'description' => 'when the invoice has been received and we have completed the process in Charon',
         ]);
         DB::table('task_status')->insert([

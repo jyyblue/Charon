@@ -61,11 +61,10 @@
                         Status<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
-                    <th></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr *ngFor="let task of taskData">
+            <tbody class="job-list-table">
+                <tr *ngFor="let task of taskData" (click)="editTask(task.id)">
                     <td class="align-middle">{{task.docket}}</td>
                     <td class="align-middle">{{task.customer.company_name}}</td>
                     <td class="align-middle">{{task.job_date}}</td>
@@ -74,16 +73,6 @@
                     <td class="align-middle"><a href="javascript:void(0)">{{task.d_tprice}}</a></td>
                     <td class="align-middle"><a href="javascript:void(0)">{{task.profit}}</a></td>
                     <td class="align-middle" [ngStyle]="{background: task._status ? task._status.color : '#fff'}"><a href="javascript:void(0)">{{task._status.name}}</a></td>
-                    <td class="text-center text-nowrap align-middle">
-                        <a (click)="editPendingTask(task.id)" class="btn btn-default icon-btn md-btn-flat"
-                            ngbTooltip="Edit">
-                            <i class="ion ion-md-create"></i>
-                        </a>
-                        <a (click)="viewProfile(task.id)" class="btn btn-default icon-btn md-btn-flat"
-                            ngbTooltip="Edit">
-                            <i class="ion ion-md-eye"></i>
-                        </a>
-                    </td>
                 </tr>
             </tbody>
         </table>

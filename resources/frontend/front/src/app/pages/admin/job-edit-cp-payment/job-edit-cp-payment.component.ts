@@ -7,13 +7,13 @@ import { DropzoneComponent, DropzoneDirective } from 'ngx-dropzone-wrapper';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { AuthServiceService } from 'src/app/shared/services/auth-service.service';
-import { environment } from 'src/environments/environment';
 const now = new Date();
 declare var $: any;
+import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-job-edit-pending-payment',
-  templateUrl: './job-edit-pending-payment.component.html',
+  selector: 'app-job-edit-cp-payment',
+  templateUrl: './job-edit-cp-payment.component.html',
   styles: [
     '.price-table td{ padding: 0px; border:none;}'
   ],
@@ -23,7 +23,7 @@ declare var $: any;
     '../../../../vendor/libs/ngx-dropzone-wrapper/ngx-dropzone-wrapper.scss'
   ]
 })
-export class JobEditPendingPaymentComponent implements OnInit {
+export class JobEditCpPaymentComponent implements OnInit {
   disputeForm: FormGroup;
   submitted2 = false;
 
@@ -66,7 +66,7 @@ export class JobEditPendingPaymentComponent implements OnInit {
   };
   dropzoneConfig = {};
   submitted = false;
-
+  
   constructor(
     private formBuilder: FormBuilder,
     private apiService: ApiService,
@@ -76,7 +76,7 @@ export class JobEditPendingPaymentComponent implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthServiceService,
     private readonly changeDetectorRef: ChangeDetectorRef
-  ) {
+  ) { 
     const token = this.authService.getToken();
     this.dropzoneConfig = {
       url: `${environment.apiUrl}/admin/v1/user/upload`,
@@ -110,10 +110,10 @@ export class JobEditPendingPaymentComponent implements OnInit {
         </div>`
     };
   }
-
   ngAfterViewChecked(): void {
     this.changeDetectorRef.detectChanges();
   }
+
   ngOnInit(): void {
     this.taskid = this.route.snapshot.params['id'];
     this.getJob();
@@ -164,13 +164,16 @@ export class JobEditPendingPaymentComponent implements OnInit {
 
       check_price: [false, [Validators.requiredTrue]],
       check_docket_off: [false, [Validators.requiredTrue]],
-      check_bank: [false, [Validators.requiredTrue]]
+      check_bank: [false, [Validators.requiredTrue]],
+
+      payment_date: [null, [Validators.required]],
+      payment_reference: [null, [Validators.required]],
     });
     this.disputeForm = this.formBuilder.group({
       description: [null, [Validators.required]],
     });
   }
-  
+
   get f(): any { return this.dataForm.controls; }
   get df(): any { return this.disputeForm.controls; }
 
@@ -211,6 +214,16 @@ export class JobEditPendingPaymentComponent implements OnInit {
             year: ird.year(),
             month: ird.month() + 1,
             day: ird.date()
+          }
+        }
+
+        let payment_date = null;
+        if(this.data.payment_date != undefined) {
+          let pd = moment(this.data.payment_date);
+          payment_date = {
+            year: pd.year(),
+            month: pd.month() + 1,
+            day: pd.date()
           }
         }
 
@@ -258,10 +271,13 @@ export class JobEditPendingPaymentComponent implements OnInit {
           invoice_received_date: [invoice_received_date, [Validators.required]],
           target_payment_date: [this.data.target_payment_date, [Validators.required]],
           invoice_number: [ this.data.invoice_number, [Validators.required]],
-          pod_file: [null, [Validators.required]],
-          check_price: [this.data.check_price, [Validators.requiredTrue]],
-          check_docket_off: [this.data.check_docket_off, [Validators.requiredTrue]],
-          check_bank: [this.data.check_bank, [Validators.requiredTrue]]
+          pod_file: [this.data.pod_file, [Validators.required]],
+          check_price: [this.data.check_price == 1 ? true: false, [Validators.requiredTrue]],
+          check_docket_off: [this.data.check_docket_off == 1 ? true : false, [Validators.requiredTrue]],
+          check_bank: [this.data.check_bank == 1 ? true : false, [Validators.requiredTrue]],
+
+          payment_date: [payment_date, [Validators.required]],
+          payment_reference: [this.data.payment_reference, [Validators.required]]
         });
 
         let customer = this.data.customer;
@@ -299,6 +315,7 @@ export class JobEditPendingPaymentComponent implements OnInit {
     });
   }
 
+  
   saveTask() {
     this.submitted = true;
     console.log(this.f.has_pod.value, '-pod value');
@@ -328,6 +345,11 @@ export class JobEditPendingPaymentComponent implements OnInit {
       invoiceReceivedDate = invoice_received_date.year + "-" + invoice_received_date.month + "-" + invoice_received_date.day;
     }
 
+    let payment_date = this.f.payment_date.value;
+    let paymentDate = '';
+    if(payment_date != undefined) {
+      paymentDate = payment_date.year + "-" + payment_date.month + "-" + payment_date.day;
+    }
     let params = {
       'id': this.taskid,
       'docket': this.f.docket.value,
@@ -376,10 +398,13 @@ export class JobEditPendingPaymentComponent implements OnInit {
       'invoice_number': this.f.invoice_number.value,
       'pod_file': this.f.pod_file.value,
       'journey': this.journey,
-      'status': 'cp_payment',
+      'status': 'completed',
       'check_price': this.f.check_price.value,
       'check_docket_off': this.f.check_docket_off.value,
       'check_bank': this.f.check_bank.value,
+
+      'payment_date': paymentDate,
+      'payment_reference': this.f.payment_reference.value,
     }
 
     this.apiService.updateTask(params).then(res => {

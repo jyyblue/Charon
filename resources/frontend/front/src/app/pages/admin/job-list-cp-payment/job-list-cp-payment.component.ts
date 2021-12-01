@@ -10,12 +10,12 @@ const now = new Date();
 declare var $: any;
 import { common as Const } from 'src/app/shared/const/common';
 @Component({
-  selector: 'app-job-list-pending-payment',
-  templateUrl: './job-list-pending-payment.component.html',
+  selector: 'app-job-list-cp-payment',
+  templateUrl: './job-list-cp-payment.component.html',
   styles: [
   ]
 })
-export class JobListPendingPaymentComponent implements OnInit {
+export class JobListCpPaymentComponent implements OnInit {
   // Filters
 
   filterDriver = '0';
@@ -80,7 +80,7 @@ export class JobListPendingPaymentComponent implements OnInit {
       'page': this.currentPage,
       'pagesize': this.perPage,
       'driverid': this.filterDriver,
-      'status': 3
+      'status': 4
     };
     this.apiService.getTaskList(params).then((res) => {
       this.taskData = res.data;
@@ -117,7 +117,7 @@ export class JobListPendingPaymentComponent implements OnInit {
   }
 
   editTask(taskid) {
-    this.router.navigate(['admin/job/edit', taskid, Const.PREV_PAGE.PAYMENT_PENDING]);
+    this.router.navigate(['admin/job/edit', taskid, Const.PREV_PAGE.COMPLRETED_PAYMENT_PENDING]);
   }
 
   onSelectAll(e) {

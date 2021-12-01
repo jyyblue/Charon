@@ -1,38 +1,42 @@
-import { Component, OnInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbCalendar, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import * as moment from 'moment';
+import { DropzoneComponent, DropzoneDirective } from 'ngx-dropzone-wrapper';
+import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { AuthServiceService } from 'src/app/shared/services/auth-service.service';
-import { NgbDateStruct, NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
-import { environment } from 'src/environments/environment';
-import * as moment from 'moment';
-import { ToastrService } from 'ngx-toastr';
-import { Router, ActivatedRoute } from '@angular/router';
-import { ViewChild } from '@angular/core';
-import { DropzoneComponent, DropzoneDirective } from 'ngx-dropzone-wrapper';
 const now = new Date();
 declare var $: any;
+import { environment } from 'src/environments/environment';
+import { common as Const } from 'src/app/shared/const/common';
 
 @Component({
   selector: 'app-job-edit',
   templateUrl: './job-edit.component.html',
-  styles: [
-    '.price-table td{ padding: 0px; border:none;}'
-  ],
+
   styleUrls: [
+    './job-edit.component.scss',
     '../../../../vendor/libs/ng-select/ng-select.scss',
     '../../../../vendor/libs/ngb-datepicker/ngb-datepicker.scss',
     '../../../../vendor/libs/ngx-dropzone-wrapper/ngx-dropzone-wrapper.scss'
   ]
 })
 export class JobEditComponent implements OnInit {
+  disputeForm: FormGroup;
+  submitted2 = false;
+
+
   @ViewChild(DropzoneComponent, { static: false }) componentRef?: DropzoneComponent;
   @ViewChild(DropzoneDirective, { static: false }) directiveRef?: DropzoneDirective;
 
   downloadurl = `${environment.apiUrl}/admin/v1/task/downloadpod`;
   disableDropZone = false;
-  taskid;
+  taskid: string;
+  previoustPage: string;
   dataForm: FormGroup;
-  data = null;
+  data: any =  {};
 
   customerOptions = [];
   customerLoading = false;
@@ -43,6 +47,7 @@ export class JobEditComponent implements OnInit {
   driverLoading = false;
   driverPage = 1;
   driverTotal = 0;
+  driver: any = {}
 
   vehicleOptions = [];
   vehicleLoading = false;
@@ -62,6 +67,7 @@ export class JobEditComponent implements OnInit {
   };
   dropzoneConfig = {};
   submitted = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private apiService: ApiService,
@@ -71,7 +77,7 @@ export class JobEditComponent implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthServiceService,
     private readonly changeDetectorRef: ChangeDetectorRef
-  ) {
+  ) { 
     const token = this.authService.getToken();
     this.dropzoneConfig = {
       url: `${environment.apiUrl}/admin/v1/user/upload`,
@@ -108,8 +114,10 @@ export class JobEditComponent implements OnInit {
   ngAfterViewChecked(): void {
     this.changeDetectorRef.detectChanges();
   }
+
   ngOnInit(): void {
     this.taskid = this.route.snapshot.params['id'];
+    this.previoustPage = this.route.snapshot.params['prePage'];
     this.getJob();
     this.loadOptions();
     this.dataForm = this.formBuilder.group({
@@ -117,8 +125,8 @@ export class JobEditComponent implements OnInit {
       docket: ['', Validators.required],
       job_date: [this.model, Validators.required],
       vehicle_type: [null, Validators.required],
-      c_price: [0, Validators.required],
-      c_vat: [null, []],
+      c_price: [0, []],
+      c_vat: [null, [Validators.required]],
       c_price_total: [0, []],
       c_extra: [0, []],
       c_extra_vat: [null, []],
@@ -129,13 +137,14 @@ export class JobEditComponent implements OnInit {
       c_net: [0, []],
       c_vat_total: [0,[]],
       c_tprice: [0, Validators.required],
+      has_pod: [false, []],
 
-      driver_id: [null, []],
-      job_ref: [null, []],
-      call_sign: [null, []],
-      driver_type: [null, []],
+      driver_id: [null, [Validators.required]],
+      job_ref: [null, [Validators.required]],
+      call_sign: [null, [Validators.required]],
+      driver_type: [null, [Validators.required]],
       cx_number: [null, []],
-      driver_vehicle: [null, []],
+      driver_vehicle: [null, [Validators.required]],
       d_price: [0, []],
       d_vat: [null, []],
       d_price_total: [0, []],
@@ -147,17 +156,28 @@ export class JobEditComponent implements OnInit {
       d_extra_total_0: [0, []],
       d_net: [0, []],
       d_vat_total: [0,[]],
-      d_tprice: [0, []],
+      d_tprice: [0, [Validators.min(1)]],
 
-      invoice_date: [null, []],
-      invoice_received_date: [null, []],
-      payment_date: [null, []],
-      invoice_number: [null, []],
-      pod_file: [null, []],
+      invoice_date: [null, [Validators.required]],
+      invoice_received_date: [null, [Validators.required]],
+      target_payment_date: [null, [Validators.required]],
+      invoice_number: [null, [Validators.required]],
+      pod_file: [null, [Validators.required]],
+
+      check_price: [false, [Validators.requiredTrue]],
+      check_docket_off: [false, [Validators.requiredTrue]],
+      check_bank: [false, [Validators.requiredTrue]],
+
+      payment_date: [null, [Validators.required]],
+      payment_reference: [null, [Validators.required]],
+    });
+    this.disputeForm = this.formBuilder.group({
+      description: [null, [Validators.required]],
     });
   }
-  
+
   get f(): any { return this.dataForm.controls; }
+  get df(): any { return this.disputeForm.controls; }
 
   getJob() {
     let params = {
@@ -168,6 +188,7 @@ export class JobEditComponent implements OnInit {
       
       if(code == 200) {
         this.data = res.data;
+        this.driver = this.data.driver;
         let job_date = null;
         if(this.data.job_date != undefined) {
           let jd = moment(this.data.job_date);
@@ -198,13 +219,23 @@ export class JobEditComponent implements OnInit {
           }
         }
 
+        let payment_date = null;
+        if(this.data.payment_date != undefined) {
+          let pd = moment(this.data.payment_date);
+          payment_date = {
+            year: pd.year(),
+            month: pd.month() + 1,
+            day: pd.date()
+          }
+        }
+
         this.dataForm = this.formBuilder.group({
           customer_id: [this.data.customer_id, Validators.required],
           docket: [ this.data.docket, Validators.required],
           job_date: [job_date, Validators.required],
           vehicle_type: [this.data.vehicle_type, Validators.required],
           c_price: [this.data.c_price, Validators.required],
-          c_vat: [this.data.c_vat, []],
+          c_vat: [this.data.c_vat, [Validators.required]],
           c_price_total: [ this.data.c_price_total, []],
           c_extra: [ this.data.c_extra, []],
           c_extra_vat: [ this.data.c_extra_vat, []],
@@ -217,7 +248,8 @@ export class JobEditComponent implements OnInit {
           c_net: [ this.data.c_net, []],
           c_vat_total: [ this.data.c_vat_total,[]],
           c_tprice: [ this.data.c_tprice, Validators.required],
-    
+          has_pod: [this.data.has_pod, []],
+
           driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
           job_ref: [this.data.job_ref, []],
           call_sign: [ this.data.call_sign, []],
@@ -239,9 +271,15 @@ export class JobEditComponent implements OnInit {
     
           invoice_date: [invoice_date, []],
           invoice_received_date: [invoice_received_date, []],
-          payment_date: [this.data.payment_date, []],
+          target_payment_date: [this.data.target_payment_date, []],
           invoice_number: [ this.data.invoice_number, []],
-          pod_file: [null, []],
+          pod_file: [this.data.pod_file, []],
+          check_price: [this.data.check_price == 1 ? true: false, []],
+          check_docket_off: [this.data.check_docket_off == 1 ? true : false, []],
+          check_bank: [this.data.check_bank == 1 ? true : false, []],
+
+          payment_date: [payment_date, []],
+          payment_reference: [this.data.payment_reference, []]
         });
 
         let customer = this.data.customer;
@@ -264,6 +302,7 @@ export class JobEditComponent implements OnInit {
 
         // load journey
         let distances = this.data.distances;
+        this.journey = [];
         if(distances.length > 0){
           distances.forEach(item => {
             let newItem = {
@@ -279,8 +318,10 @@ export class JobEditComponent implements OnInit {
     });
   }
 
-  updateTask() {
+  
+  saveTask() {
     this.submitted = true;
+    console.log(this.f.has_pod.value, '-pod value');
     if(this.validateJourney()) {
       console.log('validate journey fail');
       return;
@@ -307,7 +348,11 @@ export class JobEditComponent implements OnInit {
       invoiceReceivedDate = invoice_received_date.year + "-" + invoice_received_date.month + "-" + invoice_received_date.day;
     }
 
-
+    let payment_date = this.f.payment_date.value;
+    let paymentDate = '';
+    if(payment_date != undefined) {
+      paymentDate = payment_date.year + "-" + payment_date.month + "-" + payment_date.day;
+    }
     let params = {
       'id': this.taskid,
       'docket': this.f.docket.value,
@@ -328,7 +373,7 @@ export class JobEditComponent implements OnInit {
       'c_net': this.f.c_net.value,
       'c_vat_total': this.f.c_vat_total.value,
       'c_tprice': this.f.c_tprice.value,
-
+      'has_pod': this.f.has_pod.value,
       'driver_id': this.f.driver_id.value,
       'job_ref': this.f.job_ref.value,
       'call_sign': this.f.call_sign.value,
@@ -352,28 +397,102 @@ export class JobEditComponent implements OnInit {
 
       'invoice_date': invoiceDate,
       'invoice_received_date': invoiceReceivedDate,
-      'payment_date': this.f.payment_date.value,
+      'target_payment_date': this.f.target_payment_date.value,
       'invoice_number': this.f.invoice_number.value,
       'pod_file': this.f.pod_file.value,
-      'journey': this.journey
-    }
-    this.apiService.updateTask(params).then(res => {
-      let code = res.code;
-      if(code == 200 ) {
-        this.toastrService.success('Updated Successfully!');
-        this.onGoJobList();
-      }else{
-        let msg = res.msg;
-        this.toastrService.warning(msg, 'Warning', {
-          timeOut: 2000,
-        })
-      }
-    }).catch(err => {
+      'journey': this.journey,
+      'status': 'completed',
+      'check_price': this.f.check_price.value,
+      'check_docket_off': this.f.check_docket_off.value,
+      'check_bank': this.f.check_bank.value,
 
+      'payment_date': paymentDate,
+      'payment_reference': this.f.payment_reference.value,
+    }
+
+    this.apiService.updateTaskAuto(params).then(res => {
+      let code = res.code;
+      if(code == 200) {
+        this.toastrService.success('Job updated successfully!', 'Success', {
+          timeOut: 1500,
+        });
+        // this.onGoJobList();
+        this.getJob();
+        this.showConfirmModal();
+      }else{
+        let message = res.msg;
+        this.toastrService.error(message, 'Error', {
+          timeOut: 1500,
+        });
+      }
     })
   }
 
+  showConfirmModal() {
+    $('#confirmModal').modal('show');
+  }
+  onGoJobList() {
+    switch (this.previoustPage) {
+      case Const.PREV_PAGE.ALL:
+        this.router.navigate(['admin/job/list']);
+        break;
+      case Const.PREV_PAGE.PENDING:
+        this.router.navigate(['admin/job/list-pending']);
+        break;
+      case Const.PREV_PAGE.PAYMENT_PENDING:
+        this.router.navigate(['admin/job/list-pending-payment']);
+        break;
+      case Const.PREV_PAGE.COMPLRETED_PAYMENT_PENDING:
+        this.router.navigate(['admin/job/list-cp-payment']);
+        break;
+      case Const.PREV_PAGE.COMPLETED:
+        this.router.navigate(['admin/job/list-complete']);
+        break;
+      case Const.PREV_PAGE.QUERY:
+        this.router.navigate(['admin/job/list-query']);
+        break;
+      default:
+        this.router.navigate(['admin/job/list']);
+        break;
+    }
+    $('#confirmModal').modal('hide');
+  }
+  stayHere() {
+    $('#confirmModal').modal('hide');
+  }
+  disputeTask() {
+    this.submitted2 = true;
+    // stop here if form is invalid
+    if (this.disputeForm.invalid) {
+      return;
+    }
+    
+    let params = {
+      'taskid': this.taskid,
+      'description': this.df.description.value
+    };
+    this.apiService.disputeTask(params).then(res => {
+      let code = res.code;
+      if(code == 200) {
+        this.toastrService.warning('Dispute Job!', 'Success', {
+          timeOut: 1500,
+        });
+        $('#disputeModal').modal('hide');
+        this.getJob();
+      }else{
+        this.toastrService.error('Something wrong!', 'Error', {
+          timeOut: 1500,
+        });
+      }
+    });
+  }
 
+  onDisputeClose() {
+    this.df.description.setValue('');
+    $('#disputeModal').modal('hide');
+  }
+
+  
   validateJourney() {
     if(this.journey.length == 0) {
       this.journeyError = true;
@@ -391,15 +510,25 @@ export class JobEditComponent implements OnInit {
     return false;
   }
 
-  onGoJobList() {
-    this.router.navigate(['admin/job/list']);
-    $('#confirmModal').modal('hide');
-  }
-
   onCheckChange(event) {
     let checked = event.target.checked;
     let id = event.target.id;
-    this.data[id] = checked;
+    switch (id) {
+      case 'has_pod':
+        this.dataForm.patchValue({ 'has_pod': checked });
+        break;
+      case 'check_price':
+        this.dataForm.patchValue({'check_price': checked});
+        break;
+      case 'check_docket_off':
+        this.dataForm.patchValue({'check_docket_off': checked});
+        break;
+      case 'check_bank':
+        this.dataForm.patchValue({'check_bank': checked});
+        break;
+      default:
+        break;
+    }
   }
 
   loadCustomer(key = '') {
@@ -489,6 +618,10 @@ export class JobEditComponent implements OnInit {
     }
   }
 
+  showBankDetail(item) {
+    this.driver = item;
+  }
+
   onScrollToEndDriver() {
     if(this.driverOptions.length < this.driverTotal) {
       this.driverPage++;
@@ -543,10 +676,10 @@ export class JobEditComponent implements OnInit {
    */
   onDateChange(date: NgbDateStruct) {
     let invoice_date: NgbDate = new NgbDate(date.year, date.month, date.day);
-    let payment_date = this.calendar.getNext(invoice_date, 'd', 30);
-    let pd = payment_date.year + "-" + payment_date.month + "-" + payment_date.day;
+    let target_payment_date = this.calendar.getNext(invoice_date, 'd', 30);
+    let pd = target_payment_date.year + "-" + target_payment_date.month + "-" + target_payment_date.day;
     let str = moment(pd).format('YYYY-MM-DD')
-    this.dataForm.patchValue({ 'payment_date': str });
+    this.dataForm.patchValue({ 'target_payment_date': str });
   }
 
   /**

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as numeral from 'numeral';
 import { AppService } from 'src/app/app.service';
 import { ApiService } from 'src/app/shared/services/api.service';
+import { common as Const } from 'src/app/shared/const/common';
 
 @Component({
   selector: 'app-driver-show',
@@ -21,11 +22,11 @@ export class DriverShowComponent implements OnInit {
     private apiService: ApiService,
     ) {
     this.appService.pageTitle = 'View Driver - Pages';
-    // this.loadData();
   }
   ngOnInit(): void {
     this.userid = this.route.snapshot.params['id'];
     this.getData();
+    this.loadData();
   }
   userData = {
     id: null,
@@ -87,29 +88,29 @@ export class DriverShowComponent implements OnInit {
   filterVal = '';
   currentPage = 1;
   totalItems = 0;
-
-  usersList: object[] = [];
+  taskData: object[] = [];
   originalUsersData: object[] = [];
 
   loadData() {
-    this.http.get(this.dataUrl)
-      .subscribe((data: any) => {
-        this.originalUsersData = data.slice(0);
-        this.update();
-      });
-  }
+    let params = {
+      'page': this.currentPage,
+      'pagesize': this.perPage,
+      'driverid': this.userid,
+    };
+    this.apiService.getTaskList(params).then((res) => {
+      this.taskData = res.data;
+      this.totalItems = res.total;
+    }).catch((err) => {
 
+    });
+  }
   get totalPages() {
     return Math.ceil(this.totalItems / this.perPage);
   }
 
   update() {
-    const data = this.filter(this.originalUsersData);
-
-    this.totalItems = data.length;
-
-    this.sort(data);
-    this.usersList = this.paginate(data);
+    console.log(this.currentPage);
+    this.loadData();
   }
 
   filter(data) {
@@ -158,5 +159,9 @@ export class DriverShowComponent implements OnInit {
 
   editDriver() {
     this.router.navigate(['admin/driver/edit', this.userid]);
+  }
+
+  editTask(taskid) {
+    this.router.navigate(['admin/job/edit', taskid, Const.PREV_PAGE.ALL]);
   }
 }

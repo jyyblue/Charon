@@ -20,7 +20,6 @@ import { JobListComponent } from './job-list/job-list.component';
 import { JobAddComponent } from './job-add/job-add.component';
 import { JobImportComponent } from './job-import/job-import.component';
 import { JobEditComponent } from './job-edit/job-edit.component';
-import { JobShowComponent } from './job-show/job-show.component';
 import { CustomerShowComponent } from './customer-show/customer-show.component';
 import { DriverShowComponent } from './driver-show/driver-show.component';
 import { CustomDaterangePicker2Component } from './custom-daterange-picker/custom-daterange-picker.component';
@@ -34,6 +33,8 @@ import { JobListPendingComponent } from './job-list-pending/job-list-pending.com
 import { JobEditPendingComponent } from './job-edit-pending/job-edit-pending.component';
 import { JobEditPendingPaymentComponent } from './job-edit-pending-payment/job-edit-pending-payment.component';
 import { JobEditQueryComponent } from './job-edit-query/job-edit-query.component';
+import { JobListCpPaymentComponent } from './job-list-cp-payment/job-list-cp-payment.component';
+import { JobEditCpPaymentComponent } from './job-edit-cp-payment/job-edit-cp-payment.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,6 @@ import { JobEditQueryComponent } from './job-edit-query/job-edit-query.component
     JobAddComponent,
     JobImportComponent,
     JobEditComponent,
-    JobShowComponent,
     JobListCompleteComponent,
     JobListPendingPaymentComponent,
     JobListQueryComponent,
@@ -59,6 +59,8 @@ import { JobEditQueryComponent } from './job-edit-query/job-edit-query.component
     JobEditPendingComponent,
     JobEditPendingPaymentComponent,
     JobEditQueryComponent,
+    JobListCpPaymentComponent,
+    JobEditCpPaymentComponent,
   ],
   imports: [
     CommonModule,

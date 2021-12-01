@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppService } from 'src/app/app.service';
 import { ApiService } from 'src/app/shared/services/api.service';
-
+import { common as Const } from 'src/app/shared/const/common';
 @Component({
   selector: 'app-job-list-pending',
   templateUrl: './job-list-pending.component.html',
@@ -80,12 +80,7 @@ export class JobListPendingComponent implements OnInit {
     this.update();
   }
 
-  viewProfile(userid) {
-    console.log(userid);
-    this.router.navigate(['admin/job/show', 1]);
-  }
-
-  editPendingTask(taskid) {
-    this.router.navigate(['admin/job/edit-pending', taskid]);
+  editTask(taskid) {
+    this.router.navigate(['admin/job/edit', taskid, Const.PREV_PAGE.PENDING]);
   }
 }

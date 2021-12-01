@@ -57,7 +57,11 @@ class Task extends Model
         'status',
         'profit',
         'created_at', 
-        'updated_at'
+        'updated_at',
+        'has_pod',
+        'check_price',
+        'check_docket_off',
+        'check_bank'
     ];
 
      /**

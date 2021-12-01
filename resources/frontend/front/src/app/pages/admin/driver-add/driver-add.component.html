@@ -12,24 +12,7 @@
                     Personal Information
                 </h6>
                 <div class="card-body">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label class="form-label">First Name</label>
-                            <input type="text" class="form-control" formControlName="first_name" name="first_name"
-                                [ngClass]="{'is-invalid': submitted && f.first_name.errors }">
-                            <div *ngIf="submitted && f.first_name.errors" class="invalid-feedback">
-                                <div *ngIf="f.first_name.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label class="form-label">Last Name</label>
-                            <input type="text" class="form-control" formControlName="last_name" name="last_name"
-                                [ngClass]="{'is-invalid': submitted && f.last_name.errors }">
-                            <div *ngIf="submitted && f.last_name.errors" class="invalid-feedback">
-                                <div *ngIf="f.last_name.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="form-row">
                         <!-- <div class="form-group col-md-6">
                             <label class="form-label">Name</label>
@@ -45,6 +28,24 @@
                                 [ngClass]="{'is-invalid': submitted && f.subcontractor.errors }">
                             <div *ngIf="submitted && f.subcontractor.errors" class="invalid-feedback">
                                 <div *ngIf="f.subcontractor.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" formControlName="first_name" name="first_name"
+                                [ngClass]="{'is-invalid': submitted && f.first_name.errors }">
+                            <div *ngIf="submitted && f.first_name.errors" class="invalid-feedback">
+                                <div *ngIf="f.first_name.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control" formControlName="last_name" name="last_name"
+                                [ngClass]="{'is-invalid': submitted && f.last_name.errors }">
+                            <div *ngIf="submitted && f.last_name.errors" class="invalid-feedback">
+                                <div *ngIf="f.last_name.errors.required">This field is Required</div>
                             </div>
                         </div>
                     </div>

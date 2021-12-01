@@ -1,9 +1,7 @@
 <h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
-    <div>Edit Job</div>
+    <div>Complete Pending Payment Job</div>
+    
 </h4>
-<button type="button" (click)="saveTask()" class="btn btn-primary rounded-pill d-block btn-float"><span class="ion ion-md-add"></span>&nbsp; Update
-    Job</button>
-
 <div class="row">
     <div class="col-6">
         <label class=""><strong>Docket: {{ data.docket }}</strong></label>
@@ -17,19 +15,17 @@
     <div class="col">
         <div class="card mb-4">
             <h6 class="card-header">
+                Completed Pending Payment => Completed
                 <button *ngIf="data._status != null && data._status.id != 2" class="btn btn-danger float-right" data-toggle="modal" data-target="#disputeModal">Dispute</button>
             </h6>
             <div class="card-body">
                 <form [formGroup]="dataForm">
-                    <div class="form-row" *ngIf="data._status != null && data._status.id >= 4">
-                        <!-- completed pending payment -->
+                    <div class="form-row">
                         <div class="form-group col-md-4">
                             <label class="form-label">Payment Date</label>
-                            <div class="input-group" [ngClass]="{'is-invalid': submitted && f.payment_date.errors}">
+                            <div class="input-group" [ngClass]="{'is-invalid': submitted && f.payment_date.errors }">
                                 <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
-                                    formControlName="payment_date" name="payment_date" #d2="ngbDatepicker" readonly
-                                    [ngClass]="{'bg-warning' : data._status != null && data._status.id == 4}"
-                                    >
+                                    formControlName="payment_date" name="payment_date" #d2="ngbDatepicker" readonly>
                                 <div class="input-group-append">
                                     <button class="input-group-text" (click)="d2.toggle()" type="button">
                                         <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
@@ -44,13 +40,16 @@
                         <div class="form-group col-md-4">
                             <label class="form-label">Payment Reference</label>
                             <input type="text" class="form-control" formControlName="payment_reference"
-                                name="payment_reference" [ngClass]="{'is-invalid': submitted && f.payment_reference.errors , 'bg-warning' : data._status != null && data._status.id == 4}">
+                                name="payment_reference" [ngClass]="{'is-invalid': submitted && f.payment_reference.errors }">
                             <div *ngIf="submitted && f.payment_reference.errors" class="invalid-feedback">
                               <div *ngIf="f.payment_reference.errors.required">This field is Required</div>
                             </div>
                         </div>
                     </div>
                 </form>
+                <button type="button" class="btn btn-primary rounded-pill d-block float-right" (click)="saveTask()"><span
+                    class="ion ion-md-add"></span>&nbsp; Update
+                Job</button>
             </div>
         </div>
     </div>
@@ -415,7 +414,7 @@
                             <label class="form-label">Driver<span class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <ng-select [items]="driverOptions" bindLabel="dispName" bindValue="id"
                                 [loading]="driverLoading" formControlName="driver_id" name="driver_id"
-                                [ngClass]="{'is-invalid' : submitted && f.driver_id.errors, 'custom' : data._status != null && data._status.id == 1  }"
+                                [ngClass]="{'is-invalid' : submitted && f.driver_id.errors }"
                                 (change)="changeDriver($event)" [virtualScroll]="true"
                                 (scrollToEnd)="onScrollToEndDriver()" (search)="driverSearchFn($event)"
                                 (open)="driverOpen($event)">
@@ -434,17 +433,17 @@
                         <div class="form-group col-md">
                             <label class="form-label">Call Sign<span class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <input type="text" class="form-control" formControlName="call_sign" name="call_sign"
-                                [ngClass]="{'is-invalid' : submitted && f.call_sign.errors , 'bg-warning' : data._status != null && data._status.id == 1}">
+                                [ngClass]="{'is-invalid' : submitted && f.call_sign.errors }">
                             <div *ngIf="f.call_sign.errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f.call_sign.errors.required">This field is Required</div>
                             </div>
                         </div>
 
                         <div class="form-group col-md">
-                            <label class="form-label">Type</label>
+                            <label class="form-label">Type<span class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <ng-select [items]="typeOptions" bindLabel="label" bindValue="value"
                                 formControlName="driver_type" placeholder="Select Type"
-                                [ngClass]="{'is-invalid' : submitted && f.driver_type.errors, 'custom' : data._status != null && data._status.id == 1}">
+                                [ngClass]="{'is-invalid' : submitted && f.driver_type.errors }">
                                 <ng-template ng-label-tmp let-item="item">
                                     <span class="ng-value-label">{{item['label']}}</span>
                                 </ng-template>
@@ -458,17 +457,15 @@
                             </div>
                         </div>
                         <div class="form-group col-md" *ngIf="f.driver_type.value==1">
-                            <label class="form-label">CX Number</label>
-                            <input type="text" class="form-control" formControlName="cx_number" name="cx_number"
-                            [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }"
-                            >
+                            <label class="form-label">CX Number<span class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
+                            <input type="text" class="form-control" formControlName="cx_number" name="cx_number">
                         </div>
 
                         <div class="form-group col-md">
                             <label class="form-label">Vehicle Size<span class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <ng-select [items]="vehicleOptions" bindLabel="label" bindValue="value"
                                 formControlName="driver_vehicle" placeholder="Select Type"
-                                [ngClass]="{'is-invalid' : submitted && f.driver_vehicle.errors , 'custom' : data._status != null && data._status.id == 1}">
+                                [ngClass]="{'is-invalid' : submitted && f.driver_vehicle.errors }">
                                 <ng-template ng-label-tmp let-item="item">
                                     <span class="ng-value-label">{{item['label']}}</span>
                                 </ng-template>
@@ -487,7 +484,7 @@
                         <div class="form-group col-md">
                             <label class="form-label">Driver Job Ref / CX Ref<span class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <input type="text" class="form-control" formControlName="job_ref" name="job_ref"
-                                [ngClass]="{'is-invalid' : submitted && f.job_ref.errors , 'bg-warning' : data._status != null && data._status.id == 1}">
+                                [ngClass]="{'is-invalid' : submitted && f.job_ref.errors }">
                             <div *ngIf="f.job_ref.errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f.job_ref.errors.required">Thie field is Required</div>
                             </div>
@@ -500,7 +497,7 @@
                                 <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
                                     formControlName="invoice_date" name="invoice_date"
                                     (ngModelChange)="onDateChange($event)" #d2="ngbDatepicker"
-                                    [ngClass]="{'is-invalid' : submitted && f.invoice_date.errors , 'bg-warning' : data._status != null && data._status.id == 3}"
+                                    [ngClass]="{'is-invalid' : submitted && f.invoice_date.errors }"
                                     >
                                 <div class="input-group-append">
                                     <button class="input-group-text" (click)="d2.toggle()" type="button">
@@ -516,7 +513,7 @@
                             <label class="form-label">Driver Invoice No or CX Invoice Number<span class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <input type="text" class="form-control" formControlName="invoice_number"
                                 name="invoice_number"
-                                [ngClass]="{'is-invalid' : submitted && f.invoice_number.errors , 'bg-warning' : data._status != null && data._status.id == 3}"
+                                [ngClass]="{'is-invalid' : submitted && f.invoice_number.errors }"
                                 >
                             <div *ngIf="f.invoice_number.errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f.invoice_number.errors.required">Thie field is Required</div>
@@ -528,7 +525,7 @@
                                 <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
                                     formControlName="invoice_received_date" name="invoice_received_date"
                                     #d3="ngbDatepicker"
-                                    [ngClass]="{'is-invalid' : submitted && f.invoice_received_date.errors, 'bg-warning' : data._status != null && data._status.id == 3 }"
+                                    [ngClass]="{'is-invalid' : submitted && f.invoice_received_date.errors }"
                                     >
                                 <div class="input-group-append">
                                     <button class="input-group-text" (click)="d3.toggle()" type="button">
@@ -543,9 +540,9 @@
                         <div class="form-group col-md">
                             <label class="form-label">Target Payment Date</label>
                             <input type="text" class="form-control" formControlName="target_payment_date" name="target_payment_date"
-                            [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}"
                                 disabled>
                         </div>
+
                     </div>
 
                     <div class="form-row">
@@ -554,9 +551,7 @@
                                 <a  href="{{ downloadurl }}?filename={{ data.pod_file }}" class="btn btn-info rounded-pill">Download</a>
                             </div>
                             
-                            <div class="form-group w-100 bg-periscope-dark p-3"
-                            [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}"
-                            >
+                            <div class="form-group w-100 bg-periscope-dark p-3">
                                 <div class="d-flex mb-2">
                                     <label class="form-label w-100">Upload POD</label>
                                     <button class="btn btn-primary" (click)="onReset()">Reset</button>
@@ -602,7 +597,7 @@
                                                 <div class="form-group">
                                                     <input type="number" class="form-control" formControlName="d_price"
                                                         name="d_price" (change)="changePrice()" step="0.1"
-                                                        [ngClass]="{'is-invalid' : submitted && f.d_price.errors , 'bg-warning' : data._status != null && data._status.id == 1}">
+                                                        [ngClass]="{'is-invalid' : submitted && f.d_price.errors }">
                                                     <div *ngIf="f.d_price.errors && submitted" class="invalid-feedback">
                                                         <div *ngIf="f.d_price.errors.required">This field is Required
                                                         </div>
@@ -621,7 +616,7 @@
                                                     <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
                                                         formControlName="d_vat" name="d_vat" placeholder="Select VAT"
                                                         (change)="changePrice()"
-                                                        [ngClass]="{'is-invalid' : submitted && f.d_vat.errors,'custom': data._status != null && data.status == 1 }">
+                                                        [ngClass]="{'is-invalid' : submitted && f.d_vat.errors }">
                                                         <ng-template ng-label-tmp let-item="item">
                                                             <span class="ng-value-label">{{item['label']}}</span>
                                                         </ng-template>
@@ -635,7 +630,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </td>
                                             <td>
                                                 <div class="form-group">
@@ -647,8 +641,7 @@
                                             <td>
                                                 <div class="form-group">
                                                     <input typ="number" step="0.1" class="form-control"
-                                                        formControlName="d_price_total" readonly 
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }"/>
+                                                        formControlName="d_price_total" readonly />
                                                 </div>
                                             </td>
                                         </tr>
@@ -670,7 +663,7 @@
                                                 <div class="form-group">
                                                     <input type="number" step="0.1" class="form-control"
                                                         formControlName="d_extra" name="d_extra"
-                                                        [ngClass]="{'is-invalid' : submitted && f.d_extra.errors , 'bg-warning' : data._status != null && data._status.id == 1}"
+                                                        [ngClass]="{'is-invalid' : submitted && f.d_extra.errors }"
                                                         (change)="changePrice()">
                                                     <div *ngIf="f.d_extra.errors && submitted" class="invalid-feedback">
                                                         <div *ngIf="f.d_extra.errors.required">This field is Required
@@ -687,8 +680,7 @@
                                             </td>
                                             <td>
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" readonly value="20% (fixed)"
-                                                    [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }">
+                                                    <input type="text" class="form-control" readonly value="20% (fixed)">
                                                 </div>
                                             </td>
                                             <td>
@@ -701,8 +693,7 @@
                                             <td>
                                                 <div class="form-group">
                                                     <input typ="number" step="0.1" class="form-control"
-                                                        formControlName="d_extra_total" readonly 
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }"/>
+                                                        formControlName="d_extra_total" readonly />
                                                 </div>
                                             </td>
                                         </tr>
@@ -724,7 +715,7 @@
                                                 <div class="form-group">
                                                     <input type="number" step="0.1" class="form-control"
                                                         formControlName="d_extra_0" name="d_extra_0"
-                                                        [ngClass]="{'is-invalid' : submitted && f.d_extra_0.errors , 'bg-warning' : data._status != null && data._status.id == 1}"
+                                                        [ngClass]="{'is-invalid' : submitted && f.d_extra_0.errors }"
                                                         (change)="changePrice()">
                                                     <div *ngIf="f.d_extra_0.errors && submitted" class="invalid-feedback">
                                                         <div *ngIf="f.d_extra_0.errors.required">This field is Required
@@ -741,8 +732,7 @@
                                             </td>
                                             <td>
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" readonly value="0% (fixed)"
-                                                    [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }">
+                                                    <input type="text" class="form-control" readonly value="0% (fixed)">
                                                 </div>
                                             </td>
                                             <td>
@@ -755,8 +745,7 @@
                                             <td>
                                                 <div class="form-group">
                                                     <input typ="number" step="0.1" class="form-control"
-                                                        formControlName="d_extra_total_0" readonly 
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }"/>
+                                                        formControlName="d_extra_total_0" readonly />
                                                 </div>
                                             </td>
                                         </tr>
@@ -777,8 +766,7 @@
                                             <td>
                                                 <div class="form-group">
                                                     <input type="number" step="0.1" class="form-control"
-                                                        formControlName="d_net" name="d_net" readonly
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }">
+                                                        formControlName="d_net" name="d_net" readonly>
                                                 </div>
                                             </td>
                                             <td>
@@ -792,8 +780,7 @@
                                                 <div class="form-group">
                                                     <div class="form-group">
                                                         <input type="number" step="0.1" class="form-control"
-                                                            formControlName="d_vat_total" name="d_vat_total" readonly
-                                                            [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }">
+                                                            formControlName="d_vat_total" name="d_vat_total" readonly>
                                                     </div>
                                                 </div>
                                             </td>
@@ -808,7 +795,7 @@
                                                 <div class="form-group">
                                                     <input type="number" step="0.1" class="form-control"
                                                         formControlName="d_tprice" name="d_tprice" min="1.0" readonly 
-                                                        [ngClass]="{'is-invalid' : submitted && f.d_tprice.errors , 'bg-warning' : data._status != null && data._status.id == 1}">
+                                                        [ngClass]="{'is-invalid' : submitted && f.d_tprice.errors }">
                                                     <div *ngIf="f.d_tprice.errors && submitted" class="invalid-feedback">
                                                         <div *ngIf="f.d_tprice.errors.min">Thie field is Required</div>
                                                     </div>    
@@ -819,9 +806,10 @@
                                 </table>
                             </div>
                         </div>
+
                     </div>
 
-                    <div class="form-row" *ngIf="data._status != null && data._status.id >= 3">
+                    <div class="form-row">
                         <div class="form-group col-md">
                             <label class="form-label">Bank Name</label>
                             <input class="form-control" readonly [value]="driver.bank_name"/>
@@ -835,7 +823,7 @@
                             <input class="form-control" readonly [value]="driver.bank_account_number"/>
                         </div>
                     </div>
-                    <div class="form-row" *ngIf="data._status != null && data._status.id >= 3">
+                    <div class="form-row">
                         <div class="form-group col-md">
                             <label class="form-label">VAT</label>
                             <select class="form-control" value="driver.vat" disabled>
@@ -847,9 +835,8 @@
                             <input class="form-control" readonly [value]="driver.vat_number"/>
                         </div>
                     </div>
-                    <div class="form-row" *ngIf="data._status != null && data._status.id >= 3">
-                        <div class="form-group col-md"
-                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3 }">
+                    <div class="form-row">
+                        <div class="form-group col-md">
                             <label class="form-check form-check-inline" [ngClass]="{'is-invalid' : submitted && f.check_price.errors }">
                                 <input class="form-check-input" type="checkbox" id="check_price" (change)="onCheckChange($event)" name="check_price"
                                 [checked]="f.check_price.value">
@@ -861,8 +848,7 @@
                                 <div *ngIf="f.check_price.errors.required">Thie field is Required</div>
                             </div>
                         </div>
-                        <div class="form-group col-md"
-                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3 }">
+                        <div class="form-group col-md">
                             <label class="form-check form-check-inline" [ngClass]="{'is-invalid' : submitted && f.check_docket_off.errors }">
                                 <input class="form-check-input" type="checkbox" id="check_docket_off" (change)="onCheckChange($event)" name="check_docket_off"
                                 [checked]="f.check_docket_off.value">
@@ -874,8 +860,7 @@
                                 <div *ngIf="f.check_docket_off.errors.required">Thie field is Required</div>
                             </div>
                         </div>
-                        <div class="form-group col-md"
-                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3 }">
+                        <div class="form-group col-md">
                             <label class="form-check form-check-inline" [ngClass]="{'is-invalid' : submitted && f.check_bank.errors }">
                                 <input class="form-check-input" type="checkbox" id="check_bank" (change)="onCheckChange($event)" name="check_bank"
                                 [checked]="f.check_bank.value">
@@ -893,6 +878,7 @@
         </form>
     </div>
 </div>
+
     
 <div class="modal" id="disputeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -919,24 +905,6 @@
             <div class="modal-footer">
                 <button type="submit" class="btn btn-danger" (click)="disputeTask()">Submit</button>
                 <button type="button" class="btn btn-dark" (click)="onDisputeClose()">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-    data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Success</h4>
-            </div>
-            <div class="modal-body">
-                You updated job successfully!
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" (click)="stayHere()">Stay Here</button>
-                <button type="button" class="btn btn-dark" (click)="onGoJobList()">Go Job List</button>
             </div>
         </div>
     </div>

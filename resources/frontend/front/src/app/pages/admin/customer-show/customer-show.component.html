@@ -53,42 +53,42 @@
                             <td>{{userData.company_email}}</td>
                         </tr>
 
-                        <tr >
+                        <tr>
                             <td>Address:</td>
                             <td>{{userData.company_address}}</td>
                         </tr>
 
-                        <tr >
+                        <tr>
                             <td>City:</td>
                             <td>{{userData.company_city}}</td>
                         </tr>
-                        <tr >
+                        <tr>
                             <td>State:</td>
                             <td>{{userData.company_state}}</td>
                         </tr>
-                        <tr >
+                        <tr>
                             <td>Post Code:</td>
                             <td>{{userData.company_postcode}}</td>
-                        </tr> 
+                        </tr>
                     </tbody>
                 </table>
                 <h6 class="mt-4 mb-3">Key Contact Detail</h6>
 
                 <table class="table user-view-table m-0">
                     <tbody>
-                        <tr >
+                        <tr>
                             <td>Contact Email:</td>
                             <td>{{userData.contact_email}}</td>
-                        </tr>  
-                        <tr >
+                        </tr>
+                        <tr>
                             <td>Contact Name:</td>
                             <td>{{userData.contact_name}}</td>
                         </tr>
-                        <tr >
+                        <tr>
                             <td>Contact Telephone:</td>
                             <td>{{userData.contact_phone}}</td>
                         </tr>
-                      
+
                     </tbody>
                 </table>
 
@@ -96,11 +96,11 @@
 
                 <table class="table user-view-table m-0">
                     <tbody>
-                        <tr >
+                        <tr>
                             <td>Email:</td>
                             <td>{{userData.pod_email}}</td>
                         </tr>
-                        <tr >
+                        <tr>
                             <td>Username:</td>
                             <td>{{userData.pod_name}}</td>
                         </tr>
@@ -125,14 +125,11 @@
                     <div class="col">
                         Per page: &nbsp;
                         <select [(ngModel)]="perPage" (change)="update()"
-                            class="custom-select custom-select-sm d-inline-block w-auto">
+                            class="form-control custom-select-sm d-inline-block w-auto">
                             <option *ngFor="let limit of [10, 20, 30, 40, 50]">{{limit}}</option>
                         </select>
-                    </div>
-                    <div class="col">
                         <input type="text" [(ngModel)]="filterVal" (input)="currentPage = 1; update()"
-                            class="form-control form-control-sm d-inline-block w-auto float-sm-right"
-                            placeholder="Search...">
+                            class="form-control form-control-sm d-inline-block w-auto " placeholder="Search...">
                     </div>
                 </div>
             </div>
@@ -145,68 +142,54 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap cursor-pointer" (click)="setSort('id')">
-                                ID<i class="ion text-muted ml-2" *ngIf="sortBy=='id'"
-                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
-                            </th>
-                            <th class="text-nowrap cursor-pointer" (click)="setSort('account')">
-                                Account<i class="ion text-muted ml-2" *ngIf="sortBy=='account'"
+                                Docket Number<i class="ion text-muted ml-2" *ngIf="sortBy=='id'"
                                     [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                             </th>
                             <th class="text-nowrap cursor-pointer" (click)="setSort('email')">
-                                Email<i class="ion text-muted ml-2" *ngIf="sortBy=='email'"
+                                Customer<i class="ion text-muted ml-2" *ngIf="sortBy=='email'"
                                     [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                             </th>
                             <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
-                                Name<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
+                                Job Date<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
+                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                            </th>
+
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                                Driver<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                                     [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                             </th>
                             <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                                Latest activity<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                                Job Price<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                                     [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                             </th>
-                            <th class="text-nowrap cursor-pointer" (click)="setSort('verified')">
-                                Verified<i class="ion text-muted ml-2" *ngIf="sortBy=='verified'"
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                                Driver Price<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                                     [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                             </th>
-                            <th class="text-nowrap cursor-pointer" (click)="setSort('role')">
-                                Role<i class="ion text-muted ml-2" *ngIf="sortBy=='role'"
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                                Profit<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                                     [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                             </th>
-                            <th class="text-nowrap cursor-pointer" (click)="setSort('status')">
-                                Status<i class="ion text-muted ml-2" *ngIf="sortBy=='status'"
+                            <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                                Status<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                                     [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                             </th>
-                            <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let user of usersList">
-                            <td class="align-middle">{{user.id}}</td>
-                            <td class="align-middle"><a href="javascript:void(0)">{{user.account}}</a></td>
-                            <td class="align-middle">{{user.email}}</td>
-                            <td class="align-middle">{{user.name}}</td>
-                            <td class="align-middle">{{user.latestActivity}}</td>
-                            <td class="align-middle">
-                                <span class="ion"
-                                    [ngClass]="{'ion-md-checkmark text-primary': user.verified, 'ion-md-close text-light': !user.verified}"></span>
+                    <tbody class="job-list-table">
+                        <tr *ngFor="let task of taskData" (click)="editTask(task.id)">
+                            <td class="align-middle">{{task.docket}}</td>
+                            <td class="align-middle">{{ task.customer.account_code }} - {{task.customer.company_name}}
                             </td>
-                            <td class="align-middle">
-                                <span *ngIf="user.role === 1">User</span>
-                                <span *ngIf="user.role === 2">Author</span>
-                                <span *ngIf="user.role === 3">Staff</span>
-                                <span *ngIf="user.role === 4">Admin</span>
-                            </td>
-                            <td class="align-middle">
-                                <span class="badge badge-outline-success" *ngIf="user.status === 1">Active</span>
-                                <span class="badge badge-outline-danger" *ngIf="user.status === 2">Banned</span>
-                                <span class="badge badge-outline-default" *ngIf="user.status === 3">Deleted</span>
-                            </td>
-                            <td class="text-center text-nowrap align-middle">
-                                <a href="javascript:void(0)" class="btn btn-default btn-xs icon-btn md-btn-flat"
-                                    ngbTooltip="Edit">
-                                    <i class="ion ion-md-create"></i>
-                                </a>
-                            </td>
+                            <td class="align-middle">{{task.job_date}}</td>
+                            <td class="align-middle">{{ task.driver? task.driver.call_sign: ''}} - {{task.driver ?
+                                task.driver.email: ''}}</td>
+                            <td class="align-middle">{{task.c_tprice}}</td>
+                            <td class="align-middle">{{task.d_tprice}}</td>
+                            <td class="align-middle">{{task.profit}}</td>
+                            <td class="align-middle"
+                                [ngStyle]="{background: task._status ? task._status.color : '#fff'}">
+                                {{task._status.name}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -222,7 +205,7 @@
                     </div>
                     <div class="col-sm pt-3">
                         <ngb-pagination [collectionSize]="totalItems" [pageSize]="perPage" [(page)]="currentPage"
-                            (pageChange)="update()" size="sm"
+                            [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="update()" size="sm"
                             class="d-flex justify-content-center justify-content-sm-end m-0">
                         </ngb-pagination>
                     </div>

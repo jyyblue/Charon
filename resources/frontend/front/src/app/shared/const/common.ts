@@ -9,4 +9,12 @@ export const common = {
         ADMIN: 'ADMIN',
     },
     TIMEOUT: 5000,
+    PREV_PAGE: {
+        ALL: 'ALL',
+        PENDING: 'PENDING',
+        PAYMENT_PENDING: 'PAYMENTPENDING',
+        COMPLRETED_PAYMENT_PENDING: 'CP_PAYMENT',
+        COMPLETED: 'COMPLETED',
+        QUERY: 'QUERY'
+    }
 };

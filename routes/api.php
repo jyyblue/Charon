@@ -40,6 +40,7 @@ Route::prefix('admin')->group(function () {
                 
                 Route::post('/task/create', 'TaskController@create')->name('admin.task.saveTask');
                 Route::post('/task/update', 'TaskController@update')->name('admin.task.update');
+                Route::post('/task/updateAuto', 'TaskController@updateAuto')->name('admin.task.updateAuto');
                 
                 Route::post('/task/list', 'TaskController@getTaskList')->name('admin.task.list');
                 Route::post('/task/detail', 'TaskController@getTaskDetail')->name('admin.task.detail');

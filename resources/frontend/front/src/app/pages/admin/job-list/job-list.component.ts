@@ -3,12 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppService } from 'src/app/app.service';
 import { ApiService } from 'src/app/shared/services/api.service';
-
+import { common as Const } from 'src/app/shared/const/common';
 @Component({
   selector: 'app-job-list',
   templateUrl: './job-list.component.html',
-  styles: [
-  ]
+  styles: []
 })
 export class JobListComponent implements OnInit {
 
@@ -81,12 +80,7 @@ export class JobListComponent implements OnInit {
     this.update();
   }
 
-  viewProfile(userid) {
-    console.log(userid);
-    this.router.navigate(['admin/job/show', userid]);
-  }
-
-  editDriver(userid) {
-    this.router.navigate(['admin/job/edit', userid]);
+  editTask(taskid) {
+    this.router.navigate(['admin/job/edit', taskid, Const.PREV_PAGE.ALL]);
   }
 }
