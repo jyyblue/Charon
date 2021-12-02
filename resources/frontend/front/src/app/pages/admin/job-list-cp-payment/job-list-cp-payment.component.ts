@@ -39,9 +39,7 @@ export class JobListCpPaymentComponent implements OnInit {
   taskData: object[] = [];
   originaltaskData: object[] = [];
 
-  selectedTask = [];
   // modal 
-  dataForm: FormGroup;
 
   model: NgbDateStruct = {
     year: now.getFullYear(),
@@ -50,9 +48,10 @@ export class JobListCpPaymentComponent implements OnInit {
   };
   submitted = false;
   // checkbox 
-
+  dataForm: FormGroup;
   intermediate = false;
   checkAll = false;
+  selectedTask = [];
 
   ngOnInit(): void {
     this.dataForm = this.formBuilder.group({

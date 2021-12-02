@@ -19,6 +19,7 @@ use App\Mail\DriverPaymentCompleteMail;
 use App\Mail\DriverResolveMail;
 use App\Models\Driver;
 use App\Models\DriverType;
+use App\Models\TaskStatus;
 use App\Models\Vat;
 use App\Models\VehicleType;
 use Illuminate\Support\Facades\DB;
@@ -281,28 +282,28 @@ class TaskController extends Controller
         $customer_id = $request->get('customer_id', 0);
         $skip = ($page - 1) * $pageSize;
 
-        $users = Task::with(['customer', 'driver', '_status']);
+        $tasks = Task::with(['customer', 'driver', '_status']);
 
         if ($status != 0) {
-            $users = $users->where('status', $status);
+            $tasks = $tasks->where('status', $status);
         }
 
         if ($driverid != 0) {
-            $users = $users->where('driver_id', $driverid);
+            $tasks = $tasks->where('driver_id', $driverid);
         }
 
         if ($customer_id != 0) {
-            $users = $users->where('customer_id', $customer_id);
+            $tasks = $tasks->where('customer_id', $customer_id);
         }
 
         if ($pageSize != 1) {
-            $users = $users->skip($skip)->take($pageSize);
+            $tasks = $tasks->skip($skip)->take($pageSize);
         }
-        $users = $users->get();
-        $count = count($users);
+        $tasks = $tasks->orderby('docket', 'DESC')->get();
+        $count = count($tasks);
         $ret['code'] = 200;
         $ret['total'] = $count;
-        $ret['data'] = $users;
+        $ret['data'] = $tasks;
         return response()->json($ret, 200);
     }
 
@@ -536,9 +537,13 @@ class TaskController extends Controller
     public function downloadPodFile(Request $request)
     {
         $filename = $request->get('filename', '');
-        $directory = "public/job/attachments/";
         //PDF file is stored under project/public/download/info.pdf
-        $file = public_path() . "/storage/job/attachments/".$filename;
+        $file = storage_path() . "/app/public/job/attachments/".$filename;
         return response()->download($file);
+    }
+
+    public function getTaskStatus() {
+        $taskstatus = TaskStatus::orderby('order_id', 'ASC')->get();
+        return $taskstatus;
     }
 }

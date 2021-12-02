@@ -16,6 +16,15 @@
                 </select>
                 <input type="text" [(ngModel)]="filterVal" (input)="currentPage = 1; update()"
                     class="form-control form-control-sm d-inline-block w-auto " placeholder="Search...">
+                <select [(ngModel)]="filterStatus" (change)="update()" class="form-control form-control-sm d-inline-block w-auto">
+                    <option value="0">All</option>
+                    <option *ngFor="let item of taskStatus" value="{{ item.id }}">{{ item.name }}</option>
+                </select>
+            </div>
+            <div class="col" *ngIf="selectedTask.length > 0">
+                <div class="btn-group btn-group-sm float-right">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">Confirm Payment</button>
+                </div>
             </div>
         </div>
 
@@ -28,8 +37,19 @@
         <table class="table table-striped table-bordered card-table">
             <thead>
                 <tr>
+                    <th class="text-nowrap cursor-pointer" *ngIf="filterStatus==4">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" (change)="onSelectAll($event)"
+                                data-taskid="all" [indeterminate]="intermediate" [checked]="checkAll">
+                            <span class="custom-control-label"></span>
+                        </label>
+                    </th>
                     <th class="text-nowrap cursor-pointer" (click)="setSort('id')">
                         Docket Number<i class="ion text-muted ml-2" *ngIf="sortBy=='id'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
+                        Status<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
                     <th class="text-nowrap cursor-pointer" (click)="setSort('email')">
@@ -57,22 +77,26 @@
                         Profit<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Status<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
-                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
-                    </th>
+
                 </tr>
             </thead>
             <tbody class="job-list-table">
-                <tr *ngFor="let task of taskData" (click)="editTask(task.id)">
-                    <td class="align-middle">{{task.docket}}</td>
-                    <td class="align-middle">{{ task.customer.account_code }} - {{task.customer.company_name}}</td>
-                    <td class="align-middle">{{task.job_date}}</td>
-                    <td class="align-middle">{{ task.driver? task.driver.call_sign: ''}} - {{task.driver ? task.driver.email: ''}}</td>
-                    <td class="align-middle">{{task.c_tprice}}</td>
-                    <td class="align-middle">{{task.d_tprice}}</td>
-                    <td class="align-middle">{{task.profit}}</td>
-                    <td class="align-middle" [ngStyle]="{background: task._status ? task._status.color : '#fff'}">{{task._status.name}}</td>
+                <tr *ngFor="let task of taskData" >
+                    <td class="text-nowrap cursor-pointer" *ngIf="filterStatus==4">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" (change)="onSelectTask($event)"
+                                value="{{task.id}}" [checked]="task.checked">
+                            <span class="custom-control-label"></span>
+                        </label>
+                    </td>
+                    <td class="align-middle" (click)="editTask(task.id)">{{task.docket}}</td>
+                    <td class="align-middle" (click)="editTask(task.id)" [ngStyle]="{background: task._status ? task._status.color : '#fff'}">{{task._status.name}}</td>
+                    <td class="align-middle" (click)="editTask(task.id)">{{ task.customer.account_code }} - {{task.customer.company_name}}</td>
+                    <td class="align-middle" (click)="editTask(task.id)">{{task.job_date}}</td>
+                    <td class="align-middle" (click)="editTask(task.id)">{{ task.driver? task.driver.call_sign: ''}} - {{task.driver ? task.driver.email: ''}}</td>
+                    <td class="align-middle" (click)="editTask(task.id)">&pound; {{ task.c_tprice.toFixed(2) }}</td>
+                    <td class="align-middle" (click)="editTask(task.id)">&pound; {{task.d_tprice.toFixed(2)}}</td>
+                    <td class="align-middle" (click)="editTask(task.id)">&pound; {{task.profit.toFixed(2)}}</td>
                 </tr>
             </tbody>
         </table>
@@ -95,4 +119,47 @@
 
     </div>
     <!-- / Pagination -->
+</div>
+
+
+
+<div class="modal" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Payment</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="dataForm">
+                    <div class="form-group">
+                        <label class="form-label">Payment Date</label>
+                        <div class="input-group" [ngClass]="{'is-invalid': submitted && f.payment_date.errors }">
+                            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                                formControlName="payment_date" name="payment_date" #d2="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="input-group-text" (click)="d2.toggle()" type="button">
+                                    <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div *ngIf="submitted && f.payment_date.errors" class="invalid-feedback">
+                            <div *ngIf="f.payment_date.errors.required">This field is Required</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Payment Reference</label>
+                        <input type="text" class="form-control" formControlName="payment_reference" name="payment_reference"
+                            [ngClass]="{'is-invalid': submitted && f.payment_reference.errors }">
+                        <div *ngIf="submitted && f.payment_reference.errors" class="invalid-feedback">
+                            <div *ngIf="f.payment_reference.errors.required">This field is Required</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="onPaymentSubmit()">Submit</button>
+                <button type="button" class="btn btn-dark" (click)="onPaymentClose($event)">Close</button>
+            </div>
+        </div>
+    </div>
 </div>

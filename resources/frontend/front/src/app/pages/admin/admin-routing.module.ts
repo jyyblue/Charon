@@ -43,7 +43,7 @@ const routes: Routes = [
 	{ path: 'job/list-query', component: JobListQueryComponent },
 
 	{ path: 'job/add', component: JobAddComponent },
-	{ path: 'job/edit/:id/:prePage', component: JobEditComponent },
+	{ path: 'job/edit/:id', component: JobEditComponent },
 	{ path: 'job/edit-pending/:id', component: JobEditPendingComponent },
 	{ path: 'job/edit-query/:id', component: JobEditQueryComponent },
 	{ path: 'job/edit-pending-payment/:id', component: JobEditPendingPaymentComponent },

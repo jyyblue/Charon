@@ -107,6 +107,9 @@ export class ApiService extends ServiceBase {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/job/options`, params, null, false);
   }
   
+  public getTaskStatus(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/task/status`, params, null, false);
+  }
   /**
    * call with Rxjs
    */

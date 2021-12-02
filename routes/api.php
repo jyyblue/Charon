@@ -51,6 +51,7 @@ Route::prefix('admin')->group(function () {
                 Route::post('/task/disputeTask', 'TaskController@disputeTask')->name('admin.task.disputeTask');
                 Route::post('/task/resolveDisputeTask', 'TaskController@resolveDisputeTask')->name('admin.task.resolveDisputeTask');
                 Route::post('/job/options', 'TaskController@getOptions')->name('admin.vehicel.list');
+                Route::post('/task/status', 'TaskController@getTaskStatus')->name('admin.task.status.list');
                
                 // Driver 
                 Route::post('/driver/list', 'DriverController@getList')->name('admin.driver.list');
