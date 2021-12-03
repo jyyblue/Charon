@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light-style">
+<html lang="en" class="light-style layout-collapsed">
   <head>
     <base href="./">
     <title>Charon</title>
@@ -104,5 +104,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.7/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> -->
 
-  <script src="/assets/angular/runtime.4fedbeb78f885a8bdc62.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.886766c896dbef5ab292.js" defer></script><script src="/assets/angular/main.ca77d777a4631e4ece60.js" defer></script></body>
+  <script src="/assets/angular/runtime.4f581192175c6355c6ed.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.886766c896dbef5ab292.js" defer></script><script src="/assets/angular/main.31e242b876d39e2a0f63.js" defer></script></body>
 </html>

@@ -49,12 +49,14 @@ export class Task {
     public payment_date: NgbDateStruct;
     public payment_reference: string;
     public total_payment: number;
+    public status: number;
     public profit: number;
     public profitpercent: number;
     public driver: any;
     public _status: any;
     public customer: any;
     public distances : any[];
+    public query_history: any[];
     private model = {
         year: now.getFullYear(),
         month: now.getMonth() + 1,
@@ -67,7 +69,7 @@ export class Task {
         this.job_date = this.model;
         this.vehicle_type = '';
         this.c_price = 0;
-        this.c_vat = 0;
+        this.c_vat = null;
         this.c_price_total = 0;
         this.c_extra = 0;
         this.c_extra_vat = 0;
@@ -108,6 +110,7 @@ export class Task {
         this.payment_date = null;
         this.payment_reference = '';
         this.total_payment = 0;
+        this.status = 0;
         this.profit = 0;
         this.profitpercent = 0;
         this._status = {
@@ -120,5 +123,6 @@ export class Task {
         };
         this.customer = null;
         this.distances = [];
+        this.query_history = [];
     }
 }

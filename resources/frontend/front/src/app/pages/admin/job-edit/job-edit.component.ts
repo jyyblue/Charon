@@ -122,9 +122,7 @@ export class JobEditComponent implements OnInit {
   ngOnInit(): void {
     this.taskid = this.route.snapshot.params['id'];
     this.previoustPage = this.route.snapshot.params['prePage'];
-    if(this.taskid != '0') {
-      this.getJob();
-    }
+    this.getJob();
     this.loadOptions();
     this.loadStatus();
 
@@ -341,7 +339,6 @@ export class JobEditComponent implements OnInit {
 
     });
   }
-
   
   saveTask() {
     this.submitted = true;
@@ -432,6 +429,7 @@ export class JobEditComponent implements OnInit {
 
       'payment_date': paymentDate,
       'payment_reference': this.f.payment_reference.value,
+      'total_payment': this.f.total_payment.value,
     }
 
     this.apiService.updateTaskAuto(params).then(res => {
@@ -639,6 +637,7 @@ export class JobEditComponent implements OnInit {
         // cx driver
         this.f.cx_number.setValue(item.cx_number);
       }
+      this.showBankDetail(item);
     }
   }
 
@@ -729,6 +728,9 @@ export class JobEditComponent implements OnInit {
     this.dataForm.patchValue({ 'pod_file': '' });
   }
 
+  onCancel(e): void {
+    
+  }
   onSuccessThumb(data): void {
     const ret = data[1];
     this.dataForm.patchValue({ 'pod_file': ret.filename });

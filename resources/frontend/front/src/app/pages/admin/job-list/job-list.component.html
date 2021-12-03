@@ -77,26 +77,118 @@
                         Profit<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
-
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody class="job-list-table">
                 <tr *ngFor="let task of taskData" >
-                    <td class="text-nowrap cursor-pointer" *ngIf="filterStatus==4">
+                    <td class="text-nowrap cursor-pointer td_show td_{{ task.id }}" *ngIf="filterStatus==4">
                         <label class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" (change)="onSelectTask($event)"
                                 value="{{task.id}}" [checked]="task.checked">
                             <span class="custom-control-label"></span>
                         </label>
                     </td>
-                    <td class="align-middle" (click)="editTask(task.id)">{{task.docket}}</td>
-                    <td class="align-middle" (click)="editTask(task.id)" [ngStyle]="{background: task._status ? task._status.color : '#fff'}">{{task._status.name}}</td>
-                    <td class="align-middle" (click)="editTask(task.id)">{{ task.customer.account_code }} - {{task.customer.company_name}}</td>
-                    <td class="align-middle" (click)="editTask(task.id)">{{task.job_date}}</td>
-                    <td class="align-middle" (click)="editTask(task.id)">{{ task.driver? task.driver.call_sign: ''}} - {{task.driver ? task.driver.email: ''}}</td>
-                    <td class="align-middle" (click)="editTask(task.id)">&pound; {{ task.c_tprice.toFixed(2) }}</td>
-                    <td class="align-middle" (click)="editTask(task.id)">&pound; {{task.d_tprice.toFixed(2)}}</td>
-                    <td class="align-middle" (click)="editTask(task.id)">&pound; {{task.profit.toFixed(2)}}</td>
+                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">{{task.docket}}</td>
+                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)" 
+                    [ngStyle]="{background: task._status ? task._status.color : '#fff', color: task._status.id == 5 ? '#fff' : '#000'}">{{task._status.name}}</td>
+                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">{{ task.customer.account_code }} - {{task.customer.company_name}}</td>
+                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">{{task.job_date}}</td>
+                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">{{ task.driver? task.driver.call_sign: ''}} - {{task.driver ? task.driver.email: ''}}</td>
+                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">&pound; {{ task.c_tprice.toFixed(2) }}</td>
+                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">&pound; {{task.d_tprice.toFixed(2)}}</td>
+                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">&pound; {{task.profit.toFixed(2)}}</td>
+                    <td class="align-middle td_show  td_{{ task.id }}">
+                        <a class="btn btn-default  icon-btn md-btn-flat" ngbtooltip="Edit" (click)="editTask(task.id)">
+                            <i class="ion ion-md-create"></i>
+                        </a>
+                    </td>
+
+                    <!-- edit form -->
+                    <td *ngIf="filterStatus==4" class="bg-warning td_form form_{{ task.id }} d-none"></td>
+                    <td class="align-middle td_form form_{{ task.id }} d-none" >
+                        <input type="text" id="docket_{{ task.id }}" class="form-control bg-warning" [(ngModel)]="docket">
+                    </td>
+                    <td class="align-middle td_form form_{{ task.id }} d-none" [ngStyle]="{background: task._status ? task._status.color : '#fff'}">{{task._status.name}}</td>
+                    <td class="align-middle td_form form_{{ task.id }} d-none" >
+                        <ng-select [items]="customerOptions" bindLabel="dispName" bindValue="id"
+                            id="customer_id_{{ task.id }}" [loading]="customerLoading" class="custom"
+                            [(ngModel)]="customer_id"
+                            (change)="changeCustomer($event)" [virtualScroll]="true" (scrollToEnd)="onScrollToEnd()"
+                            (search)="customerSearchFn($event)" (open)="customerOpen($event)">
+                            <ng-template ng-label-tmp let-item="item">
+                                <span class="ng-value-label">{{item['dispName']}}</span>
+                            </ng-template>
+
+                            <ng-template ng-option-tmp let-item="item">
+                                <span class="ng-value-label">{{item['dispName']}}</span>
+                            </ng-template>
+                        </ng-select>
+                    </td>
+                    <td class="align-middle td_form form_{{ task.id }} d-none" >
+                        <div class="input-group">
+                            <input class="form-control bg-warning" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                                [(ngModel)]="job_date" name="job_date" #d="ngbDatepicker"
+                                [ngClass]="{'is-invalid' : submitted && f.job_date.errors }" readonly>
+                            <div class="input-group-append">
+                                <button class="input-group-text" (click)="d.toggle()" type="button">
+                                    <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    
+                    <td class="align-middle td_form form_{{ task.id }} d-none" >
+                        <ng-select [items]="driverOptions" bindLabel="dispName" bindValue="id"
+                            [loading]="driverLoading" id="driver_id_{{ task.id }}" class="custom"
+                            (change)="changeDriver($event)" [virtualScroll]="true"
+                            (scrollToEnd)="onScrollToEndDriver()" (search)="driverSearchFn($event)"
+                            [(ngModel)]="driver_id"
+                            (open)="driverOpen($event)">
+                            <ng-template ng-label-tmp let-item="item">
+                                <span class="ng-value-label">{{item['dispName']}}</span>
+                            </ng-template>
+
+                            <ng-template ng-option-tmp let-item="item">
+                                <span class="ng-value-label">{{item['dispName']}}</span>
+                            </ng-template>
+                        </ng-select>
+                    </td>
+                    <td class="align-middle td_form form_{{ task.id }} d-none" >
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">&pound;</span>
+                            </div>
+                            <input type="number" step="0.01" class="form-control bg-warning" [(ngModel)]="c_tprice" (change)="changePrice()">
+                        </div>
+                    </td>
+                    <td class="align-middle td_form form_{{ task.id }} d-none" >
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">&pound;</span>
+                            </div>
+                            <input type="number" step="0.01" class="form-control bg-warning" [(ngModel)]="d_tprice" (change)="changePrice()">
+                        </div>
+                    </td>
+                    <td class="align-middle td_form form_{{ task.id }} d-none">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">&pound;</span>
+                            </div>
+                            <input type="number" step="0.01" class="form-control bg-warning" [(ngModel)]="profit" readonly>
+                        </div>
+                    </td>
+
+                    <td class="align-middle td_form form_{{ task.id }} d-none">
+                        <div class="d-inline-flex">
+                            <a class="btn btn-default  icon-btn md-btn-flat" ngbtooltip="Save" (click)="updateTask(task.id)">
+                                <i class="ion ion-md-save"></i>
+                            </a>
+                            <a class="btn btn-default  icon-btn md-btn-flat" ngbtooltip="Cancel" (click)="cancelTask()">
+                                <i class="ion ion-md-close"></i>
+                            </a>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>

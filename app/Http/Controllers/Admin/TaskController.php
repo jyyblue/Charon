@@ -54,68 +54,50 @@ class TaskController extends Controller
                 $ret['msg'] = 'Same docket number already exist';
                 return response()->json($ret, 200);
             }
+            DB::beginTransaction();
             $task = new Task;
             $task->create($data);
-
             $task = Task::where('docket', $docket)->first();
-            foreach ($journey as $key => $item) {
-                $taskDistance = new TaskDistance;
-                $taskDistance->create([
-                    'task_id' => $task->id,
-                    'source' => $item['src'],
-                    'destination' => $item['dst'],
-                ]);
-            }
-
-            // add to status history
-            TaskStatusHistory::create(
+            $status = $task->status;
+            TaskStatusHistory::updateOrCreate(
                 [
                     'task_id' => $task->id,
                     'status' => $pending_status,
-                    'description' => 'created job',
+                ],
+                [
+                    'task_id' => $task->id,
+                    'status' => $pending_status,
                     'worker' => 'system'
                 ]
             );
-
-            $ret['code'] = 200;
-            $ret['data'] = $task;
-            return response()->json($ret, 200);
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
-
-    public function update(Request $request)
-    {
-        try {
-            DB::beginTransaction();
+            /////////////////////////////////////////////////////////////////////////////////////
             $data = $request->except(['journey', 'id']);
             $journey = $request->get('journey', []);
-            $id = $request->get('id', '');
 
             $c_tprice = $request->get('c_tprice', 0);
             $d_tprice = $request->get('d_tprice', 0);
             $profit = (float)$c_tprice - (float)$d_tprice;
             $data['profit'] = $profit;
-            
-            $status = constants('status.'.$request->get('status', ''));
-            if(!empty($status)) {
-                $data['status'] = $status;
-            }
-            $task = Task::where('id', $id)->first();
-            $task->update($data);
 
-            $task = Task::where('id', $id)->first();
-            TaskDistance::where('task_id', $id)->delete();
-            foreach ($journey as $key => $item) {
-                $taskDistance = new TaskDistance;
-                $taskDistance->create([
-                    'task_id' => $task->id,
-                    'source' => $item['src'],
-                    'destination' => $item['dst'],
-                ]);
-            }
-            if(!empty($status)) {
+
+            // pending to pending_payment
+            $driver_id = $request->get('driver_id', 0);
+            $call_sign = $request->get('call_sign', '');
+            $driver_vehicle = $request->get('driver_vehicle', 0);
+            $driver_type = $request->get('driver_type', 0);
+            $job_ref = $request->get('job_ref', '');
+            $d_tprice = $request->get('d_tprice', 0);
+
+            if (
+                $status == constants('status.pending') &&
+                !empty($driver_id) &&
+                !empty($call_sign) &&
+                !empty($driver_vehicle) &&
+                !empty($driver_type) &&
+                !empty($job_ref) &&
+                !empty($d_tprice)
+            ) {
+                $status = constants('status.pending_payment');
                 TaskStatusHistory::updateOrCreate(
                     [
                         'task_id' => $task->id,
@@ -128,12 +110,134 @@ class TaskController extends Controller
                     ]
                 );
             }
+
+            // pending_payment to cp_payment
+            $invoice_number = $request->get('invoice_number', '');
+            $invoice_date = $request->get('invoice_date', '');
+            $invoice_received_date = $request->get('invoice_received_date', '');
+            $target_payment_date = $request->get('target_payment_date', '');
+            $pod_file = $request->get('pod_file', '');
+            $check_price = $request->get('check_price', false);
+            $check_docket_off = $request->get('check_docket_off', false);
+            $check_bank = $request->get('check_bank', false);
+
+            if (
+                $status == constants('status.pending_payment') &&
+                !empty($invoice_number) &&
+                !empty($invoice_date) &&
+                !empty($invoice_received_date) &&
+                !empty($target_payment_date) &&
+                !empty($pod_file) &&
+                !empty($d_tprice) &&
+                $check_price &&
+                $check_docket_off &&
+                $check_bank
+            ) {
+                $status = constants('status.cp_payment');
+                TaskStatusHistory::updateOrCreate(
+                    [
+                        'task_id' => $task->id,
+                        'status' => $status,
+                    ],
+                    [
+                        'task_id' => $task->id,
+                        'status' => $status,
+                        'worker' => 'system'
+                    ]
+                );
+            }
+
+            // cp_payment to completed
+            $payment_date = $request->get('payment_date', '');
+            $payment_reference = $request->get('payment_reference', '');
+            if (
+                $status == constants('status.cp_payment') &&
+                !empty($payment_date) &&
+                !empty($payment_reference)
+            ) {
+                $status = constants('status.completed');
+                TaskStatusHistory::updateOrCreate(
+                    [
+                        'task_id' => $task->id,
+                        'status' => $status,
+                    ],
+                    [
+                        'task_id' => $task->id,
+                        'status' => $status,
+                        'worker' => 'system'
+                    ]
+                );
+            }
+            /////////////////////////////////////////////////////////////////////////////////////
+            $task->update([
+                'status' => $status
+            ]);
+            foreach ($journey as $key => $item) {
+                $taskDistance = new TaskDistance;
+                $taskDistance->create([
+                    'task_id' => $task->id,
+                    'source' => $item['src'],
+                    'destination' => $item['dst'],
+                ]);
+            }
+
+            // completed payment
+            if ($status == constants('status.completed')) {
+                // send mail to driver for payment complete
+                $driver = Driver::find($driver_id);
+                $driver_email = $driver->email;
+                $task = Task::with(['customer'])->where('id', $task->id)->first();
+                $task_data = array();
+                $item = [
+                    'docket' => $task->docket,
+                    'company_name' => $task->customer['company_name'],
+                    'price' => $task->d_price,
+                    'net' => $task->d_net,
+                    'vat' => $task->d_vat,
+                    'extra' => $task->d_extra,
+                    'tprice' => $task->d_tprice,
+                    'job_date' => $task->job_date,
+                ];
+                array_push($task_data, $item);
+                if (!empty($driver_email)) {
+                    $data = [
+                        'payment_reference' => $payment_reference,
+                        'payment_date' => $payment_date,
+                        'task_data' => $task_data,
+                    ];
+                    Mail::to($driver_email)->send(new DriverPaymentCompleteMail($data));
+                }
+            }
             DB::commit();
             $ret['code'] = 200;
             $ret['data'] = $task;
             return response()->json($ret, 200);
         } catch (\Exception $e) {
             DB::rollBack();
+            throw $e;
+        }
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $request->except(['journey', 'id']);
+            $id = $request->get('id', '');
+
+            $task = Task::where('id', $id)->first();
+            $task->update($data);
+
+            $task = Task::with(['customer', 'driver', '_status'])->where('id', $id)->first();
+
+            DB::commit();
+            $ret['code'] = 200;
+            $ret['data'] = $task;
+            return response()->json($ret, 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $ret['code'] = 300;
+            return response()->json($ret, 200);
             throw $e;
         }
     }
@@ -149,7 +253,7 @@ class TaskController extends Controller
             $d_tprice = $request->get('d_tprice', 0);
             $profit = (float)$c_tprice - (float)$d_tprice;
             $data['profit'] = $profit;
-            
+
             $task = Task::where('id', $id)->first();
 
             $status = $task->status;
@@ -161,15 +265,27 @@ class TaskController extends Controller
             $job_ref = $request->get('job_ref', '');
             $d_tprice = $request->get('d_tprice', 0);
 
-            if($status == constants('status.pending') &&
+            if (
+                $status == constants('status.pending') &&
                 !empty($driver_id) &&
                 !empty($call_sign) &&
                 !empty($driver_vehicle) &&
                 !empty($driver_type) &&
                 !empty($job_ref) &&
                 !empty($d_tprice)
-            ){
+            ) {
                 $status = constants('status.pending_payment');
+                TaskStatusHistory::updateOrCreate(
+                    [
+                        'task_id' => $task->id,
+                        'status' => $status,
+                    ],
+                    [
+                        'task_id' => $task->id,
+                        'status' => $status,
+                        'worker' => 'system'
+                    ]
+                );
             }
 
             // pending_payment to cp_payment
@@ -182,30 +298,52 @@ class TaskController extends Controller
             $check_docket_off = $request->get('check_docket_off', false);
             $check_bank = $request->get('check_bank', false);
 
-            if($status == constants('status.pending_payment') && 
-                !empty($invoice_number) && 
-                !empty($invoice_date) && 
-                !empty($invoice_received_date) && 
-                !empty($target_payment_date) && 
-                !empty($pod_file) && 
+            if (
+                $status == constants('status.pending_payment') &&
+                !empty($invoice_number) &&
+                !empty($invoice_date) &&
+                !empty($invoice_received_date) &&
+                !empty($target_payment_date) &&
+                !empty($pod_file) &&
                 !empty($d_tprice) &&
-                $check_price && 
-                $check_docket_off && 
+                $check_price &&
+                $check_docket_off &&
                 $check_bank
-            )
-            {
+            ) {
                 $status = constants('status.cp_payment');
+                TaskStatusHistory::updateOrCreate(
+                    [
+                        'task_id' => $task->id,
+                        'status' => $status,
+                    ],
+                    [
+                        'task_id' => $task->id,
+                        'status' => $status,
+                        'worker' => 'system'
+                    ]
+                );
             }
 
             // cp_payment to completed
             $payment_date = $request->get('payment_date', '');
             $payment_reference = $request->get('payment_reference', '');
-            if($status == constants('status.cp_payment') && 
-                !empty($payment_date) && 
+            if (
+                $status == constants('status.cp_payment') &&
+                !empty($payment_date) &&
                 !empty($payment_reference)
-            )
-            {
+            ) {
                 $status = constants('status.completed');
+                TaskStatusHistory::updateOrCreate(
+                    [
+                        'task_id' => $task->id,
+                        'status' => $status,
+                    ],
+                    [
+                        'task_id' => $task->id,
+                        'status' => $status,
+                        'worker' => 'system'
+                    ]
+                );
             }
             $data['status'] = $status;
 
@@ -221,22 +359,9 @@ class TaskController extends Controller
                     'destination' => $item['dst'],
                 ]);
             }
-            if(!empty($status)) {
-                TaskStatusHistory::updateOrCreate(
-                    [
-                        'task_id' => $task->id,
-                        'status' => $status,
-                    ],
-                    [
-                        'task_id' => $task->id,
-                        'status' => $status,
-                        'worker' => 'system'
-                    ]
-                );
-            }
 
             // completed payment
-            if($status == constants('status.completed')) {
+            if ($status == constants('status.completed')) {
                 // send mail to driver for payment complete
                 $driver = Driver::find($driver_id);
                 $driver_email = $driver->email;
@@ -295,12 +420,12 @@ class TaskController extends Controller
         if ($customer_id != 0) {
             $tasks = $tasks->where('customer_id', $customer_id);
         }
+        $count = count($tasks->get());
 
         if ($pageSize != 1) {
             $tasks = $tasks->skip($skip)->take($pageSize);
         }
         $tasks = $tasks->orderby('docket', 'DESC')->get();
-        $count = count($tasks);
         $ret['code'] = 200;
         $ret['total'] = $count;
         $ret['data'] = $tasks;
@@ -328,7 +453,7 @@ class TaskController extends Controller
     public function getTaskDetail(Request $request)
     {
         $taskid = $request->get('taskid', '');
-        $task = Task::with(['customer', 'driver', '_status', 'distances'])->find($taskid);
+        $task = Task::with(['customer', 'driver', '_status', 'distances', 'queryHistory'])->find($taskid);
         if ($task) {
             $ret['code'] = 200;
             $ret['data'] = $task;
@@ -478,7 +603,8 @@ class TaskController extends Controller
                 'task_id' => $taskid,
                 'status' => $status,
                 'description' => $description,
-                'worker' => 'system'
+                'worker' => 'system',
+                'query' => 1
             ]
         );
         $ret['code'] = 200;
@@ -516,7 +642,8 @@ class TaskController extends Controller
                 'task_id' => $taskid,
                 'status' => $last_status,
                 'description' => $description,
-                'worker' => 'system'
+                'worker' => 'system',
+                'query' => 1
             ]
         );
         $ret['code'] = 200;
@@ -538,11 +665,12 @@ class TaskController extends Controller
     {
         $filename = $request->get('filename', '');
         //PDF file is stored under project/public/download/info.pdf
-        $file = storage_path() . "/app/public/job/attachments/".$filename;
+        $file = storage_path() . "/app/public/job/attachments/" . $filename;
         return response()->download($file);
     }
 
-    public function getTaskStatus() {
+    public function getTaskStatus()
+    {
         $taskstatus = TaskStatus::orderby('order_id', 'ASC')->get();
         return $taskstatus;
     }

@@ -412,6 +412,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col">
         <form [formGroup]="dataForm">
@@ -506,17 +507,16 @@
                             </div>
                         </div>
 
-
                         <div class="form-group col-md">
                             <label class="form-label">Invoice Date<span
                                     class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <div class="input-group">
                                 <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
                                     formControlName="invoice_date" name="invoice_date"
-                                    (ngModelChange)="onDateChange($event)" #d2="ngbDatepicker"
+                                    (ngModelChange)="onDateChange($event)" #d1="ngbDatepicker"
                                     [ngClass]="{'is-invalid' : submitted && f.invoice_date.errors , 'bg-warning' : data._status != null && data._status.id == 3}">
                                 <div class="input-group-append">
-                                    <button class="input-group-text" (click)="d2.toggle()" type="button">
+                                    <button class="input-group-text" (click)="d1.toggle()" type="button">
                                         <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
                                     </button>
                                 </div>
@@ -562,7 +562,7 @@
                     </div>
 
                     <div class="form-row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-2" *ngIf="data.pod_file">
                                 <a href="{{ downloadurl }}?filename={{ data.pod_file }}"
                                     class="btn btn-info rounded-pill">Download</a>
@@ -592,7 +592,36 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                                <div class="form-row" >
+                                    <div class="form-group col-md">
+                                        <label class="form-label">Bank Name</label>
+                                        <input class="form-control" readonly [value]="driver.bank_name ? driver.bank_name : ''" />
+                                    </div>
+                                    <div class="form-group col-md">
+                                        <label class="form-label">Bank Sort Code</label>
+                                        <input class="form-control" readonly [value]="driver.bank_sort_code ? driver.bank_sort_code: ''" />
+                                    </div>
+                                    <div class="form-group col-md">
+                                        <label class="form-label">Bank Account Number</label>
+                                        <input class="form-control" readonly [value]="driver.bank_account_number ? driver.bank_account_number : ''" />
+                                    </div>
+                                </div>
+                                <div class="form-row" >
+                                    <div class="form-group col-md">
+                                        <label class="form-label">VAT</label>
+                                        <select class="form-control" value="driver.vat" disabled>
+                                            <option value="{{ item.value }}" *ngFor="let item of vatOptions">{{ item.label }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md" *ngIf="driver.vat == 2">
+                                        <label class="form-label">VAT Number</label>
+                                        <input class="form-control" readonly [value]="driver.vat_number" />
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="col-md-4">
                             <div class="row">
                                 <table class="table price-table mr-3 ml-3">
                                     <tbody>
@@ -897,40 +926,12 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="form-row" >
-                        <div class="form-group col-md">
-                            <label class="form-label">Bank Name</label>
-                            <input class="form-control" readonly [value]="driver.bank_name" />
-                        </div>
-                        <div class="form-group col-md">
-                            <label class="form-label">Bank Sort Code</label>
-                            <input class="form-control" readonly [value]="driver.bank_sort_code" />
-                        </div>
-                        <div class="form-group col-md">
-                            <label class="form-label">Bank Account Number</label>
-                            <input class="form-control" readonly [value]="driver.bank_account_number" />
-                        </div>
-                    </div>
-                    <div class="form-row" >
-                        <div class="form-group col-md">
-                            <label class="form-label">VAT</label>
-                            <select class="form-control" value="driver.vat" disabled>
-                                <option value="{{ item.value }}" *ngFor="let item of vatOptions">{{ item.label }}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md" *ngIf="driver.vat == 2">
-                            <label class="form-label">VAT Number</label>
-                            <input class="form-control" readonly [value]="driver.vat_number" />
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </form>
     </div>
 </div>
+
 <div class="row mt-2" >
     <div class="col">
         <div class="card mb-4">
@@ -985,6 +986,28 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2" >
+    <div class="col">
+        <div class="card mb-4">
+            <h6 class="card-header">
+                Dispute History
+            </h6>
+            <div class="card-body">
+                    <div class="" *ngFor="let item of data.query_history">
+                        <div class="col-md">
+                            <label class="form-label btn-sm rounded-pill" *ngIf="item.status == 2" [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Query</label>
+                            <label class="form-label btn-sm rounded-pill" *ngIf="item.status != 2" [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Resolve</label>
+                            <p class="">
+                                {{ item.description }}
+                            </p>
+
+                        </div>
+                    </div>
             </div>
         </div>
     </div>

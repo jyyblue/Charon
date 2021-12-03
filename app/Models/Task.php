@@ -61,7 +61,8 @@ class Task extends Model
         'has_pod',
         'check_price',
         'check_docket_off',
-        'check_bank'
+        'check_bank',
+        'total_payment'
     ];
 
      /**
@@ -88,5 +89,9 @@ class Task extends Model
 
     public function distances() {
         return $this->hasMany(TaskDistance::class, 'task_id', 'id');
+    }
+
+    public function queryHistory() {
+        return $this->hasMany(TaskStatusHistory::class, 'task_id', 'id')->with('_status')->where('query', 1);
     }
 }

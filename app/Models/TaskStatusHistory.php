@@ -16,6 +16,11 @@ class TaskStatusHistory extends Model
         'worker',
         'worker_id',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'query'
     ];
+
+    public function _status() {
+        return $this->hasOne(TaskStatus::class, 'id', 'status');
+    }
 }

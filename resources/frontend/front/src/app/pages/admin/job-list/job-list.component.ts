@@ -9,11 +9,17 @@ const now = new Date();
 declare var $: any;
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-job-list',
   templateUrl: './job-list.component.html',
-  styles: []
+  styles: ['.job-list-table td{ padding: 2px 2px; border:none;}'],
+  styleUrls: [
+    '../../../../vendor/libs/ng-select/ng-select.scss',
+    '../../../../vendor/libs/ngb-datepicker/ngb-datepicker.scss',
+    '../../../../vendor/libs/ngx-dropzone-wrapper/ngx-dropzone-wrapper.scss'
+  ]
 })
 export class JobListComponent implements OnInit {
   dataForm: FormGroup;
@@ -50,6 +56,26 @@ export class JobListComponent implements OnInit {
 
   taskData: object[] = [];
   originaltaskData: object[] = [];
+
+  customerOptions = [];
+  customerLoading = false;
+  customerPage = 1;
+  customerTotal = 0;
+  pageSize = 50;
+
+  driverOptions = [];
+  driverLoading = false;
+  driverPage = 1;
+  driverTotal = 0;
+
+  customer_id = 0;
+  driver_id = 0;
+  job_date = null;
+  taskid = 0;
+  docket = '';
+  c_tprice = '';
+  d_tprice = '';
+  profit = '';
 
   constructor(
     private http: HttpClient, 
@@ -213,4 +239,209 @@ export class JobListComponent implements OnInit {
     this.f.payment_reference.setValue('');
     $("#paymentModal").modal("hide");
   }
+
+  inlineEditTask(taskid) {
+    $('.td_form').addClass('d-none');
+    $('.td_show').removeClass('d-none');
+    $('.td_' + taskid).addClass('d-none');
+    $('.form_' + taskid).removeClass('d-none');
+    this.init(taskid);
+  }
+
+  updateTask(taskid) {
+    $('.td_' + taskid).removeClass('d-none');
+    $('.form_' + taskid).addClass('d-none');
+    let jd = '';
+    if(this.job_date != undefined) {
+      jd = this.job_date.year + "-" + this.job_date.month + "-" + this.job_date.day;
+    }
+    let params = {
+      id: this.taskid,
+      docket: this.docket,
+      customer_id: this.customer_id,
+      driver_id: this.driver_id,
+      job_date: jd,
+      c_tprice: this.c_tprice,
+      d_tprice: this.d_tprice,
+      profit: this.profit
+    };
+
+    this.apiService.updateTask(params).then(res => {
+      let code = res.code;
+      if(code == 200) {
+        let taskIdx = this.taskData.findIndex(item => { return item['id'] == taskid; });
+        let task_old = this.taskData[taskIdx];
+        this.taskData[taskIdx] = res.data;
+        this.toastrService.success('Updated Successfully!');
+      }else{
+        this.toastrService.error('Somthing wrong!');  
+      }
+    }).catch(err => {
+      this.toastrService.error('Somthing wrong!');
+    })
+    console.log(params);
+  }
+
+  cancelTask() {
+    $('.td_form').addClass('d-none');
+    $('.td_show').removeClass('d-none');
+  }
+
+  // customer change
+  init(taskid) {
+    this.taskid = taskid;
+    this.customerLoading = false;
+    this.customerTotal = 0;
+    this.customerOptions = [];
+
+    this.driverLoading = false;
+    this.driverTotal = 0;
+    this.driverOptions = [];
+    
+    let _taskIndex = this.taskData.findIndex(item =>{return item['id'] == taskid});
+    let task = this.taskData[_taskIndex];
+    let driver = task['driver'];
+    let customer = task['customer'];
+    this.customer_id = task['customer_id'];
+    this.driver_id = task['driver_id'];
+
+    let d_c = driver['call_sign'] ? driver['call_sign'] : '';
+    let d_e = driver['email'] ? driver['email']: '';
+    driver['dispName'] = d_c + '-' + d_e;
+    this.driverOptions.push(driver);
+
+    let c_a = customer['account_code'] ? customer['account_code']: '';
+    let c_c = customer['company_name'] ? customer['company_name'] : '';
+    customer['dispName'] = c_a + '-' + c_c;
+    this.customerOptions.push(customer);
+    console.log('here');
+    this.loadCustomer();
+    this.loadDriver();
+
+
+    this.job_date = null;
+    if(task['job_date'] != undefined) {
+      let jd = moment(task['job_date']);
+      this.job_date = {
+        year: jd.year(),
+        month: jd.month() + 1,
+        day: jd.date()
+      };
+    }
+    this.docket = task['docket'];
+    this.c_tprice = task['c_tprice'].toFixed(2);
+    this.d_tprice = task['d_tprice'].toFixed(2);
+    this.profit = task['profit'].toFixed(2);
+  }
+
+  changePrice() {
+    this.c_tprice = parseFloat(this.c_tprice).toFixed(2);
+    this.d_tprice = parseFloat(this.d_tprice).toFixed(2);
+    this.profit = ( parseFloat(this.c_tprice) - parseFloat(this.d_tprice)).toFixed(2);
+  }
+  loadCustomer(key = '') {
+    this.customerLoading = true;
+    let params = {
+      'page': this.customerPage,
+      'pagesize': this.pageSize,
+      'search': key,
+    }
+    this.apiService.getUserList(params).then((res) => {
+      this.customerLoading = false;
+      let code = res.code;
+      if(code == 200) {
+        this.customerOptions = this.customerOptions.concat(res.data);
+        this.customerTotal = res.total;
+      }
+    }).catch(err=>{
+      this.customerLoading = false;
+    })
+  }
+
+  changeCustomer(item) {
+    console.log(item);
+  }
+
+  onScrollToEnd() {
+    if(this.customerOptions.length < this.customerTotal) {
+      this.customerPage++;
+      this.loadCustomer();
+    }
+  }
+
+  customerSearchFn(event) {
+    let term = event.term;
+    if(!this.customerLoading) {
+      this.customerPage = 1;
+      this.customerOptions = [];
+      this.customerTotal = 0;
+      this.loadCustomer(term);
+    }
+  }
+
+  customerOpen(event) {
+    if(this.customerOptions.length > 1) {
+
+    }else{
+      this.customerPage = 1;
+      this.customerTotal = 0;
+      this.customerOptions = [];
+      this.loadCustomer();
+    }
+  }
+
+
+  // change driver
+  loadDriver(key='') {
+    this.driverLoading = true;
+    let params = {
+      'page': this.customerPage,
+      'pagesize': this.pageSize,
+      'search': key,
+    }
+    this.apiService.getDriverList(params).then((res) => {
+      this.driverLoading = false;
+      let code = res.code;
+      if(code == 200) {
+        this.driverOptions = this.driverOptions.concat(res.data);
+        this.driverTotal = res.total;
+      }
+    }).catch(err => {
+      this.driverLoading = false;
+      console.log(err);
+    })
+  }
+
+  // change driver
+  changeDriver(item) {
+  }
+
+  onScrollToEndDriver() {
+    if(this.driverOptions.length < this.driverTotal) {
+      this.driverPage++;
+      this.loadDriver();
+    }
+  }
+
+  driverSearchFn(event) {
+    let term = event.term;
+    if(!this.driverLoading) {
+      this.driverPage = 1;
+      this.driverOptions = [];
+      this.driverTotal = 0;
+      this.loadDriver(term);
+    }
+  }
+
+  driverOpen(event) {
+    if(this.driverOptions.length > 1) {
+
+    }else{
+      this.driverPage = 1;
+      this.driverTotal = 0;
+      this.driverOptions = [];
+      this.loadDriver();
+    }
+  }
+
 }
