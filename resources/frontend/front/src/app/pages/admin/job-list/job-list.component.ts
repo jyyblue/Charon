@@ -305,16 +305,19 @@ export class JobListComponent implements OnInit {
     this.customer_id = task['customer_id'];
     this.driver_id = task['driver_id'];
 
-    let d_c = driver['call_sign'] ? driver['call_sign'] : '';
-    let d_e = driver['email'] ? driver['email']: '';
-    driver['dispName'] = d_c + '-' + d_e;
-    this.driverOptions.push(driver);
+    let d_c = driver ? driver['call_sign'] : '';
+    let d_e = driver ? driver['email']: '';
+    if(driver != undefined) {
+      driver['dispName'] = d_c + '-' + d_e;
+      this.driverOptions.push(driver);
+    }
 
-    let c_a = customer['account_code'] ? customer['account_code']: '';
-    let c_c = customer['company_name'] ? customer['company_name'] : '';
-    customer['dispName'] = c_a + '-' + c_c;
-    this.customerOptions.push(customer);
-    console.log('here');
+    let c_a = customer ? customer['account_code']: '';
+    let c_c = customer ? customer['company_name'] : '';
+    if(customer != undefined) {
+      customer['dispName'] = c_a + '-' + c_c;
+      this.customerOptions.push(customer);
+    }
     this.loadCustomer();
     this.loadDriver();
 
