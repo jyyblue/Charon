@@ -595,29 +595,29 @@
                                 <div class="form-group col-md">
                                     <label class="form-label">Bank Name</label>
                                     <input class="form-control" readonly
-                                        [value]="driver.bank_name ? driver.bank_name : ''" />
+                                        [value]="driver ? driver.bank_name : ''" />
                                 </div>
                                 <div class="form-group col-md">
                                     <label class="form-label">Bank Sort Code</label>
                                     <input class="form-control" readonly
-                                        [value]="driver.bank_sort_code ? driver.bank_sort_code: ''" />
+                                        [value]="driver ? driver.bank_sort_code: ''" />
                                 </div>
                                 <div class="form-group col-md">
                                     <label class="form-label">Bank Account Number</label>
                                     <input class="form-control" readonly
-                                        [value]="driver.bank_account_number ? driver.bank_account_number : ''" />
+                                        [value]="driver ? driver.bank_account_number : ''" />
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md">
                                     <label class="form-label">VAT</label>
-                                    <select class="form-control" value="driver.vat" disabled>
+                                    <select class="form-control" value="driver ? driver.vat: ''" disabled>
                                         <option value="{{ item.value }}" *ngFor="let item of vatOptions">{{ item.label }}</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md" *ngIf="driver.vat == 2">
                                     <label class="form-label">VAT Number</label>
-                                    <input class="form-control" readonly [value]="driver.vat_number" />
+                                    <input class="form-control" readonly [value]="driver ? driver.vat_number: ''" />
                                 </div>
                             </div>
                         </div>
