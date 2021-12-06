@@ -136,6 +136,7 @@ class ImportData implements ShouldQueue
                 'd_net' => (float)$row[15],
                 'd_vat_total' => (float)$row[16],
                 'd_tprice' => (float)$row[17],
+                'source' => $row[5],
 
                 'profit' => (float)$row[10] - (float)$row[17],
 

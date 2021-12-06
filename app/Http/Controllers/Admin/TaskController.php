@@ -45,9 +45,9 @@ class TaskController extends Controller
             $journey = $request->get('journey', []);
             $docket = $request->get('docket', '');
             $task = Task::where('docket', $docket)->first();
-            $c_tprice = $request->get('c_tprice', 0);
-            $d_tprice = $request->get('d_tprice', 0);
-            $profit = (float)$c_tprice - (float)$d_tprice;
+            $c_net = $request->get('c_net', 0);
+            $d_net = $request->get('d_net', 0);
+            $profit = (float)$c_net - (float)$d_net;
             $data['profit'] = $profit;
             if (!empty($task)) {
                 $ret['code'] = 410;
@@ -74,28 +74,18 @@ class TaskController extends Controller
             $data = $request->except(['journey', 'id']);
             $journey = $request->get('journey', []);
 
-            $c_tprice = $request->get('c_tprice', 0);
-            $d_tprice = $request->get('d_tprice', 0);
-            $profit = (float)$c_tprice - (float)$d_tprice;
-            $data['profit'] = $profit;
-
-
             // pending to pending_payment
             $driver_id = $request->get('driver_id', 0);
             $call_sign = $request->get('call_sign', '');
             $driver_vehicle = $request->get('driver_vehicle', 0);
             $driver_type = $request->get('driver_type', 0);
-            $job_ref = $request->get('job_ref', '');
-            $d_tprice = $request->get('d_tprice', 0);
 
             if (
                 $status == constants('status.pending') &&
                 !empty($driver_id) &&
                 !empty($call_sign) &&
                 !empty($driver_vehicle) &&
-                !empty($driver_type) &&
-                !empty($job_ref) &&
-                !empty($d_tprice)
+                !empty($driver_type) 
             ) {
                 $status = constants('status.pending_payment');
                 TaskStatusHistory::updateOrCreate(
@@ -112,6 +102,9 @@ class TaskController extends Controller
             }
 
             // pending_payment to cp_payment
+            $job_ref = $request->get('job_ref', '');
+            $d_tprice = $request->get('d_tprice', 0);
+
             $invoice_number = $request->get('invoice_number', '');
             $invoice_date = $request->get('invoice_date', '');
             $invoice_received_date = $request->get('invoice_received_date', '');
@@ -120,18 +113,24 @@ class TaskController extends Controller
             $check_price = $request->get('check_price', false);
             $check_docket_off = $request->get('check_docket_off', false);
             $check_bank = $request->get('check_bank', false);
+            $has_pod = $request->get('has_pod', false);
 
+            if(!$has_pod && empty($pod_file)) {
+                $has_pod = false;
+            }
             if (
                 $status == constants('status.pending_payment') &&
                 !empty($invoice_number) &&
                 !empty($invoice_date) &&
                 !empty($invoice_received_date) &&
                 !empty($target_payment_date) &&
-                !empty($pod_file) &&
+                $has_pod &&
                 !empty($d_tprice) &&
                 $check_price &&
                 $check_docket_off &&
-                $check_bank
+                $check_bank &&
+                !empty($job_ref) &&
+                !empty($d_tprice)
             ) {
                 $status = constants('status.cp_payment');
                 TaskStatusHistory::updateOrCreate(
@@ -249,9 +248,9 @@ class TaskController extends Controller
             $journey = $request->get('journey', []);
             $id = $request->get('id', '');
 
-            $c_tprice = $request->get('c_tprice', 0);
-            $d_tprice = $request->get('d_tprice', 0);
-            $profit = (float)$c_tprice - (float)$d_tprice;
+            $c_net = $request->get('c_net', 0);
+            $d_net = $request->get('d_net', 0);
+            $profit = (float)$c_net - (float)$d_net;
             $data['profit'] = $profit;
 
             $task = Task::where('id', $id)->first();
@@ -262,17 +261,14 @@ class TaskController extends Controller
             $call_sign = $request->get('call_sign', '');
             $driver_vehicle = $request->get('driver_vehicle', 0);
             $driver_type = $request->get('driver_type', 0);
-            $job_ref = $request->get('job_ref', '');
-            $d_tprice = $request->get('d_tprice', 0);
+
 
             if (
                 $status == constants('status.pending') &&
                 !empty($driver_id) &&
                 !empty($call_sign) &&
                 !empty($driver_vehicle) &&
-                !empty($driver_type) &&
-                !empty($job_ref) &&
-                !empty($d_tprice)
+                !empty($driver_type) 
             ) {
                 $status = constants('status.pending_payment');
                 TaskStatusHistory::updateOrCreate(
@@ -289,14 +285,21 @@ class TaskController extends Controller
             }
 
             // pending_payment to cp_payment
+            $job_ref = $request->get('job_ref', '');
+            $d_tprice = $request->get('d_tprice', 0);
             $invoice_number = $request->get('invoice_number', '');
             $invoice_date = $request->get('invoice_date', '');
             $invoice_received_date = $request->get('invoice_received_date', '');
             $target_payment_date = $request->get('target_payment_date', '');
+            $has_pod = $request->get('has_pod', false);
             $pod_file = $request->get('pod_file', '');
             $check_price = $request->get('check_price', false);
             $check_docket_off = $request->get('check_docket_off', false);
             $check_bank = $request->get('check_bank', false);
+
+            if(!$has_pod && empty($pod_file)) {
+                $has_pod = false;
+            }
 
             if (
                 $status == constants('status.pending_payment') &&
@@ -304,11 +307,13 @@ class TaskController extends Controller
                 !empty($invoice_date) &&
                 !empty($invoice_received_date) &&
                 !empty($target_payment_date) &&
-                !empty($pod_file) &&
+                $has_pod &&
                 !empty($d_tprice) &&
                 $check_price &&
                 $check_docket_off &&
-                $check_bank
+                $check_bank &&
+                !empty($job_ref) &&
+                !empty($d_tprice)
             ) {
                 $status = constants('status.cp_payment');
                 TaskStatusHistory::updateOrCreate(

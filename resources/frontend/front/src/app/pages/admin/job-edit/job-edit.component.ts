@@ -145,6 +145,7 @@ export class JobEditComponent implements OnInit {
       c_net: [ this.data.c_net.toFixed(2), []],
       c_vat_total: [ this.data.c_vat_total.toFixed(2),[]],
       c_tprice: [ this.data.c_tprice.toFixed(2), Validators.required],
+      source: [this.data.source, []],
       has_pod: [this.data.has_pod, []],
 
       driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
@@ -245,7 +246,7 @@ export class JobEditComponent implements OnInit {
             day: pd.date()
           }
         }
-        let profit = ( this.data.profit/this.data.c_tprice) * 100;
+        let profit = ( this.data.profit/this.data.c_net) * 100;
         let profitpercent = profit.toFixed(2);
 
         this.dataForm = this.formBuilder.group({
@@ -267,6 +268,7 @@ export class JobEditComponent implements OnInit {
           c_net: [ this.data.c_net.toFixed(2), []],
           c_vat_total: [ this.data.c_vat_total.toFixed(2),[]],
           c_tprice: [ this.data.c_tprice.toFixed(2), Validators.required],
+          source: [this.data.source, []],
           has_pod: [this.data.has_pod, []],
 
           driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
@@ -287,7 +289,7 @@ export class JobEditComponent implements OnInit {
           d_net: [ this.data.d_net ? this.data.d_net.toFixed(2) : (0).toFixed(2), []],
           d_vat_total: [ this.data.d_vat_total ? this.data.d_vat_total.toFixed(2) : (0).toFixed(2),[]],
           d_tprice: [ this.data.d_tprice ? this.data.d_tprice.toFixed(2) : (0).toFixed(2), []],
-    
+          
           invoice_date: [invoice_date, []],
           invoice_received_date: [invoice_received_date, []],
           target_payment_date: [this.data.target_payment_date, []],
@@ -343,10 +345,10 @@ export class JobEditComponent implements OnInit {
   saveTask() {
     this.submitted = true;
     console.log(this.f.has_pod.value, '-pod value');
-    if(this.validateJourney()) {
-      console.log('validate journey fail');
-      return;
-    }
+    // if(this.validateJourney()) {
+    //   console.log('validate journey fail');
+    //   return;
+    // }
     if(this.dataForm.invalid){
       console.log('validate form fail');
       return;
@@ -394,6 +396,7 @@ export class JobEditComponent implements OnInit {
       'c_net': this.f.c_net.value,
       'c_vat_total': this.f.c_vat_total.value,
       'c_tprice': this.f.c_tprice.value,
+      'source': this.f.source.value,
       'has_pod': this.f.has_pod.value,
       'driver_id': this.f.driver_id.value,
       'job_ref': this.f.job_ref.value,
@@ -819,10 +822,10 @@ export class JobEditComponent implements OnInit {
     let d_tprice = d_price_total + d_extra_total + d_extra_total_0;
     this.f.d_tprice.setValue(d_tprice.toFixed(2));
 
-    let profit = c_tprice - d_tprice;
+    let profit = c_net - d_net;
     this.f.profit.setValue(profit.toFixed(2));
 
-    let profitpercent = (profit / c_tprice) * 100;
+    let profitpercent = (profit / c_net) * 100;
     this.f.profitpercent.setValue(profitpercent.toFixed(2));
   }
 

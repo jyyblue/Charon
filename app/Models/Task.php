@@ -43,6 +43,7 @@ class Task extends Model
         'd_net',
         'd_vat_total',
         'd_tprice',
+        'source',
         'invoice_date',
         'invoice_received_date',
         'invoice_number',

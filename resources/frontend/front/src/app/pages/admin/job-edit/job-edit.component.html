@@ -91,7 +91,17 @@
                 </form>
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <form [formGroup]="dataForm">
+                            <div class="form-group">
+                                <label class="form-label">Journey</label>
+                                <input class="form-control" formControlName="source" name="source" [ngClass]="{'is-invalid' : submitted && f.source.errors}"/>
+                                <div *ngIf="f.source.errors && submitted" class="invalid-feedback">
+                                    <div *ngIf="f.source.errors.required">This field is Required
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- <div class="form-group">
                             Journey
                             <div class="btn-group">
                                 <button class="btn btn-primary" (click)="addJourney()">+</button>
@@ -116,7 +126,7 @@
                             <div [ngClass]="{'d-block' : submitted && journeyError }" class="invalid-feedback">
                                 <div>This field is Required</div>
                             </div>
-                        </table>
+                        </table> -->
                     </div>
                     <div class="col-md-6">
                         <form [formGroup]="dataForm">
@@ -393,19 +403,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="has_pod"
-                                            (change)="onCheckChange($event)" name="has_pod" [checked]="f.has_pod.value">
-                                        <span class="form-check-label">
-                                            No Pod
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -501,7 +499,7 @@
                             <label class="form-label">Driver Job Ref / CX Ref<span
                                     class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <input type="text" class="form-control" formControlName="job_ref" name="job_ref"
-                                [ngClass]="{'is-invalid' : submitted && f.job_ref.errors , 'bg-warning' : data._status != null && data._status.id == 1}">
+                                [ngClass]="{'is-invalid' : submitted && f.job_ref.errors , 'bg-warning' : data._status != null && data._status.id == 3}">
                             <div *ngIf="f.job_ref.errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f.job_ref.errors.required">Thie field is Required</div>
                             </div>
@@ -562,17 +560,27 @@
                     </div>
 
                     <div class="form-row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="mb-2" *ngIf="data.pod_file">
                                 <a href="{{ downloadurl }}?filename={{ data.pod_file }}"
                                     class="btn btn-info rounded-pill">Download</a>
                             </div>
 
-                            <div class="form-group w-100 bg-periscope-dark p-3"
-                                [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}">
+                            <div class="form-group w-100 p-3 border-success" style="border: 2px dashed"
+                            [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3 && f.has_pod.value != true }"
+                                >
                                 <div class="d-flex mb-2">
                                     <label class="form-label w-100">Upload POD</label>
-                                    <button class="btn btn-primary" (click)="onReset()">Reset</button>
+                                    <div class="w-100 d-flex" style="direction:rtl;">
+                                        <button class="btn btn-primary" (click)="onReset()">Reset</button>
+                                        <label class="form-check form-check-inline" style="direction:ltr;">
+                                            <input class="form-check-input" type="checkbox" id="has_pod"
+                                                (change)="onCheckChange($event)" name="has_pod" [checked]="f.has_pod.value">
+                                            <span class="form-check-label">
+                                                No Pod
+                                            </span>
+                                        </label>
+                                    </div>
                                 </div>
                                 <div class="dropzone dropzone-container" [dropzone]="dropzoneConfig"
                                     (reset)="resetThumbnail()" (error)="onErrorThumb($event)"
@@ -592,12 +600,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                                 <div class="form-row" >
                                     <div class="form-group col-md">
                                         <label class="form-label">Bank Name</label>
                                         <input class="form-control" readonly [value]="driver ? driver.bank_name : ''" />
                                     </div>
+                                    <div class="form-group col-md">
+                                        <label class="form-label">Payee Name</label>
+                                        <input class="form-control" readonly
+                                            [value]="driver ? driver.payee_name : ''" />
+                                    </div>
+                                </div>
+    
+                                <div class="form-row">
                                     <div class="form-group col-md">
                                         <label class="form-label">Bank Sort Code</label>
                                         <input class="form-control" readonly [value]="driver ? driver.bank_sort_code: ''" />
@@ -621,7 +637,7 @@
                                     </div>
                                 </div>
                             </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="row">
                                 <table class="table price-table mr-3 ml-3">
                                     <tbody>
@@ -647,7 +663,7 @@
                                                         </div>
                                                         <input type="number" class="form-control" formControlName="d_price"
                                                         name="d_price" (change)="changePrice()" step="0.01"
-                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 1}">   
+                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}">   
                                                     </div>
                                                     
                                                     <div *ngIf="f.d_price.errors && submitted" class="invalid-feedback">
@@ -668,7 +684,7 @@
                                                     <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
                                                         formControlName="d_vat" name="d_vat" placeholder="Select VAT"
                                                         (change)="changePrice()"
-                                                        [ngClass]="{'is-invalid' : submitted && f.d_vat.errors,'custom': data._status != null && data.status == 1 }">
+                                                        [ngClass]="{'is-invalid' : submitted && f.d_vat.errors,'custom': data._status != null && data.status == 3 }">
                                                         <ng-template ng-label-tmp let-item="item">
                                                             <span class="ng-value-label">{{item['label']}}</span>
                                                         </ng-template>
@@ -699,7 +715,7 @@
                                                         </div>
                                                         <input typ="number" step="0.01" class="form-control"
                                                         formControlName="d_price_total" readonly
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }" />
+                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }" />
                                                     </div>
                                                 </div>
                                             </td>
@@ -728,7 +744,7 @@
                                                         </div>
                                                         <input type="number" step="0.01" class="form-control"
                                                         formControlName="d_extra" name="d_extra"
-                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 1}"
+                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}"
                                                         (change)="changePrice()">
                                                     </div>
 
@@ -748,7 +764,7 @@
                                             <td>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" readonly value="20% (fixed)"
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }">
+                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }">
                                                 </div>
                                             </td>
                                             <td>
@@ -767,7 +783,7 @@
                                                         </div>
                                                         <input typ="number" step="0.01" class="form-control"
                                                         formControlName="d_extra_total" readonly
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }" />
+                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }" />
                                                     </div>
 
 
@@ -798,7 +814,7 @@
                                                         </div>
                                                         <input type="number" step="0.01" class="form-control"
                                                         formControlName="d_extra_0" name="d_extra_0"
-                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 1}"
+                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}"
                                                         (change)="changePrice()">
                                                     </div>
 
@@ -820,7 +836,7 @@
                                             <td>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" readonly value="0% (fixed)"
-                                                    [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }">
+                                                    [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }">
                                                 </div>
                                             </td>
                                             <td>
@@ -839,7 +855,7 @@
                                                         </div>
                                                         <input typ="number" step="0.01" class="form-control"
                                                         formControlName="d_extra_total_0" readonly
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }" />
+                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }" />
                                                     </div>
 
                                                 </div>
@@ -868,7 +884,7 @@
                                                         </div>
                                                         <input type="number" step="0.01" class="form-control"
                                                         formControlName="d_net" name="d_net" readonly
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }">
+                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }">
                                                     </div>
                                                 </div>
                                             </td>
@@ -889,7 +905,7 @@
                                                             </div>
                                                             <input type="number" step="0.01" class="form-control"
                                                             formControlName="d_vat_total" name="d_vat_total" readonly
-                                                            [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }">
+                                                            [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -911,7 +927,7 @@
                                                         </div>
                                                         <input type="number" step="0.01" class="form-control"
                                                         formControlName="d_tprice" name="d_tprice" min="1.0" readonly
-                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 1}">
+                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}">
                                                     </div>
 
                                                     <div *ngIf="f.d_tprice.errors && submitted"

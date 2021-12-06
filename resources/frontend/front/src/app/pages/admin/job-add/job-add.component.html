@@ -23,7 +23,7 @@
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label class="form-label">Customer</label>
-                            <ng-select [items]="customerOptions" bindLabel="dispName" bindValue="id"
+                            <ng-select [items]="customerOptions" bindLabel="dispName" bindValue="id" class="custom"
                                 formControlName="customer_id" name="customer_id" [loading]="customerLoading"
                                 [ngClass]="{'is-invalid' : submitted && f.customer_id.errors }"
                                 (change)="changeCustomer($event)" [virtualScroll]="true" (scrollToEnd)="onScrollToEnd()"
@@ -42,7 +42,7 @@
                         </div>
                         <div class="form-group col-md-3">
                             <label class="form-label">Docket Number</label>
-                            <input type="text" class="form-control" formControlName="docket" name="docket"
+                            <input type="text" class="form-control bg-warning" formControlName="docket" name="docket"
                                 [ngClass]="{'is-invalid' : submitted && f.docket.errors }">
                             <div *ngIf="f.docket.errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f.docket.errors.required">Thie field is Required</div>
@@ -51,7 +51,7 @@
                         <div class="form-group col-md-3">
                             <label class="form-label">Job Date</label>
                             <div class="input-group">
-                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                                <input class="form-control bg-warning" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
                                     formControlName="job_date" name="job_date" #d="ngbDatepicker"
                                     [ngClass]="{'is-invalid' : submitted && f.job_date.errors }" readonly>
                                 <div class="input-group-append">
@@ -66,7 +66,7 @@
                         </div>
                         <div class="form-group col-md-3">
                             <label class="form-label">Vehicle Size</label>
-                            <ng-select [items]="vehicleOptions" bindLabel="label" bindValue="value"
+                            <ng-select [items]="vehicleOptions" bindLabel="label" bindValue="value" class="custom"
                                 formControlName="vehicle_type" name="vehicle_type" [loading]="vehicleLoading"
                                 [ngClass]="{'is-invalid' : submitted && f.vehicle_type.errors }"
                                 (change)="changeVehicle()">
@@ -86,7 +86,17 @@
                 </form>
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <form [formGroup]="dataForm">
+                            <div class="form-group">
+                                <label class="form-label">Journey</label>
+                                <input class="form-control bg-warning" formControlName="source" name="source" [ngClass]="{'is-invalid' : submitted && f.source.errors}"/>
+                                <div *ngIf="f.source.errors && submitted" class="invalid-feedback">
+                                    <div *ngIf="f.source.errors.required">This field is Required
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- <div class="form-group">
                             Journey
                             <div class="btn-group">
                                 <button class="btn btn-primary" (click)="addJourney()">+</button>
@@ -111,7 +121,7 @@
                             <div [ngClass]="{'d-block' : submitted && journeyError }" class="invalid-feedback">
                                 <div>This field is Required</div>
                             </div>
-                        </table>
+                        </table> -->
                     </div>
                     <div class="col-md-6">
                         <form [formGroup]="dataForm">
@@ -139,7 +149,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" class="form-control"
+                                                        <input type="number" class="form-control bg-warning"
                                                             formControlName="c_price" name="c_price"
                                                             (change)="changePrice()" step="0.01">
                                                     </div>
@@ -158,7 +168,7 @@
                                             </td>
                                             <td>
                                                 <div class="form-group">
-                                                    <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
+                                                    <ng-select [items]="vatOptions" bindLabel="label" bindValue="value" class="custom"
                                                         formControlName="c_vat" name="c_vat" placeholder="Select VAT"
                                                         (change)="changePrice()"
                                                         [ngClass]="{'is-invalid' : submitted && f.c_vat.errors }">
@@ -189,7 +199,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input typ="number" step="0.01" class="form-control"
+                                                        <input type="number" step="0.01" class="form-control bg-warning"
                                                             formControlName="c_price_total" readonly />
                                                     </div>
 
@@ -217,7 +227,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" step="0.01" class="form-control"
+                                                        <input type="number" step="0.01" class="form-control bg-warning"
                                                             formControlName="c_extra" name="c_extra"
                                                             (change)="changePrice()">
                                                     </div>
@@ -237,7 +247,7 @@
                                             </td>
                                             <td>
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" value="20% (fixed )"
+                                                    <input type="text" class="form-control bg-warning" value="20% (fixed )"
                                                         readonly>
                                                 </div>
                                             </td>
@@ -254,7 +264,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input typ="number" step="0.01" class="form-control"
+                                                        <input typ="number" step="0.01" class="form-control bg-warning"
                                                             formControlName="c_extra_total" readonly />
                                                     </div>
                                                 </div>
@@ -281,7 +291,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" step="0.01" class="form-control"
+                                                        <input type="number" step="0.01" class="form-control bg-warning"
                                                             formControlName="c_extra_0" name="c_extra_0"
                                                             (change)="changePrice()">
                                                     </div>
@@ -302,7 +312,7 @@
                                             </td>
                                             <td>
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" value="0% (fixed )"
+                                                    <input type="text" class="form-control bg-warning" value="0% (fixed )"
                                                         readonly>
                                                 </div>
                                             </td>
@@ -319,7 +329,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input typ="number" step="0.01" class="form-control"
+                                                        <input typ="number" step="0.01" class="form-control bg-warning"
                                                             formControlName="c_extra_total_0" readonly />
                                                     </div>
                                                 </div>
@@ -345,7 +355,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" step="0.01" class="form-control"
+                                                        <input type="number" step="0.01" class="form-control bg-warning"
                                                             formControlName="c_net" name="c_net" readonly>
                                                     </div>
                                                 </div>
@@ -363,7 +373,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" step="0.01" class="form-control"
+                                                        <input type="number" step="0.01" class="form-control bg-warning"
                                                             formControlName="c_vat_total" name="c_vat_total" readonly>
                                                     </div>
                                                 </div>
@@ -381,7 +391,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" step="0.01" class="form-control"
+                                                        <input type="number" step="0.01" class="form-control bg-warning"
                                                             formControlName="c_tprice" name="c_tprice" readonly>
                                                     </div>
                                                 </div>
@@ -390,19 +400,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="has_pod"
-                                            (change)="onCheckChange($event)" name="has_pod" [checked]="f.has_pod.value">
-                                        <span class="form-check-label">
-                                            No Pod
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -560,17 +558,27 @@
                     </div>
 
                     <div class="form-row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="mb-2" *ngIf="data.pod_file">
                                 <a href="{{ downloadurl }}?filename={{ data.pod_file }}"
                                     class="btn btn-info rounded-pill">Download</a>
                             </div>
 
-                            <div class="form-group w-100 bg-periscope-dark p-3"
-                                [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}">
+                            <div class="form-group w-100 p-3 border-success" style="border: 2px dashed"
+                            [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3 && f.has_pod.value != true }"
+                                >
                                 <div class="d-flex mb-2">
                                     <label class="form-label w-100">Upload POD</label>
-                                    <button class="btn btn-primary" (click)="onReset()">Reset</button>
+                                    <div class="w-100 d-flex" style="direction:rtl;">
+                                        <button class="btn btn-primary" (click)="onReset()">Reset</button>
+                                        <label class="form-check form-check-inline" style="direction:ltr;">
+                                            <input class="form-check-input" type="checkbox" id="has_pod"
+                                                (change)="onCheckChange($event)" name="has_pod" [checked]="f.has_pod.value">
+                                            <span class="form-check-label">
+                                                No Pod
+                                            </span>
+                                        </label>
+                                    </div>
                                 </div>
                                 <div class="dropzone dropzone-container" [dropzone]="dropzoneConfig"
                                     (reset)="resetThumbnail()" (error)="onErrorThumb($event)"
@@ -590,13 +598,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-row">
                                 <div class="form-group col-md">
                                     <label class="form-label">Bank Name</label>
                                     <input class="form-control" readonly
                                         [value]="driver ? driver.bank_name : ''" />
                                 </div>
+                                <div class="form-group col-md">
+                                    <label class="form-label">Payee Name</label>
+                                    <input class="form-control" readonly
+                                        [value]="driver ? driver.payee_name : ''" />
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+
                                 <div class="form-group col-md">
                                     <label class="form-label">Bank Sort Code</label>
                                     <input class="form-control" readonly
@@ -621,7 +638,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="row">
                                 <table class="table price-table mr-3 ml-3">
                                     <tbody>

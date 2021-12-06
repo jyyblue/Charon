@@ -38,6 +38,7 @@ export class Task {
     public d_net: number;
     public d_vat_total: number;
     public d_tprice: number;
+    public source: string;
     public invoice_date: NgbDateStruct;
     public invoice_received_date: NgbDateStruct;
     public target_payment_date: string;
@@ -99,6 +100,7 @@ export class Task {
         this.d_net = 0;
         this.d_vat_total = 0;
         this.d_tprice = 0;
+        this.source = null;
         this.invoice_date = null;
         this.invoice_received_date = null;
         this.target_payment_date = '';
@@ -119,7 +121,8 @@ export class Task {
         this.driver = {
             bank_name: '',
             bank_sort_code: '',
-            bank_account_number: ''
+            bank_account_number: '',
+            payee_name: ''
         };
         this.customer = null;
         this.distances = [];
