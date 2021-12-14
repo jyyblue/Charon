@@ -1,7 +1,7 @@
 const now = new Date();
 import { NgbCalendar, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
-export class Task {
+export class InlineTask {
     public id: number;
     public customer_id: number;
     public docket: string;
@@ -18,7 +18,7 @@ export class Task {
     public c_extra_total_0: number;
     public c_net: number;
     public c_vat_total: number;
-    public c_tprice: number;
+    public c_tprice: string;
     public has_pod: boolean;
     public driver_id: number;
     public job_ref: string;
@@ -37,7 +37,7 @@ export class Task {
     public d_extra_total_0: number;
     public d_net: number;
     public d_vat_total: number;
-    public d_tprice: number;
+    public d_tprice: string;
     public source: string;
     public invoice_date: NgbDateStruct;
     public invoice_received_date: NgbDateStruct;
@@ -51,11 +51,14 @@ export class Task {
     public payment_reference: string;
     public total_payment: number;
     public status: number;
-    public profit: number;
+    public profit: string;
     public profitpercent: number;
-    public driver: any;
-    public _status: any;
-    public customer: any;
+    public d_email: string;
+    public d_call_sign: string;
+    public status_name: string;
+    public status_color: string;
+    public c_account_code: string;
+    public c_company_name: string;
     public distances : any[];
     public query_history: any[];
     private model = {
@@ -80,7 +83,7 @@ export class Task {
         this.c_extra_total_0 = 0;
         this.c_net = 0;
         this.c_vat_total = 0;
-        this.c_tprice = 0;
+        this.c_tprice = '';
         this.has_pod = false;
         this.driver_id = 0;
         this.job_ref = '';
@@ -99,7 +102,7 @@ export class Task {
         this.d_extra_total_0 = 0;
         this.d_net = 0;
         this.d_vat_total = 0;
-        this.d_tprice = 0;
+        this.d_tprice = '';
         this.source = null;
         this.invoice_date = null;
         this.invoice_received_date = null;
@@ -113,18 +116,14 @@ export class Task {
         this.payment_reference = '';
         this.total_payment = 0;
         this.status = 0;
-        this.profit = 0;
+        this.profit = '';
         this.profitpercent = 0;
-        this._status = {
-            id: 0
-        }
-        this.driver = {
-            bank_name: '',
-            bank_sort_code: '',
-            bank_account_number: '',
-            payee_name: ''
-        };
-        this.customer = null;
+        this.d_email ='';
+        this.d_call_sign ='';
+        this.status_name = '';
+        this.status_color = '';
+        this.c_account_code = '';
+        this.c_company_name = '';
         this.distances = [];
         this.query_history = [];
     }

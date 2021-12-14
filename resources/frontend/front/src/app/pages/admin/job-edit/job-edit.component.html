@@ -1,8 +1,9 @@
 <h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
     <div>Edit Job</div>
     <div class="btn-group">
-        <label class="btn btn-outline-primary "
-            [ngStyle]="{background: item.id == data._status.id ? item.color  : '#fff'}"
+        <label class="btn status_nav status_nav_{{ item.id }}"
+            [ngStyle]="{background: item.color }"
+            [ngClass]="{'active': item.id == data._status.id }"
             *ngFor="let item of taskStatus">{{ item.name }}</label>
     </div>
 </h4>
@@ -425,7 +426,7 @@
                                     class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <ng-select [items]="driverOptions" bindLabel="dispName" bindValue="id"
                                 [loading]="driverLoading" formControlName="driver_id" name="driver_id"
-                                [ngClass]="{'is-invalid' : submitted && f.driver_id.errors, 'custom' : data._status != null && data._status.id == 1  }"
+                                [ngClass]="{'is-invalid' : f.driver_id.value == undefined , 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 1  }"
                                 (change)="changeDriver($event)" [virtualScroll]="true"
                                 (scrollToEnd)="onScrollToEndDriver()" (search)="driverSearchFn($event)"
                                 (open)="driverOpen($event)">
@@ -445,7 +446,7 @@
                             <label class="form-label">Call Sign<span
                                     class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <input type="text" class="form-control" formControlName="call_sign" name="call_sign"
-                                [ngClass]="{'is-invalid' : submitted && f.call_sign.errors , 'bg-warning' : data._status != null && data._status.id == 1}">
+                                [ngClass]="{'is-invalid' : f.call_sign.value == '' , 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 1}">
                             <div *ngIf="f.call_sign.errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f.call_sign.errors.required">This field is Required</div>
                             </div>
@@ -455,7 +456,7 @@
                             <label class="form-label">Type</label>
                             <ng-select [items]="typeOptions" bindLabel="label" bindValue="value"
                                 formControlName="driver_type" placeholder="Select Type"
-                                [ngClass]="{'is-invalid' : submitted && f.driver_type.errors, 'custom' : data._status != null && data._status.id == 1}">
+                                [ngClass]="{'is-invalid' : f.driver_type.value == undefined, 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 1}">
                                 <ng-template ng-label-tmp let-item="item">
                                     <span class="ng-value-label">{{item['label']}}</span>
                                 </ng-template>
@@ -471,7 +472,7 @@
                         <div class="form-group col-md" *ngIf="f.driver_type.value==1">
                             <label class="form-label">CX Number</label>
                             <input type="text" class="form-control" formControlName="cx_number" name="cx_number"
-                                [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 1 }">
+                                [ngClass]="{'is-invalid' : f.cx_number.value == '', 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 1 }">
                         </div>
 
                         <div class="form-group col-md">
@@ -479,7 +480,7 @@
                                     class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <ng-select [items]="vehicleOptions" bindLabel="label" bindValue="value"
                                 formControlName="driver_vehicle" placeholder="Select Type"
-                                [ngClass]="{'is-invalid' : submitted && f.driver_vehicle.errors , 'custom' : data._status != null && data._status.id == 1}">
+                                [ngClass]="{'is-invalid' : f.driver_vehicle.value == undefined , 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 1}">
                                 <ng-template ng-label-tmp let-item="item">
                                     <span class="ng-value-label">{{item['label']}}</span>
                                 </ng-template>
@@ -499,7 +500,7 @@
                             <label class="form-label">Driver Job Ref / CX Ref<span
                                     class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <input type="text" class="form-control" formControlName="job_ref" name="job_ref"
-                                [ngClass]="{'is-invalid' : submitted && f.job_ref.errors , 'bg-warning' : data._status != null && data._status.id == 3}">
+                                [ngClass]="{'is-invalid' : f.job_ref.value == '' , 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3}">
                             <div *ngIf="f.job_ref.errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f.job_ref.errors.required">Thie field is Required</div>
                             </div>
@@ -512,7 +513,7 @@
                                 <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
                                     formControlName="invoice_date" name="invoice_date"
                                     (ngModelChange)="onDateChange($event)" #d1="ngbDatepicker"
-                                    [ngClass]="{'is-invalid' : submitted && f.invoice_date.errors , 'bg-warning' : data._status != null && data._status.id == 3}">
+                                    [ngClass]="{'is-invalid' : f.invoice_date.value == undefined , 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3}">
                                 <div class="input-group-append">
                                     <button class="input-group-text" (click)="d1.toggle()" type="button">
                                         <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
@@ -528,7 +529,7 @@
                                     class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <input type="text" class="form-control" formControlName="invoice_number"
                                 name="invoice_number"
-                                [ngClass]="{'is-invalid' : submitted && f.invoice_number.errors , 'bg-warning' : data._status != null && data._status.id == 3}">
+                                [ngClass]="{'is-invalid' : f.invoice_number.value == '' , 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3}">
                             <div *ngIf="f.invoice_number.errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f.invoice_number.errors.required">Thie field is Required</div>
                             </div>
@@ -540,7 +541,7 @@
                                 <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
                                     formControlName="invoice_received_date" name="invoice_received_date"
                                     #d3="ngbDatepicker"
-                                    [ngClass]="{'is-invalid' : submitted && f.invoice_received_date.errors, 'bg-warning' : data._status != null && data._status.id == 3 }">
+                                    [ngClass]="{'is-invalid' : f.invoice_received_date.value == undefined, 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }">
                                 <div class="input-group-append">
                                     <button class="input-group-text" (click)="d3.toggle()" type="button">
                                         <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
@@ -555,7 +556,7 @@
                             <label class="form-label">Target Payment Date</label>
                             <input type="text" class="form-control" formControlName="target_payment_date"
                                 name="target_payment_date"
-                                [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}" disabled>
+                                [ngClass]="{'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3}" disabled>
                         </div>
                     </div>
 
@@ -567,7 +568,7 @@
                             </div>
 
                             <div class="form-group w-100 p-3 border-success" style="border: 2px dashed"
-                            [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3 && f.has_pod.value != true }"
+                            [ngClass]="{'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 && f.has_pod.value != true }"
                                 >
                                 <div class="d-flex mb-2">
                                     <label class="form-label w-100">Upload POD</label>
@@ -663,7 +664,7 @@
                                                         </div>
                                                         <input type="number" class="form-control" formControlName="d_price"
                                                         name="d_price" (change)="changePrice()" step="0.01"
-                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}">   
+                                                        [ngClass]="{'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3}">   
                                                     </div>
                                                     
                                                     <div *ngIf="f.d_price.errors && submitted" class="invalid-feedback">
@@ -715,7 +716,7 @@
                                                         </div>
                                                         <input typ="number" step="0.01" class="form-control"
                                                         formControlName="d_price_total" readonly
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }" />
+                                                        [ngClass]="{ 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }" />
                                                     </div>
                                                 </div>
                                             </td>
@@ -744,7 +745,7 @@
                                                         </div>
                                                         <input type="number" step="0.01" class="form-control"
                                                         formControlName="d_extra" name="d_extra"
-                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}"
+                                                        [ngClass]="{'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3}"
                                                         (change)="changePrice()">
                                                     </div>
 
@@ -764,7 +765,7 @@
                                             <td>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" readonly value="20% (fixed)"
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }">
+                                                        [ngClass]="{ 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }">
                                                 </div>
                                             </td>
                                             <td>
@@ -783,7 +784,7 @@
                                                         </div>
                                                         <input typ="number" step="0.01" class="form-control"
                                                         formControlName="d_extra_total" readonly
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }" />
+                                                        [ngClass]="{ 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }" />
                                                     </div>
 
 
@@ -814,7 +815,7 @@
                                                         </div>
                                                         <input type="number" step="0.01" class="form-control"
                                                         formControlName="d_extra_0" name="d_extra_0"
-                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}"
+                                                        [ngClass]="{'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3}"
                                                         (change)="changePrice()">
                                                     </div>
 
@@ -836,7 +837,7 @@
                                             <td>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" readonly value="0% (fixed)"
-                                                    [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }">
+                                                    [ngClass]="{ 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }">
                                                 </div>
                                             </td>
                                             <td>
@@ -855,7 +856,7 @@
                                                         </div>
                                                         <input typ="number" step="0.01" class="form-control"
                                                         formControlName="d_extra_total_0" readonly
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }" />
+                                                        [ngClass]="{ 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }" />
                                                     </div>
 
                                                 </div>
@@ -884,7 +885,7 @@
                                                         </div>
                                                         <input type="number" step="0.01" class="form-control"
                                                         formControlName="d_net" name="d_net" readonly
-                                                        [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }">
+                                                        [ngClass]="{ 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }">
                                                     </div>
                                                 </div>
                                             </td>
@@ -905,7 +906,7 @@
                                                             </div>
                                                             <input type="number" step="0.01" class="form-control"
                                                             formControlName="d_vat_total" name="d_vat_total" readonly
-                                                            [ngClass]="{ 'bg-warning' : data._status != null && data._status.id == 3 }">
+                                                            [ngClass]="{ 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -927,7 +928,7 @@
                                                         </div>
                                                         <input type="number" step="0.01" class="form-control"
                                                         formControlName="d_tprice" name="d_tprice" min="1.0" readonly
-                                                        [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3}">
+                                                        [ngClass]="{'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3}">
                                                     </div>
 
                                                     <div *ngIf="f.d_tprice.errors && submitted"
@@ -958,7 +959,7 @@
                 <form [formGroup]="dataForm">
                     <div class="form-row">
                         <div class="form-group col-md"
-                            [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3 }">
+                            [ngClass]="{'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }">
                             <label class="form-check form-check-inline"
                                 [ngClass]="{'is-invalid' : submitted && f.check_price.errors }">
                                 <input class="form-check-input" type="checkbox" id="check_price"
@@ -972,7 +973,7 @@
                             </div>
                         </div>
                         <div class="form-group col-md"
-                            [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3 }">
+                            [ngClass]="{'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }">
                             <label class="form-check form-check-inline"
                                 [ngClass]="{'is-invalid' : submitted && f.check_docket_off.errors }">
                                 <input class="form-check-input" type="checkbox" id="check_docket_off"
@@ -987,7 +988,7 @@
                             </div>
                         </div>
                         <div class="form-group col-md"
-                            [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3 }">
+                            [ngClass]="{'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }">
                             <label class="form-check form-check-inline"
                                 [ngClass]="{'is-invalid' : submitted && f.check_bank.errors }">
                                 <input class="form-check-input" type="checkbox" id="check_bank"
@@ -1044,7 +1045,7 @@
                             <div class="input-group" [ngClass]="{'is-invalid': submitted && f.payment_date.errors}">
                                 <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
                                     formControlName="payment_date" name="payment_date" #d2="ngbDatepicker" readonly
-                                    [ngClass]="{'bg-warning' : data._status != null && data._status.id == 4}">
+                                    [ngClass]="{'is-invalid': f.payment_date.value == undefined , 'PAID' : data._status != null && data._status.id == 4}">
                                 <div class="input-group-append">
                                     <button class="input-group-text" (click)="d2.toggle()" type="button">
                                         <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
@@ -1060,7 +1061,7 @@
                             <label class="form-label">Payment Reference</label>
                             <input type="text" class="form-control" formControlName="payment_reference"
                                 name="payment_reference"
-                                [ngClass]="{'is-invalid': submitted && f.payment_reference.errors , 'bg-warning' : data._status != null && data._status.id == 4}">
+                                [ngClass]="{'is-invalid': f.payment_reference.value == '', 'PAID' : data._status != null && data._status.id == 4}">
                             <div *ngIf="submitted && f.payment_reference.errors" class="invalid-feedback">
                                 <div *ngIf="f.payment_reference.errors.required">This field is Required</div>
                             </div>
@@ -1073,7 +1074,7 @@
                                 </div>
                                 <input type="number" step="0.01" class="form-control" formControlName="total_payment"
                                 name="total_payment"
-                                [ngClass]="{'bg-warning' : data._status != null && data._status.id == 4}">
+                                [ngClass]="{'PAID' : data._status != null && data._status.id == 4}">
                             </div>
                             
                             <div *ngIf="submitted && f.total_payment.errors" class="invalid-feedback">

@@ -63,7 +63,7 @@ class Task extends Model
         'check_price',
         'check_docket_off',
         'check_bank',
-        'total_payment'
+        'total_payment',
     ];
 
      /**

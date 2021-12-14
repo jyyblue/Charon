@@ -217,6 +217,7 @@ class TaskController extends Controller
         }
     }
 
+    // used in inline update on job list page
     public function update(Request $request)
     {
         try {
@@ -227,7 +228,20 @@ class TaskController extends Controller
             $task = Task::where('id', $id)->first();
             $task->update($data);
 
-            $task = Task::with(['customer', 'driver', '_status'])->where('id', $id)->first();
+            $task = Task::leftJoin('customer', function($join){
+                $join->on('task.customer_id', '=', 'customer.id');
+            })->leftJoin('driver', function($join){
+                $join->on('task.driver_id', '=', 'driver.id');
+            })->leftJoin('task_status', function($join){
+                $join->on('task.status', '=', 'task_status.id');
+            })->select(['task.*', 
+            'customer.company_name', 
+            'customer.account_code',
+            'driver.call_sign', 
+            DB::raw('driver.email as d_email'), 
+            DB::raw('task_status.name as status_name'),
+            DB::raw('task_status.color as status_color')
+            ])->where('task.id', $id)->first();
 
             DB::commit();
             $ret['code'] = 200;
@@ -410,9 +424,20 @@ class TaskController extends Controller
         $status = $request->get('status', 0);
         $driverid = $request->get('driverid', 0);
         $customer_id = $request->get('customer_id', 0);
+        $sortDesc = $request->get('sortDesc', true);
+        $sortBy = $request->get('sortBy', 'key');
+
         $skip = ($page - 1) * $pageSize;
 
-        $tasks = Task::with(['customer', 'driver', '_status']);
+        // $tasks = Task::with(['customer', 'driver', '_status']);
+        $tasks = Task::with(['customer', 'driver', '_status'])
+        ->leftJoin('customer', function($join){
+            $join->on('task.customer_id', '=', 'customer.id');
+        })->leftJoin('driver', function($join){
+            $join->on('task.driver_id', '=', 'driver.id');
+        })->leftJoin('task_status', function($join){
+            $join->on('task.status', '=', 'task_status.id');
+        });
 
         if ($status != 0) {
             $tasks = $tasks->where('status', $status);
@@ -425,15 +450,56 @@ class TaskController extends Controller
         if ($customer_id != 0) {
             $tasks = $tasks->where('customer_id', $customer_id);
         }
+        if($sortBy != '') {
+            $direction = 'DESC';
+            if($sortDesc == false) {
+                $direction = 'ASC';
+            }
+            $column = '';
+            switch ($sortBy) {
+                case 'docket':
+                    $column = 'docket';
+                    break;
+                case 'status':
+                    $column = 'task_status.order_id';
+                    break;
+                case 'customer':
+                    $column = 'CONCAT(customer.account_code, "-", customer.company_name)';
+                    break;
+                case 'job_date':
+                    $column = 'task.job_date';
+                    break;
+                case 'driver':
+                    $column = 'CONCAT(driver.call_sign, driver.email)';
+                    break;
+                case 'c_tprice':
+                    $column = 'task.c_tprice';
+                    break;
+                case 'd_tprice':
+                    $column = 'task.d_tprice';
+                    break;
+                case 'profit':
+                    $column = 'task.profit';
+                    break;
+                case 'created_at':
+                    $column = 'task.created_at';
+                    break;
+                default:
+                    $column = 'task.docket';
+                    break;
+            }
+            $tasks = $tasks->orderby( DB::raw($column), $direction);
+        }
         $count = count($tasks->get());
 
         if ($pageSize != 1) {
             $tasks = $tasks->skip($skip)->take($pageSize);
         }
-        $tasks = $tasks->orderby('docket', 'DESC')->get();
+        $tasks = $tasks->get();
         $ret['code'] = 200;
         $ret['total'] = $count;
         $ret['data'] = $tasks;
+        // $ret['taskss'] = $taskss;
         return response()->json($ret, 200);
     }
 
@@ -470,6 +536,7 @@ class TaskController extends Controller
         }
     }
 
+    // unused
     public function updatePendingTask(Request $request)
     {
         try {
@@ -518,6 +585,7 @@ class TaskController extends Controller
         }
     }
 
+    // unused
     public function updatePendingPaymentTasks(Request $request)
     {
         try {

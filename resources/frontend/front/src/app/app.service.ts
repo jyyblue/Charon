@@ -8,7 +8,7 @@ export class AppService {
 
   // Set page title
   set pageTitle(value: string) {
-    this.titleService.setTitle(`${value} - Appwork`);
+    this.titleService.setTitle(`${value} - Charon`);
   }
 
   // Check for RTL layout

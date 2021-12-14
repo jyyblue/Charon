@@ -1,0 +1,68 @@
+// job list dropzone custom css
+.job-list-table tr:hover{
+    background: #aec7b38c !important; 
+  }
+  
+.job-list.dropzone {
+    padding: 0px !important;
+    .dz-message{
+      margin: 0px !important;
+      font-size: 0.8rem !important;
+      padding: 0px !important;
+    }
+}
+
+td {
+    padding: 3px;
+    font-size: 0.8rem;
+    .form-control {
+        display: block;
+        width: 100% !important;
+        height: calc(1em + 0.5rem + 2px) !important;
+        padding: 0rem !important;
+        font-size: 0.8rem;
+        font-weight: 400;
+        line-height: 1;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+    .input-group-text {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: center;
+        align-items: center;
+        height: calc(1em + 0.5rem + 2px) !important;
+        padding: 0.5rem !important;
+        margin-bottom: 0;
+        font-size: 0.8rem !important;
+        font-weight: 400;
+        line-height: 1 !important;
+        color: #495057;
+        text-align: center;
+        white-space: nowrap;
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+    .form-check-label {
+        margin-bottom: 0;
+        font-size: 0.8rem;
+    }
+    .btn{
+        padding: 0.25rem 0.3rem;
+        font-size: 0.8rem;
+        line-height: 1;
+    }
+}
+.w-145 {
+    max-width: 145px;
+    min-width: 145px;
+}
+.w-90 {
+    max-width: 90px;
+    min-width: 90px;
+}

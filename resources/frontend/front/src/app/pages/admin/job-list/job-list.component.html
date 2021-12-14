@@ -37,6 +37,17 @@
         <table class="table table-striped table-bordered card-table">
             <thead>
                 <tr>
+                    <th rowspan="2" *ngIf="filterStatus==4"></th>
+                    <th rowspan="2" class="text-nowrap cursor-pointer" (click)="setSort('status')">
+                        Status<i class="ion text-muted ml-2" *ngIf="sortBy=='status'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th colspan="17">Customer Info</th>
+                    <th colspan="32">Driver Info</th>
+                    <th colspan="3">Processing</th>
+                    <th colspan="5">Summary</th>
+                </tr>
+                <tr>
                     <th class="text-nowrap cursor-pointer" *ngIf="filterStatus==4">
                         <label class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" (change)="onSelectAll($event)"
@@ -44,151 +55,265 @@
                             <span class="custom-control-label"></span>
                         </label>
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('id')">
-                        Docket Number<i class="ion text-muted ml-2" *ngIf="sortBy=='id'"
+                    
+                    <!-- Customer Info -->
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('customer')">
+                        Customer<i class="ion text-muted ml-2" *ngIf="sortBy=='customer'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Status<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('docket')">
+                        Docket Number<i class="ion text-muted ml-2" *ngIf="sortBy=='docket'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('email')">
-                        Customer<i class="ion text-muted ml-2" *ngIf="sortBy=='email'"
+
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Job Date<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
-                        Job Date<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
+
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Vehicle Size<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
                     
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Driver<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
-                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
-                    </th>                    
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Job Price<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Journey<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Driver Price<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Journey Price<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Profit<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Jorney VAT<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Journey Total<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        20% VAT Docket Extra <i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        20% VAT<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        20% VAT Total Price<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        0% VAT Docket Extra<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        0% VAT<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        0% VAT Total Price<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Net Price<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Net VAT<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Total Price<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <!-- Customer Info -->
+                    <!-- Driver Info -->
+
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Driver<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Call Sign<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Type<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        CX Number<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Vehicle Size<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Driver Job Ref/CX Ref<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Invoice Date<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Driver Invoice No Or CX Invoice Number<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Date Invoice Received<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Target Payment Date<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        No Pod<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Pod File<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer">
+                        Dropzone
+                    </th>
+                    <th class="text-nowrap cursor-pointer">
+                        Reset
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Bank Name<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Payee Name<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Bank Sort Code<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        Bank Account Number<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        VAT<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('driver')">
+                        VAT Number<i class="ion text-muted ml-2" *ngIf="sortBy=='driver'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Journey Price<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Jorney VAT<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Journey Total<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        20% VAT Docket Extra <i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        20% VAT<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        20% VAT Total Price<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        0% VAT Docket Extra<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        0% VAT<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        0% VAT Total Price<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Net Price<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Net VAT<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Total Price<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <!-- Driver Info -->
+
+                    <!-- Processing -->
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Price checked on ACI<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Docket off hold on ACI and Reference Added<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Bank and VAT details checked<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <!-- Processing -->
+                    <!-- Summary -->
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Payment Date<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Payment Reference<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Total Payment<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Profit £<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('job_date')">
+                        Profit %<i class="ion text-muted ml-2" *ngIf="sortBy=='job_date'"
+                            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                    </th>
+
+                    <th class="text-nowrap cursor-pointer" (click)="setSort('created_at')">
+                        Created At<i class="ion text-muted ml-2" *ngIf="sortBy=='created_at'"
                             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
                     </th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody class="job-list-table">
-                <tr *ngFor="let task of taskData" >
-                    <td class="text-nowrap cursor-pointer td_show td_{{ task.id }}" *ngIf="filterStatus==4">
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" (change)="onSelectTask($event)"
-                                value="{{task.id}}" [checked]="task.checked">
-                            <span class="custom-control-label"></span>
-                        </label>
-                    </td>
-                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">{{task.docket}}</td>
-                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)" 
-                    [ngStyle]="{background: task._status ? task._status.color : '#fff', color: task._status.id == 5 ? '#fff' : '#000'}">{{task._status.name}}</td>
-                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">{{ task.customer.account_code }} - {{task.customer.company_name}}</td>
-                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">{{task.job_date}}</td>
-                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">{{ task.driver? task.driver.call_sign: ''}} - {{task.driver ? task.driver.email: ''}}</td>
-                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">&pound; {{ task.c_tprice.toFixed(2) }}</td>
-                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">&pound; {{task.d_tprice.toFixed(2)}}</td>
-                    <td class="align-middle td_show  td_{{ task.id }}" (click)="inlineEditTask(task.id)">&pound; {{task.profit.toFixed(2)}}</td>
-                    <td class="align-middle td_show  td_{{ task.id }}">
-                        <a class="btn btn-default  icon-btn md-btn-flat" ngbtooltip="Edit" (click)="editTask(task.id)">
-                            <i class="ion ion-md-create"></i>
-                        </a>
-                    </td>
-
-                    <!-- edit form -->
-                    <td *ngIf="filterStatus==4" class="bg-warning td_form form_{{ task.id }} d-none"></td>
-                    <td class="align-middle td_form form_{{ task.id }} d-none" >
-                        <input type="text" id="docket_{{ task.id }}" class="form-control bg-warning" [(ngModel)]="docket">
-                    </td>
-                    <td class="align-middle td_form form_{{ task.id }} d-none" [ngStyle]="{background: task._status ? task._status.color : '#fff'}">{{task._status.name}}</td>
-                    <td class="align-middle td_form form_{{ task.id }} d-none" >
-                        <ng-select [items]="customerOptions" bindLabel="dispName" bindValue="id"
-                            id="customer_id_{{ task.id }}" [loading]="customerLoading" class="custom"
-                            [(ngModel)]="customer_id"
-                            (change)="changeCustomer($event)" [virtualScroll]="true" (scrollToEnd)="onScrollToEnd()"
-                            (search)="customerSearchFn($event)" (open)="customerOpen($event)">
-                            <ng-template ng-label-tmp let-item="item">
-                                <span class="ng-value-label">{{item['dispName']}}</span>
-                            </ng-template>
-
-                            <ng-template ng-option-tmp let-item="item">
-                                <span class="ng-value-label">{{item['dispName']}}</span>
-                            </ng-template>
-                        </ng-select>
-                    </td>
-                    <td class="align-middle td_form form_{{ task.id }} d-none" >
-                        <div class="input-group">
-                            <input class="form-control bg-warning" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
-                                [(ngModel)]="job_date" name="job_date" #d="ngbDatepicker"
-                                [ngClass]="{'is-invalid' : submitted && f.job_date.errors }" readonly>
-                            <div class="input-group-append">
-                                <button class="input-group-text" (click)="d.toggle()" type="button">
-                                    <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </td>
-                    
-                    <td class="align-middle td_form form_{{ task.id }} d-none" >
-                        <ng-select [items]="driverOptions" bindLabel="dispName" bindValue="id"
-                            [loading]="driverLoading" id="driver_id_{{ task.id }}" class="custom"
-                            (change)="changeDriver($event)" [virtualScroll]="true"
-                            (scrollToEnd)="onScrollToEndDriver()" (search)="driverSearchFn($event)"
-                            [(ngModel)]="driver_id"
-                            (open)="driverOpen($event)">
-                            <ng-template ng-label-tmp let-item="item">
-                                <span class="ng-value-label">{{ item['dispName'] }}</span>
-                            </ng-template>
-
-                            <ng-template ng-option-tmp let-item="item">
-                                <span class="ng-value-label">{{ item['dispName'] }}</span>
-                            </ng-template>
-                        </ng-select>
-                    </td>
-                    <td class="align-middle td_form form_{{ task.id }} d-none" >
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">&pound;</span>
-                            </div>
-                            <input type="number" step="0.01" class="form-control bg-warning" [(ngModel)]="c_tprice" (change)="changePrice()">
-                        </div>
-                    </td>
-                    <td class="align-middle td_form form_{{ task.id }} d-none" >
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">&pound;</span>
-                            </div>
-                            <input type="number" step="0.01" class="form-control bg-warning" [(ngModel)]="d_tprice" (change)="changePrice()">
-                        </div>
-                    </td>
-                    <td class="align-middle td_form form_{{ task.id }} d-none">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">&pound;</span>
-                            </div>
-                            <input type="number" step="0.01" class="form-control bg-warning" [(ngModel)]="profit" readonly>
-                        </div>
-                    </td>
-
-                    <td class="align-middle td_form form_{{ task.id }} d-none">
-                        <div class="d-inline-flex">
-                            <a class="btn btn-default  icon-btn md-btn-flat" ngbtooltip="Save" (click)="updateTask(task.id)">
-                                <i class="ion ion-md-save"></i>
-                            </a>
-                            <a class="btn btn-default  icon-btn md-btn-flat" ngbtooltip="Cancel" (click)="cancelTask()">
-                                <i class="ion ion-md-close"></i>
-                            </a>
-                        </div>
-                    </td>
+                <tr *ngFor="let task of taskData" app-inline-edit 
+                [task]="task" 
+                [cOptions] = "customerOptions"
+                [cTotal] = "customerTotal"
+                [dOptions] = "driverOptions"
+                [dTotal] = "driverTotal"
+                [vhOptions] = "vehicleOptions"
+                [tOptions] ="typeOptions"
+                [vOptions] ="vatOptions"
+                (componentChange)="onSubComponentChange($event)">
                 </tr>
             </tbody>
         </table>
@@ -203,8 +328,16 @@
                 <span class="text-muted" *ngIf="totalItems">Page {{ currentPage }} of {{ totalPages }}</span>
             </div>
             <div class="col-sm pt-3">
-                <ngb-pagination [collectionSize]="totalItems" [pageSize]="perPage" [(page)]="currentPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"
-                    (pageChange)="update()" size="sm" class="d-flex justify-content-center justify-content-sm-end m-0">
+                <ngb-pagination 
+                [collectionSize]="totalItems" 
+                [pageSize]="perPage" 
+                [(page)]="currentPage" 
+                [maxSize]="5" 
+                [rotate]="true" 
+                [boundaryLinks]="true"
+                (pageChange)="update()" 
+                size="sm" 
+                class="d-flex justify-content-center justify-content-sm-end m-0">
                 </ngb-pagination>
             </div>
         </div>

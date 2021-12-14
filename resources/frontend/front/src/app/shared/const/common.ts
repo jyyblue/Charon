@@ -16,5 +16,6 @@ export const common = {
         COMPLRETED_PAYMENT_PENDING: 'CP_PAYMENT',
         COMPLETED: 'COMPLETED',
         QUERY: 'QUERY'
-    }
+    },
+    PAGE_SIZE: 50
 };
