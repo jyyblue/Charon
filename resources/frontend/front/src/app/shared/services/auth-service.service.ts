@@ -10,6 +10,8 @@ import { debounceTime } from 'rxjs/operators';
 import { Profile } from '../models/profile.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { common as Const } from '../const/common';
+import { AppService } from 'src/app/app.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,8 +22,8 @@ export class AuthServiceService extends ServiceBase implements OnDestroy {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
-  constructor(protected toastrService: ToastrService, protected http: HttpClient) {
-    super(toastrService, http);
+  constructor(protected toastrService: ToastrService, protected http: HttpClient, protected appService: AppService) {
+    super(toastrService, http, appService);
     this.subject = new ReplaySubject(1);
     this.subscription = this.subject.pipe(debounceTime(500)).subscribe(params => this.postDefaultTheme(params));
     const cu = localStorage.getItem(Const.USER);

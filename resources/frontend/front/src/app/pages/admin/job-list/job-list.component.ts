@@ -84,6 +84,7 @@ export class JobListComponent implements OnInit {
   typeOptions = [];
   vatOptions = [];
   
+  newJob = false;
   constructor(
     private http: HttpClient, 
     private appService: AppService,
@@ -148,7 +149,6 @@ export class JobListComponent implements OnInit {
     } else {
       this.sortDesc = !this.sortDesc;
     }
-
     this.currentPage = 1;
     this.update();
   }
@@ -156,8 +156,8 @@ export class JobListComponent implements OnInit {
   editTask(taskid) {
   }
 
-  onSelectAll(e) {
-    if (e.target.checked) {
+  onSelectAll(checked) {
+    if (checked == 'true') {
       this.taskData.forEach(element => {
         element['checked'] = true;
         this.selectedTask.push(element['id']);
@@ -169,12 +169,10 @@ export class JobListComponent implements OnInit {
       this.selectedTask = [];
     }
     this.checkAllStatus();
-
   }
-  onSelectTask(e) {
-    let taskid = e.target.value;
+  onSelectTask(taskid, check) {
     let index = this.taskData.findIndex(item => { return item['id'] == taskid; });
-    if (e.target.checked) {
+    if (check) {
       // insert into array
       this.taskData[index]['checked'] = true;
       if (!this.selectedTask.includes(taskid)) {
@@ -254,8 +252,32 @@ export class JobListComponent implements OnInit {
   protected async onSubComponentChange(event: ComponentChangedEvent) {
     let taskid = event.taskid;
     let action = event.action;
+    
+    console.log(event);
     if(action == 'edit') {
       this.router.navigate(['admin/job/edit', taskid]);
+    }else if(action == 'update') {
+      let data = event.entity;
+      let taskIdx = this.taskData.findIndex(item => { return item['id'] == taskid; });
+      let task_old = this.taskData[taskIdx];
+      this.taskData[taskIdx] = data;
+      this.toastrService.success('Updated Successfully!');
+    }else if(action == 'add') {
+      // add new task at top of job list or refresh
+      let task = event.entity;
+      this.taskData.unshift(task);
+      this.newJob = false;
+    }else if(action == 'check') {
+      let check = event.field;
+      let checked = check == 'true' ? true : false;
+      this.onSelectTask(taskid, checked);
+    }else if(action == 'check_all') {
+      let check = event.field;
+      let checked = check == 'true' ? true : false;
+      this.onSelectAll(checked);
+    }else if(action == 'setSort') {
+      let key = event.field;
+      this.setSort(key);
     }
   }
 
@@ -305,4 +327,7 @@ export class JobListComponent implements OnInit {
     });
   }
 
+  addJob(flag) {
+    this.newJob = true;
+  }
 }

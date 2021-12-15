@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChange, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
@@ -36,7 +36,7 @@ export class InlineEditComponent implements OnInit {
 
   downloadurl = `${environment.apiUrl}/admin/v1/task/downloadpod`;
   disableDropZone = false;
-  taskid: string;
+  taskid: number;
   previoustPage: string;
   dataForm: FormGroup;
   data = new Task();
@@ -104,12 +104,12 @@ export class InlineEditComponent implements OnInit {
   set vOptions(data) {
     this.vatOptions = data;
   }
-
+  @Input()
+  filterStatus;
   @Input()
   set task(task) {
-    console.log(task);
     this.data = task;
-    console.log(this.data);
+    this.taskid = this.data.id;
     this.driver = this.data.driver;
     let job_date = null;
     if (this.data.job_date != undefined) {
@@ -173,6 +173,8 @@ export class InlineEditComponent implements OnInit {
       c_vat_total: [this.data.c_vat_total.toFixed(2), []],
       c_tprice: [this.data.c_tprice.toFixed(2), Validators.required],
       source: [this.data.source, []],
+      mileage: [this.data.mileage, []],
+      stop_number: [this.data.stop_number, []],
       has_pod: [this.data.has_pod, []],
 
       driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
@@ -219,9 +221,7 @@ export class InlineEditComponent implements OnInit {
     if (driver) {
       let ddispName = driver.call_sign + '-' + driver.email;
       driver['dispName'] = ddispName;
-      this.driverOptions = [
-        driver
-      ];
+      this.driverOptions = this.driverOptions.concat([ driver ]);
     }
   };
 
@@ -344,6 +344,8 @@ export class InlineEditComponent implements OnInit {
       'c_vat_total': this.f.c_vat_total.value,
       'c_tprice': this.f.c_tprice.value,
       'source': this.f.source.value,
+      'mileage': this.f.mileage.value,
+      'stop_number': this.f.stop_number.value,
       'has_pod': this.f.has_pod.value,
       'driver_id': this.f.driver_id.value,
       'job_ref': this.f.job_ref.value,
@@ -385,12 +387,13 @@ export class InlineEditComponent implements OnInit {
     this.apiService.updateTaskAuto(params).then(res => {
       let code = res.code;
       if(code == 200) {
-        this.toastrService.success('Job updated successfully!', 'Success', {
-          timeOut: 1500,
-        });
+        // this.toastrService.success('Job updated successfully!', 'Success', {
+        //   timeOut: 1500,
+        // });
+        this.updateJobList(res.data);
         // this.onGoJobList();
         // this.getJob();
-        this.showConfirmModal();
+        // this.showConfirmModal();
       }else{
         let message = res.msg;
         this.toastrService.error(message, 'Error', {
@@ -478,6 +481,7 @@ export class InlineEditComponent implements OnInit {
       default:
         break;
     }
+    this.saveTask();
   }
 
   loadCustomer(key = '') {
@@ -565,6 +569,7 @@ export class InlineEditComponent implements OnInit {
         this.f.cx_number.setValue(item.cx_number);
       }
       this.showBankDetail(item);
+      this.saveTask();
     }
   }
 
@@ -620,6 +625,7 @@ export class InlineEditComponent implements OnInit {
     let pd = target_payment_date.year + "-" + target_payment_date.month + "-" + target_payment_date.day;
     let str = moment(pd).format('YYYY-MM-DD')
     this.dataForm.patchValue({ 'target_payment_date': str });
+    this.saveTask();
   }
 
   /**
@@ -647,6 +653,7 @@ export class InlineEditComponent implements OnInit {
     const ret = data[1];
     this.dataForm.patchValue({ 'pod_file': ret.filename });
     this.disableDropZone = true;
+    this.saveTask();
   }
 
   onErrorThumb(err): void {
@@ -736,12 +743,14 @@ export class InlineEditComponent implements OnInit {
 
     let profitpercent = (profit / c_net) * 100;
     this.f.profitpercent.setValue(profitpercent.toFixed(2));
+    this.saveTask();
   }
 
   //
   changeVehicle() {
     let vehicleType = this.f.vehicle_type.value;
     this.f.driver_vehicle.setValue(vehicleType);
+    this.saveTask();
   }
 
   // resolve query 
@@ -778,8 +787,23 @@ export class InlineEditComponent implements OnInit {
 
 
   editTask() {
-    const compChgEvent = new ComponentChangedEvent(this.data.id.toString(), null, null);
+    const compChgEvent = new ComponentChangedEvent(this.taskid.toString(), null, null);
     compChgEvent.action = 'edit';
+    this.componentChange.emit(compChgEvent);
+  }
+
+  updateJobList(task) {
+    const compChgEvent = new ComponentChangedEvent(this.taskid.toString(), null, task);
+    compChgEvent.action = 'update';
+    this.componentChange.emit(compChgEvent);
+  }
+  onSelectTask(e) {
+    let checked = 'false';
+    if (e.target.checked) {
+      checked = 'true';
+    }
+    const compChgEvent = new ComponentChangedEvent(this.taskid.toString(), checked, null);
+    compChgEvent.action = 'check';
     this.componentChange.emit(compChgEvent);
   }
 }

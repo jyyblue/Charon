@@ -60,6 +60,9 @@ Route::prefix('admin')->group(function () {
                 Route::post('/driver/store', 'DriverController@store')->name('admin.driver.store');
                 Route::post('/driver/options', 'DriverController@getOptions')->name('admin.driver.options');
 
+                // getDashboard Data
+                Route::post('/getDashboardData', 'DashboardController@getDashboardData')->name('admin.get.dashboarddata');
+                
             });
         });
     });

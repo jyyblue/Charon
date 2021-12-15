@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { AppService } from 'src/app/app.service';
 import { common as Const} from '../../shared/const/common';
 
 @Injectable()
 export class ServiceBase {
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
-  constructor(protected toastrService: ToastrService, protected http: HttpClient) { }
+  constructor(protected toastrService: ToastrService, protected http: HttpClient, protected appService: AppService) { }
 
   protected handleError(error: Response | any): Promise<any> {
     let errMsg: string;
@@ -85,7 +86,7 @@ export class ServiceBase {
 
   protected postData<T>(url: string, data?: any, params?: any, handleError: boolean = true): Promise<T> {
     let accessToken = localStorage.getItem(Const.TOKEN);
-
+    
     let token ='Bearer ' + accessToken;
     let headers = {'Authorization': token};
     return this.http
@@ -95,6 +96,7 @@ export class ServiceBase {
       })
       .toPromise()
       .catch(error => {
+        this.appService.hideLoading();
         if (handleError) {
           return this.handleError(error);
         } else {

@@ -39,6 +39,8 @@ export class Task {
     public d_vat_total: number;
     public d_tprice: number;
     public source: string;
+    public mileage: number;
+    public stop_number: number;
     public invoice_date: NgbDateStruct;
     public invoice_received_date: NgbDateStruct;
     public target_payment_date: string;
@@ -53,6 +55,7 @@ export class Task {
     public status: number;
     public profit: number;
     public profitpercent: number;
+    public created_at: string;
     public driver: any;
     public _status: any;
     public customer: any;
@@ -101,6 +104,8 @@ export class Task {
         this.d_vat_total = 0;
         this.d_tprice = 0;
         this.source = null;
+        this.mileage = 0;
+        this.stop_number = 0;
         this.invoice_date = null;
         this.invoice_received_date = null;
         this.target_payment_date = '';
@@ -127,5 +132,6 @@ export class Task {
         this.customer = null;
         this.distances = [];
         this.query_history = [];
+        this.created_at = '';
     }
 }

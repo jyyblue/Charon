@@ -1,8 +1,7 @@
 <h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
     <div>Add Job</div>
     <div class="btn-group">
-        <label class="btn status_nav status_nav_{{ item.id }}"
-            [ngStyle]="{background: item.color }"
+        <label class="btn status_nav status_nav_{{ item.id }}" [ngStyle]="{background: item.color }"
             *ngFor="let item of taskStatus">{{ item.name }}</label>
     </div>
 </h4>
@@ -23,8 +22,9 @@
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label class="form-label">Customer</label>
-                            <ng-select [items]="customerOptions" bindLabel="dispName" bindValue="id" class="custom"
-                                formControlName="customer_id" name="customer_id" [loading]="customerLoading"
+                            <ng-select [items]="customerOptions" bindLabel="dispName" bindValue="id"
+                                class="CUSTOMER_UPLOAD_COMPLETE" formControlName="customer_id" name="customer_id"
+                                [loading]="customerLoading"
                                 [ngClass]="{'is-invalid' : submitted && f.customer_id.errors }"
                                 (change)="changeCustomer($event)" [virtualScroll]="true" (scrollToEnd)="onScrollToEnd()"
                                 (search)="customerSearchFn($event)" (open)="customerOpen($event)">
@@ -42,8 +42,8 @@
                         </div>
                         <div class="form-group col-md-3">
                             <label class="form-label">Docket Number</label>
-                            <input type="text" class="form-control bg-warning" formControlName="docket" name="docket"
-                                [ngClass]="{'is-invalid' : submitted && f.docket.errors }">
+                            <input type="text" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="docket"
+                                name="docket" [ngClass]="{'is-invalid' : submitted && f.docket.errors }">
                             <div *ngIf="f.docket.errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f.docket.errors.required">Thie field is Required</div>
                             </div>
@@ -51,8 +51,8 @@
                         <div class="form-group col-md-3">
                             <label class="form-label">Job Date</label>
                             <div class="input-group">
-                                <input class="form-control bg-warning" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
-                                    formControlName="job_date" name="job_date" #d="ngbDatepicker"
+                                <input class="form-control CUSTOMER_UPLOAD_COMPLETE" placeholder="yyyy-mm-dd" name="dp"
+                                    ngbDatepicker formControlName="job_date" name="job_date" #d="ngbDatepicker"
                                     [ngClass]="{'is-invalid' : submitted && f.job_date.errors }" readonly>
                                 <div class="input-group-append">
                                     <button class="input-group-text" (click)="d.toggle()" type="button">
@@ -66,8 +66,9 @@
                         </div>
                         <div class="form-group col-md-3">
                             <label class="form-label">Vehicle Size</label>
-                            <ng-select [items]="vehicleOptions" bindLabel="label" bindValue="value" class="custom"
-                                formControlName="vehicle_type" name="vehicle_type" [loading]="vehicleLoading"
+                            <ng-select [items]="vehicleOptions" bindLabel="label" bindValue="value"
+                                class="CUSTOMER_UPLOAD_COMPLETE" formControlName="vehicle_type" name="vehicle_type"
+                                [loading]="vehicleLoading"
                                 [ngClass]="{'is-invalid' : submitted && f.vehicle_type.errors }"
                                 (change)="changeVehicle()">
                                 <ng-template ng-label-tmp let-item="item">
@@ -87,15 +88,39 @@
                 <div class="row">
                     <div class="col-md-6">
                         <form [formGroup]="dataForm">
-                            <div class="form-group">
-                                <label class="form-label">Journey</label>
-                                <input class="form-control bg-warning" formControlName="source" name="source" [ngClass]="{'is-invalid' : submitted && f.source.errors}"/>
-                                <div *ngIf="f.source.errors && submitted" class="invalid-feedback">
-                                    <div *ngIf="f.source.errors.required">This field is Required
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label class="form-label">Journey</label>
+                                    <input class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="source"
+                                        name="source" [ngClass]="{'is-invalid' : submitted && f.source.errors}" />
+                                    <div *ngIf="f.source.errors && submitted" class="invalid-feedback">
+                                        <div *ngIf="f.source.errors.required">This field is Required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="form-label">Mileage</label>
+                                    <input type="number" min="0" class="form-control CUSTOMER_UPLOAD_COMPLETE"
+                                        formControlName="mileage" name="mileage"
+                                        [ngClass]="{'is-invalid' : submitted && f.source.errors}" />
+                                    <div *ngIf="f.mileage.errors && submitted" class="invalid-feedback">
+                                        <div *ngIf="f.mileage.errors.required">This field is Required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="form-label">Number of Stop</label>
+                                    <input type="number" min="0" class="form-control CUSTOMER_UPLOAD_COMPLETE"
+                                        formControlName="stop_number" name="stop_number"
+                                        [ngClass]="{'is-invalid' : submitted && f.source.errors}" />
+                                    <div *ngIf="f.stop_number.errors && submitted" class="invalid-feedback">
+                                        <div *ngIf="f.stop_number.errors.required">This field is Required
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </form>
+
                         <!-- <div class="form-group">
                             Journey
                             <div class="btn-group">
@@ -149,7 +174,8 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" class="form-control bg-warning"
+                                                        <input type="number"
+                                                            class="form-control CUSTOMER_UPLOAD_COMPLETE"
                                                             formControlName="c_price" name="c_price"
                                                             (change)="changePrice()" step="0.01">
                                                     </div>
@@ -168,9 +194,9 @@
                                             </td>
                                             <td>
                                                 <div class="form-group">
-                                                    <ng-select [items]="vatOptions" bindLabel="label" bindValue="value" class="custom"
-                                                        formControlName="c_vat" name="c_vat" placeholder="Select VAT"
-                                                        (change)="changePrice()"
+                                                    <ng-select [items]="vatOptions" bindLabel="label" bindValue="value"
+                                                        class="CUSTOMER_UPLOAD_COMPLETE" formControlName="c_vat"
+                                                        name="c_vat" placeholder="Select VAT" (change)="changePrice()"
                                                         [ngClass]="{'is-invalid' : submitted && f.c_vat.errors }">
                                                         <ng-template ng-label-tmp let-item="item">
                                                             <span class="ng-value-label">{{item['label']}}</span>
@@ -199,7 +225,8 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" step="0.01" class="form-control bg-warning"
+                                                        <input type="number" step="0.01"
+                                                            class="form-control CUSTOMER_UPLOAD_COMPLETE"
                                                             formControlName="c_price_total" readonly />
                                                     </div>
 
@@ -227,7 +254,8 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" step="0.01" class="form-control bg-warning"
+                                                        <input type="number" step="0.01"
+                                                            class="form-control CUSTOMER_UPLOAD_COMPLETE"
                                                             formControlName="c_extra" name="c_extra"
                                                             (change)="changePrice()">
                                                     </div>
@@ -247,8 +275,8 @@
                                             </td>
                                             <td>
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control bg-warning" value="20% (fixed )"
-                                                        readonly>
+                                                    <input type="text" class="form-control CUSTOMER_UPLOAD_COMPLETE"
+                                                        value="20% (fixed )" readonly>
                                                 </div>
                                             </td>
                                             <td>
@@ -264,7 +292,8 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input typ="number" step="0.01" class="form-control bg-warning"
+                                                        <input typ="number" step="0.01"
+                                                            class="form-control CUSTOMER_UPLOAD_COMPLETE"
                                                             formControlName="c_extra_total" readonly />
                                                     </div>
                                                 </div>
@@ -291,7 +320,8 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" step="0.01" class="form-control bg-warning"
+                                                        <input type="number" step="0.01"
+                                                            class="form-control CUSTOMER_UPLOAD_COMPLETE"
                                                             formControlName="c_extra_0" name="c_extra_0"
                                                             (change)="changePrice()">
                                                     </div>
@@ -312,8 +342,8 @@
                                             </td>
                                             <td>
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control bg-warning" value="0% (fixed )"
-                                                        readonly>
+                                                    <input type="text" class="form-control CUSTOMER_UPLOAD_COMPLETE"
+                                                        value="0% (fixed )" readonly>
                                                 </div>
                                             </td>
                                             <td>
@@ -329,7 +359,8 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input typ="number" step="0.01" class="form-control bg-warning"
+                                                        <input typ="number" step="0.01"
+                                                            class="form-control CUSTOMER_UPLOAD_COMPLETE"
                                                             formControlName="c_extra_total_0" readonly />
                                                     </div>
                                                 </div>
@@ -355,7 +386,8 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" step="0.01" class="form-control bg-warning"
+                                                        <input type="number" step="0.01"
+                                                            class="form-control CUSTOMER_UPLOAD_COMPLETE"
                                                             formControlName="c_net" name="c_net" readonly>
                                                     </div>
                                                 </div>
@@ -373,7 +405,8 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" step="0.01" class="form-control bg-warning"
+                                                        <input type="number" step="0.01"
+                                                            class="form-control CUSTOMER_UPLOAD_COMPLETE"
                                                             formControlName="c_vat_total" name="c_vat_total" readonly>
                                                     </div>
                                                 </div>
@@ -391,7 +424,8 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">&pound;</span>
                                                         </div>
-                                                        <input type="number" step="0.01" class="form-control bg-warning"
+                                                        <input type="number" step="0.01"
+                                                            class="form-control CUSTOMER_UPLOAD_COMPLETE"
                                                             formControlName="c_tprice" name="c_tprice" readonly>
                                                     </div>
                                                 </div>
@@ -507,7 +541,7 @@
                             <label class="form-label">Invoice Date<span
                                     class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <div class="input-group">
-                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker 
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
                                     formControlName="invoice_date" name="invoice_date"
                                     (ngModelChange)="onDateChange($event)" #d1="ngbDatepicker"
                                     [ngClass]="{'is-invalid' : submitted && f.invoice_date.errors , 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 3}">
@@ -565,15 +599,15 @@
                             </div>
 
                             <div class="form-group w-100 p-3 border-success" style="border: 2px dashed"
-                            [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3 && f.has_pod.value != true }"
-                                >
+                                [ngClass]="{'bg-warning' : data._status != null && data._status.id == 3 && f.has_pod.value != true }">
                                 <div class="d-flex mb-2">
                                     <label class="form-label w-100">Upload POD</label>
                                     <div class="w-100 d-flex" style="direction:rtl;">
                                         <button class="btn btn-primary" (click)="onReset()">Reset</button>
                                         <label class="form-check form-check-inline" style="direction:ltr;">
                                             <input class="form-check-input" type="checkbox" id="has_pod"
-                                                (change)="onCheckChange($event)" name="has_pod" [checked]="f.has_pod.value">
+                                                (change)="onCheckChange($event)" name="has_pod"
+                                                [checked]="f.has_pod.value">
                                             <span class="form-check-label">
                                                 No Pod
                                             </span>
@@ -602,13 +636,11 @@
                             <div class="form-row">
                                 <div class="form-group col-md">
                                     <label class="form-label">Bank Name</label>
-                                    <input class="form-control" readonly
-                                        [value]="driver ? driver.bank_name : ''" />
+                                    <input class="form-control" readonly [value]="driver ? driver.bank_name : ''" />
                                 </div>
                                 <div class="form-group col-md">
                                     <label class="form-label">Payee Name</label>
-                                    <input class="form-control" readonly
-                                        [value]="driver ? driver.payee_name : ''" />
+                                    <input class="form-control" readonly [value]="driver ? driver.payee_name : ''" />
                                 </div>
                             </div>
 
@@ -616,8 +648,7 @@
 
                                 <div class="form-group col-md">
                                     <label class="form-label">Bank Sort Code</label>
-                                    <input class="form-control" readonly
-                                        [value]="driver ? driver.bank_sort_code: ''" />
+                                    <input class="form-control" readonly [value]="driver ? driver.bank_sort_code: ''" />
                                 </div>
                                 <div class="form-group col-md">
                                     <label class="form-label">Bank Account Number</label>
@@ -629,7 +660,8 @@
                                 <div class="form-group col-md">
                                     <label class="form-label">VAT</label>
                                     <select class="form-control" value="driver ? driver.vat: ''" disabled>
-                                        <option value="{{ item.value }}" *ngFor="let item of vatOptions">{{ item.label }}</option>
+                                        <option value="{{ item.value }}" *ngFor="let item of vatOptions">{{ item.label
+                                            }}</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md" *ngIf="driver.vat == 2">
@@ -1008,23 +1040,25 @@
     </div>
 </div>
 
-<div class="row mt-2" >
+<div class="row mt-2">
     <div class="col">
         <div class="card mb-4">
             <h6 class="card-header">
                 Dispute History
             </h6>
             <div class="card-body">
-                    <div class="" *ngFor="let item of data.query_history">
-                        <div class="col-md">
-                            <label class="form-label btn-sm rounded-pill" *ngIf="item.status == 2" [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Query</label>
-                            <label class="form-label btn-sm rounded-pill" *ngIf="item.status != 2" [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Resolve</label>
-                            <p class="">
-                                {{ item.description }}
-                            </p>
+                <div class="" *ngFor="let item of data.query_history">
+                    <div class="col-md">
+                        <label class="form-label btn-sm rounded-pill" *ngIf="item.status == 2"
+                            [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Query</label>
+                        <label class="form-label btn-sm rounded-pill" *ngIf="item.status != 2"
+                            [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Resolve</label>
+                        <p class="">
+                            {{ item.description }}
+                        </p>
 
-                        </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>

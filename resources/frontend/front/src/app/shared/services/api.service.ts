@@ -10,13 +10,14 @@ import { debounceTime } from 'rxjs/operators';
 import { Profile } from '../models/profile.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { common as Const } from '../const/common';
+import { AppService } from 'src/app/app.service';
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService extends ServiceBase {
 
-  constructor(protected toastrService: ToastrService, protected http: HttpClient) {
-    super(toastrService, http);
+  constructor(protected toastrService: ToastrService, protected http: HttpClient, protected appService: AppService) {
+    super(toastrService, http, appService);
   }
 
   public getUserProfile(params: any): Promise<any> {
@@ -110,6 +111,11 @@ export class ApiService extends ServiceBase {
   public getTaskStatus(params: any): Promise<any> {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/task/status`, params, null, false);
   }
+
+  public getDashboardData(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/getDashboardData`, params, null, false);
+  }
+  
   /**
    * call with Rxjs
    */

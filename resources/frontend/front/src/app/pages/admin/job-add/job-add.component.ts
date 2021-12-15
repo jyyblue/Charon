@@ -134,6 +134,8 @@ export class JobAddComponent implements OnInit {
       c_vat_total: [ this.data.c_vat_total.toFixed(2),[]],
       c_tprice: [ this.data.c_tprice.toFixed(2), Validators.min(1)],
       source: [ this.data.source, [Validators.required]],
+      mileage: [this.data.mileage, []],
+      stop_number: [this.data.stop_number, []],
       has_pod: [this.data.has_pod, []],
 
       driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
@@ -229,6 +231,8 @@ export class JobAddComponent implements OnInit {
       'c_vat_total': this.f.c_vat_total.value,
       'c_tprice': this.f.c_tprice.value,
       'source': this.f.source.value,
+      'mileage': this.f.mileage.value,
+      'stop_number': this.f.stop_number.value,
       'has_pod': this.f.has_pod.value,
       'driver_id': this.f.driver_id.value,
       'job_ref': this.f.job_ref.value,
@@ -309,6 +313,8 @@ export class JobAddComponent implements OnInit {
       c_vat_total: [ this.data.c_vat_total.toFixed(2),[]],
       c_tprice: [ this.data.c_tprice.toFixed(2), Validators.min(1)],
       source: [ this.data.source, [Validators.required]],
+      mileage: [this.data.mileage, []],
+      stop_number: [this.data.stop_number, []],
       has_pod: [this.data.has_pod, []],
 
       driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],

@@ -1,91 +1,92 @@
 <h4 class="font-weight-bold py-3 mb-4">
     Dashboard
-    <div class="text-muted text-tiny mt-1"><small class="font-weight-normal">Today is Friday, 8 October 2021</small>
+    <div class="text-muted text-tiny mt-1"><small class="font-weight-normal">Today is {{ today }}</small>
     </div>
 </h4>
+    <div class="row align-middle mt-2 mb-2">
+            <div class="form-group hidden">
+                <div class="input-group">
+                    <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
+                        [autoClose]="'outside'" (dateSelect)="onDateSelection($event, datepicker)" [displayMonths]="2"
+                        [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" style="visibility: hidden;">
+                    <ng-template #t let-date let-focused="focused">
+                        <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                            [class.faded]="isHovered(date) || isInside(date)"
+                            (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
+                            {{ date.day }}
+                        </span>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="form-group col-4 p-0 d-none">
+                <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
+                    [value]="formatter.format(fromDate)"
+                    (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+            </div>
+            <div class="form-group col-4 p-0 d-none">
+                <div class="input-group">
+                    <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
+                        [value]="formatter.format(toDate)"
+                        (input)="toDate = validateInput(toDate, dpToDate.value)">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label">Date Range</label>
+                    <div class="input-group">
+                        <input class="form-control" placeholder="yyyy-mm-dd ~ yyyy-mm-dd" name="dpAll"
+                            [value]="formatter.format(fromDate) + '~' + formatter.format(toDate)">
+                        <div class="input-group-append">
+                            <button class="input-group-text" (click)="datepicker.toggle()" type="button">
+                                <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label">
+                        Vehicle Type
+                    </label>
+                    <ng-select [items]="vehicleOptions" bindLabel="label" bindValue="value"
+                    [loading]="vehicleLoading"
+                    (change)="changeVehicle($event)">
+                    <ng-template ng-label-tmp let-item="item">
+                        <span class="ng-value-label">{{item['label']}}</span>
+                    </ng-template>
 
+                    <ng-template ng-option-tmp let-item="item">
+                        <span class="ng-value-label">{{item['label']}}</span>
+                    </ng-template>
+                </ng-select>
+
+                </div>
+            </div>
+    </div>
 <!-- Counters -->
 <div class="row">
-    <div class="col-sm-6 col-xl-3">
-
+    <div class="col-md" *ngFor="let item of job_count; let i=index;">
         <div class="card mb-4">
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="lnr lnr-gift display-4 text-danger"></div>
                     <div class="ml-3">
-                        <div class="text-muted small">Best Profitable (Customer)</div>
-                        <div class="text-large">985</div>
+                        <div class="text-muted small">{{ item.name }}</div>
+                        <div class="text-large">{{ item.cps }}</div>
                     </div>
                 </div>
             </div>
         </div>
-
-    </div>
-    <div class="col-sm-6 col-xl-3">
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="lnr lnr-users display-4 text-warning"></div>
-                    <div class="ml-3">
-                        <div class="text-muted small">Best Jobs ( Customer )</div>
-                        <div class="text-large">105,652</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <div class="col-sm-6 col-xl-3">
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="lnr lnr-gift display-4 text-danger"></div>
-                    <div class="ml-3">
-                        <div class="text-muted small">Best Profitable (Driver)</div>
-                        <div class="text-large">985</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <div class="col-sm-6 col-xl-3">
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="lnr lnr-users display-4 text-warning"></div>
-                    <div class="ml-3">
-                        <div class="text-muted small">Best Jobs ( Driver )</div>
-                        <div class="text-large">105,652</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 <!-- / Counters -->
 
 <!-- Statistics -->
 <div class="card mb-4">
-    <h6 class="card-header with-elements">
-        <div class="card-header-title">Statistics</div>
-        <div class="card-header-elements ml-auto">
-            <label class="text m-0">
-                <span class="text-light text-tiny font-weight-semibold align-middle">
-                    SHOW STATS
-                </span>
-                <span class="switcher switcher-sm d-inline-block align-middle mr-0 ml-2">
-                    <input type="checkbox" class="switcher-input" checked>
-                    <span class="switcher-indicator">
-                        <span class="switcher-yes"></span>
-                        <span class="switcher-no"></span>
-                    </span>
-                </span>
-            </label>
+    <h6 class="card-header">
+        <div class="row">
+            <div class="card-header-title col-md-2">Statistics</div>
         </div>
     </h6>
     <div class="row no-gutters row-bordered">
@@ -93,7 +94,7 @@
             <div class="card-body">
                 <div style="height: 210px">
                     <canvas baseChart height="210" [datasets]="chart1Data"
-                        [labels]="['2016-10', '2016-11', '2016-12', '2017-01', '2017-02', '2017-03', '2017-04', '2017-05']"
+                        [labels]="chart1Label"
                         [options]="chart1Options" [chartType]="'line'" [colors]="chart1Colors">
                     </canvas>
                 </div>
@@ -107,23 +108,23 @@
                 <div class="row">
                     <div class="col-6 col-xl-5 text-muted mb-3">Total Job</div>
                     <div class="col-6 col-xl-7 mb-3">
-                        <span class="text-big">10,32</span>
+                        <span class="text-big">{{ total_job }}</span>
                         <sup class="text-success">+12%</sup>
                     </div>
                     <div class="col-6 col-xl-5 text-muted mb-3">Profit</div>
                     <div class="col-6 col-xl-7 mb-3">
-                        <span class="text-big">$1,534</span>
-                        <sup class="text-danger">-5%</sup>
-                    </div>
-                    <div class="col-6 col-xl-5 text-muted mb-3">Completed Jobs</div>
-                    <div class="col-6 col-xl-7 mb-3">
-                        <span class="text-big">34</span>
-                        <sup class="text-success">+12%</sup>
+                        <span class="text-big">&pound; {{ profit_sum }}</span>
+                        <sup class="text-danger"></sup>
                     </div>
                     <div class="col-6 col-xl-5 text-muted mb-3">Average Cost Per Mile</div>
                     <div class="col-6 col-xl-7 mb-3">
-                        <span class="text-big">$0.534</span>
-                        <sup class="text-success">-12%</sup>
+                        <span class="text-big">&pound; {{ customer_ppm }}</span>
+                        <sup class="text-success">Customer</sup>
+                    </div>
+                    <div class="col-6 col-xl-5 text-muted mb-3">Average Cost Per Mile</div>
+                    <div class="col-6 col-xl-7 mb-3">
+                        <span class="text-big">&pound; {{ customer_ppm }}</span>
+                        <sup class="text-success">Driver</sup>
                     </div>
                 </div>
                 <!-- / Numbers -->
@@ -212,13 +213,10 @@
 </div>
 <div class="row">
     <!-- / Charts -->
-
-
     <div class="col-md-6 col-lg-12 col-xl-6">
-
         <!-- Sales -->
         <h6 class="with-elements">
-            <div class="">Customer</div>
+            <div class="">Most Valuable Customer</div>
         </h6>
         <div class="nav-tabs-top mb-4">
             <ul ngbNav #customerTabs="ngbNav" class="nav-tabs">
@@ -231,56 +229,45 @@
                                     <th>No</th>
                                     <th>Name</th>
                                     <th>Profit</th>
-                                    <th>Jobs</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>John</td>
-                                    <td>100</td>
-                                    <td>5</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Tomas</td>
-                                    <td>89</td>
-                                    <td>8</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Alan</td>
-                                    <td>88</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>Jenny</td>
-                                    <td>45</td>
-                                    <td>10</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>Wangmeng</td>
-                                    <td>23</td>
-                                    <td>8</td>
-                                </tr>
-                                <tr>
-                                    <td>6</td>
-                                    <td>Okumar</td>
-                                    <td>21</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>7</td>
-                                    <td>Yasusu</td>
-                                    <td>11</td>
-                                    <td>10</td>
+                                <tr *ngFor="let item of c_profit; let i=index;">
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ item.account_code }} - {{ item.company_name }}</td>
+                                    <td>&pound; {{ item.cc }}</td>
+                                    <td>
+                                        <button class="btn" (click)="viewCustomer(item.id)">View</button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <a href="javascript:void(0)"
-                            class="card-footer d-block text-center text-body small font-weight-semibold">SHOW MORE</a>
+                    </ng-template>
+                </li>
+                <li ngbNavItem>
+                    <a ngbNavLink>Billed</a>
+                    <ng-template ngbNavContent>
+                        <table class="table card-table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Name</th>
+                                    <th>Bill</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of c_bill; let i=index">
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ item.account_code }} - {{ item.company_name }}</td>
+                                    <td>&pound; {{ item.cc }}</td>
+                                    <td>
+                                        <button class="btn" (click)="viewCustomer(item.id)">View</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </ng-template>
                 </li>
                 <li ngbNavItem>
@@ -292,38 +279,20 @@
                                     <th>No</th>
                                     <th>Name</th>
                                     <th>Jobs</th>
-                                    <th>Profit</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="align-middle">1</td>
+                                <tr *ngFor="let item of c_job; let i=index">
+                                    <td class="align-middle">{{ i+1 }}</td>
+                                    <td class="align-middle"> {{ item.account_code }} - {{ item.company_name }}</td>
+                                    <td class="align-middle">{{ item.cc }}</td>
                                     <td class="align-middle">
-                                        <a href="javascript:void(0)" class="text-body">Ali</a>
+                                        <button class="btn" (click)="viewCustomer(item.id)">View</button>
                                     </td>
-                                    <td class="align-middle">21</td>
-                                    <td class="align-middle">$480.00</td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">2</td>
-                                    <td class="align-middle">
-                                        <a href="javascript:void(0)" class="text-body">Olivia</a>
-                                    </td>
-                                    <td class="align-middle">12</td>
-                                    <td class="align-middle">$115.1</td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">3</td>
-                                    <td class="align-middle">
-                                        <a href="javascript:void(0)" class="text-body">Millan</a>
-                                    </td>
-                                    <td class="align-middle">11</td>
-                                    <td class="align-middle">$235.55</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <a href="javascript:void(0)"
-                            class="card-footer d-block text-center text-body small font-weight-semibold">SHOW MORE</a>
                     </ng-template>
                 </li>
             </ul>
@@ -332,10 +301,9 @@
         <!-- / Sales -->
     </div>
     <div class="col-md-6 col-lg-12 col-xl-6">
-
         <!-- Sales -->
         <h6 class="with-elements">
-            <div class="">Driver</div>
+            <div class="">Most Valuable Driver</div>
         </h6>
         <div class="nav-tabs-top mb-4">
             <ul ngbNav #driverTabs="ngbNav" class="nav-tabs">
@@ -348,56 +316,45 @@
                                     <th>No</th>
                                     <th>Name</th>
                                     <th>Profit</th>
-                                    <th>Jobs</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>John</td>
-                                    <td>100</td>
-                                    <td>5</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Tomas</td>
-                                    <td>89</td>
-                                    <td>8</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Alan</td>
-                                    <td>88</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>Jenny</td>
-                                    <td>45</td>
-                                    <td>10</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>Wangmeng</td>
-                                    <td>23</td>
-                                    <td>8</td>
-                                </tr>
-                                <tr>
-                                    <td>6</td>
-                                    <td>Okumar</td>
-                                    <td>21</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>7</td>
-                                    <td>Yasusu</td>
-                                    <td>11</td>
-                                    <td>10</td>
+                                <tr *ngFor="let item of d_profit; let i=index">
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ item.subcontractor }}</td>
+                                    <td>{{ item.cc }}</td>
+                                    <td>
+                                        <button class="btn" (click)="viewDriver(item.id)">View</button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <a href="javascript:void(0)"
-                            class="card-footer d-block text-center text-body small font-weight-semibold">SHOW MORE</a>
+                    </ng-template>
+                </li>
+                <li ngbNavItem>
+                    <a ngbNavLink>Billed</a>
+                    <ng-template ngbNavContent>
+                        <table class="table card-table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Name</th>
+                                    <th>Bill</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of d_bill; let i=index">
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ item.subcontractor }}</td>
+                                    <td>{{ item.cc }}</td>
+                                    <td>
+                                        <button class="btn" (click)="viewDriver(item.id)">View</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </ng-template>
                 </li>
                 <li ngbNavItem>
@@ -409,38 +366,20 @@
                                     <th>No</th>
                                     <th>Name</th>
                                     <th>Jobs</th>
-                                    <th>Profit</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="align-middle">1</td>
+                                <tr *ngFor="let item of d_job;let i = index">
+                                    <td class="align-middle">{{ i+1 }}</td>
+                                    <td class="align-middle">{{ item.subcontractor }}</td>
+                                    <td class="align-middle">{{item.cc}}</td>
                                     <td class="align-middle">
-                                        <a href="javascript:void(0)" class="text-body">Ali</a>
+                                        <button class="btn" (click)="viewDriver(item.id)">View</button>
                                     </td>
-                                    <td class="align-middle">21</td>
-                                    <td class="align-middle">$480.00</td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">2</td>
-                                    <td class="align-middle">
-                                        <a href="javascript:void(0)" class="text-body">Olivia</a>
-                                    </td>
-                                    <td class="align-middle">12</td>
-                                    <td class="align-middle">$115.1</td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">3</td>
-                                    <td class="align-middle">
-                                        <a href="javascript:void(0)" class="text-body">Millan</a>
-                                    </td>
-                                    <td class="align-middle">11</td>
-                                    <td class="align-middle">$235.55</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <a href="javascript:void(0)"
-                            class="card-footer d-block text-center text-body small font-weight-semibold">SHOW MORE</a>
                     </ng-template>
                 </li>
             </ul>

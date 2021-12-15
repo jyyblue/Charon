@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Customer;
 
-class DriverPendingPaymentMail extends Mailable
+class DriverProcess1Mail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,7 +31,7 @@ class DriverPendingPaymentMail extends Mailable
     public function build()
     {
         return $this->from(env('MAIL_FROM_ADDRESS', 'operations@gjsservices.com'), 'Charon')
-        ->view('email.driver_pending_payment_mail')
+        ->view('email.driver_process1_mail')
         ->subject("Charon | Your invoice is arrived")
         ->with('data', $this->data);
     }

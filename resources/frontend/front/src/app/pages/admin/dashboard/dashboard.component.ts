@@ -2,40 +2,89 @@ import { AppService } from './../../../app.service';
 import { Component, OnInit, ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { LayoutAppService } from 'src/app/layout_app/layout_app.service';
+import { ApiService } from 'src/app/shared/services/api.service';
+import { Router } from '@angular/router';
+import { NgbDateStruct, NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import * as moment from 'moment';
+
+const now = new Date();
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styles: [`
+  .form-group.hidden {
+    width: 0;
+    margin: 0;
+    border: none;
+    padding: 0;
+  }
+  .custom-day {
+    text-align: center;
+    padding: 0.185rem 0.25rem;
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+  }
+  .custom-day.focused {
+    background-color: #e6e6e6;
+  }
+  .custom-day.range, .custom-day:hover {
+    background-color: rgb(2, 117, 216);
+    color: white;
+  }
+  .custom-day.faded {
+    background-color: rgba(2, 117, 216, 0.5);
+  }
+`],
+  styleUrls: [
+  './dashboard.component.scss',
+  '../../../../vendor/libs/ngb-datepicker/ngb-datepicker.scss',
+  '../../../../vendor/libs/ng-select/ng-select.scss',
+]
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
-  isRTL = false;
-  constructor(private appService: AppService, private layoutService: LayoutAppService) {
-    this.appService.pageTitle = 'Dashboard 1 - Dashboards';
+  c_job = [];
+  c_bill = [];
+  c_profit = [];
+  d_job = [];
+  d_bill = [];
+  d_profit = [];
+  job_count = [];
+  customer_ppm = 0;
+  driver_ppm = 0;
+  total_job = 0;
+  profit_sum = 0;
 
-    // if (themeSettingsService.isDarkStyle()) {
-    //   this.chart1Options.scales.xAxes[0].ticks.fontColor = '#fff';
-    //   this.chart1Options.scales.yAxes[0].ticks.fontColor = '#fff';
-    //   (this.chart1Options as any).legend = { labels: { fontColor: '#fff' } };
-    //   this.chart6Options.legend.labels = {
-    //     fontColor: '#fff',
-    //     boxWidth: 12
-    //   } as any;
-    // }
+  hoveredDate: NgbDate | null = null;
+  fromDate: NgbDate | null;
+  toDate: NgbDate | null;
+
+  vehicleLoading = false;
+  vehicleOptions = [];
+  vehicle_type = 0;
+
+  today = '';
+  constructor(
+    private appService: AppService,
+    private layoutService: LayoutAppService,
+    private apiService: ApiService,
+    private router: Router,
+    private calendar: NgbCalendar, 
+    public formatter: NgbDateParserFormatter
+  ) {
+    this.appService.pageTitle = 'Dashboard';
+    let today = calendar.getToday();
+    let year = today.year;
+    let month = today.month;
+    this.fromDate = new NgbDate(year, month, 1);
+    this.toDate = calendar.getToday(); //calendar.getNext(calendar.getToday(), 'd', 10);
+    this.today = moment(formatter.format(calendar.getToday())).format('dddd, MMMM Do YYYY');
   }
   // Chart 1
   //
 
-  chart1Data = [{
-    label: 'Job',
-    data: [93, 25, 95, 59, 46, 68, 4, 41],
-    borderWidth: 1
-  }, {
-    label: 'Profit',
-    data: [83, 1, 43, 28, 56, 82, 80, 66],
-    borderWidth: 1,
-    borderDash: [5, 5]
-  }];
+
   chart1Options = {
     scales: {
       xAxes: [{
@@ -52,7 +101,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         ticks: {
           fontColor: '#aaa',
-          stepSize: 20
+          stepSize: 2
         }
       }]
     },
@@ -64,9 +113,19 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     borderColor: 'rgba(28,180,255,1)'
   }, {
     backgroundColor: 'rgba(136, 151, 170, 0.1)',
-    borderColor: '#8897aa'
+    borderColor: '#cd0909'
   }];
-
+  chart1Data = [{
+    label: 'Job',
+    data: [],
+    borderWidth: 1
+  }, {
+    label: 'Profit',
+    data: [],
+    borderWidth: 1,
+    borderDash: [5, 5]
+  }];
+  chart1Label = [];
   // Chart 2
   //
 
@@ -237,6 +296,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective>;
 
   ngOnInit(): void {
+    this.loadOptions();
+    this.getDashboardData();
   }
   ngAfterViewInit(): any {
     setTimeout(() => {
@@ -252,5 +313,111 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): any {
     setTimeout(() => this.layoutService.off('resize.dashboard-1'));
+  }
+
+  loadOptions() {
+    this.vehicleLoading = true;
+    this.apiService.getJobOptions(null).then(res => {
+      this.vehicleOptions = res.vehicle_type;
+      this.vehicleLoading = false;
+    });
+  }
+
+  getDashboardData() {
+    let from = '';
+    if(this.fromDate != undefined) {
+      from = this.fromDate.year + '-' + this.fromDate.month + '-' + this.fromDate.day;
+      from = moment(from).format('YYYY-MM-DD 00:00:00');
+    }
+    let to = '';
+    if(this.toDate != undefined) {
+      to = this.toDate.year + '-' + this.toDate.month + '-' + this.toDate.day;
+      to = moment(to).format('YYYY-MM-DD 23:59:59');
+    }
+
+    let params = {
+      'from': from,
+      'to': to,
+      'vehicle_type': this.vehicle_type
+    };
+    this.appService.showLoading();
+    console.log(params);
+    this.apiService.getDashboardData(params).then(res => {
+      this.appService.hideLoading();
+
+      this.c_job = res.c_job;
+      this.c_bill = res.c_bill;
+      this.c_profit = res.c_profit;
+      this.d_job = res.d_job;
+      this.d_bill = res.d_bill;
+      this.d_profit = res.d_profit;
+      this.job_count = res.job_count;
+      this.customer_ppm = res.customer_ppm;
+      this.driver_ppm = res.driver_ppm;
+      this.profit_sum = res.profit_sum;
+      this.total_job = res.total_job;
+
+      let res_c1Data = res.chart1Data;
+      this.chart1Data = [{
+        label: 'Job',
+        data: res_c1Data.job,
+        borderWidth: 1
+      }, {
+        label: 'Profit',
+        data: res_c1Data.profit,
+        borderWidth: 1,
+        borderDash: [5, 5]
+      }];
+      this.chart1Label = res_c1Data.label;
+    }).catch(err => {
+
+    })
+  }
+
+  viewCustomer(id) {
+    this.router.navigate(['admin/customer/show', id]);
+  }
+
+  viewDriver(id) {
+    this.router.navigate(['admin/driver/show', id]);
+  }
+
+  // Range datepicker
+  onDateSelection(date: NgbDate, datepicker: any) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+      this.toDate = date;
+      datepicker.close();
+      this.getDashboardData();
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+  }
+
+  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+    const parsed = this.formatter.parse(input);
+    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+  isHovered(date: NgbDate) {
+    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
+  }
+  changeVehicle(event) {
+    console.log(event);
+    if(event != undefined){
+      this.vehicle_type = event.value;
+    }else{
+      this.vehicle_type = 0;
+    }
+    this.getDashboardData();
   }
 }

@@ -13,10 +13,13 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\CustomerOpen;
 use App\Models\Task;
 use App\Models\TaskDistance;
-use App\Mail\DriverPendingPaymentMail;
+
+use App\Mail\DriverProcess1Mail;
+use App\Mail\DriverProcess2Mail;
+use App\Mail\DriverPaidMail;
 use App\Mail\DriverDisputeMail;
-use App\Mail\DriverPaymentCompleteMail;
 use App\Mail\DriverResolveMail;
+
 use App\Models\Driver;
 use App\Models\DriverType;
 use App\Models\TaskStatus;
@@ -99,6 +102,23 @@ class TaskController extends Controller
                         'worker' => 'system'
                     ]
                 );
+                // send mail_1
+                $task = Task::with(['driver', 'customer'])->find($task->id);
+                $driver_email = $task->driver ? $task->driver['email'] : '';
+                if (!empty($driver_email)) {
+                    $data = [
+                        'docket' => $task->docket,
+                        'company_name' => $task->customer['company_name'],
+                        'price' => $task->d_price,
+                        'net' => $task->d_net,
+                        'vat' => $task->d_vat,
+                        'extra' => $task->d_extra,
+                        'tprice' => $task->d_tprice,
+                        'job_date' => $task->job_date,
+                        'target_payment_date' => $task->target_payment_date
+                    ];
+                    Mail::to($driver_email)->send(new DriverProcess1Mail($data));
+                }
             }
 
             // pending_payment to cp_payment
@@ -144,6 +164,23 @@ class TaskController extends Controller
                         'worker' => 'system'
                     ]
                 );
+                // send mail_2
+                $task = Task::with(['driver', 'customer'])->find($task->id);
+                $driver_email = $task->driver ? $task->driver['email'] : '';
+                if (!empty($driver_email)) {
+                    $data = [
+                        'docket' => $task->docket,
+                        'company_name' => $task->customer['company_name'],
+                        'price' => $task->d_price,
+                        'net' => $task->d_net,
+                        'vat' => $task->d_vat,
+                        'extra' => $task->d_extra,
+                        'tprice' => $task->d_tprice,
+                        'job_date' => $task->job_date,
+                        'target_payment_date' => $task->target_payment_date
+                    ];
+                    Mail::to($driver_email)->send(new DriverProcess2Mail($data));
+                }
             }
 
             // cp_payment to completed
@@ -166,23 +203,7 @@ class TaskController extends Controller
                         'worker' => 'system'
                     ]
                 );
-            }
-            /////////////////////////////////////////////////////////////////////////////////////
-            $task->update([
-                'status' => $status
-            ]);
-            foreach ($journey as $key => $item) {
-                $taskDistance = new TaskDistance;
-                $taskDistance->create([
-                    'task_id' => $task->id,
-                    'source' => $item['src'],
-                    'destination' => $item['dst'],
-                ]);
-            }
-
-            // completed payment
-            if ($status == constants('status.completed')) {
-                // send mail to driver for payment complete
+                // send mail_3
                 $driver = Driver::find($driver_id);
                 $driver_email = $driver->email;
                 $task = Task::with(['customer'])->where('id', $task->id)->first();
@@ -204,9 +225,22 @@ class TaskController extends Controller
                         'payment_date' => $payment_date,
                         'task_data' => $task_data,
                     ];
-                    Mail::to($driver_email)->send(new DriverPaymentCompleteMail($data));
+                    Mail::to($driver_email)->send(new DriverPaidMail($data));
                 }
             }
+            /////////////////////////////////////////////////////////////////////////////////////
+            $task->update([
+                'status' => $status
+            ]);
+            foreach ($journey as $key => $item) {
+                $taskDistance = new TaskDistance;
+                $taskDistance->create([
+                    'task_id' => $task->id,
+                    'source' => $item['src'],
+                    'destination' => $item['dst'],
+                ]);
+            }
+            $task = Task::with(['customer', 'driver', '_status'])->where('id', $task->id)->first();
             DB::commit();
             $ret['code'] = 200;
             $ret['data'] = $task;
@@ -217,7 +251,7 @@ class TaskController extends Controller
         }
     }
 
-    // used in inline update on job list page
+    // not used for now in frontend.
     public function update(Request $request)
     {
         try {
@@ -296,6 +330,22 @@ class TaskController extends Controller
                         'worker' => 'system'
                     ]
                 );
+                $task = Task::with(['driver', 'customer'])->find($task->id);
+                $driver_email = $task->driver ? $task->driver['email'] : '';
+                if (!empty($driver_email)) {
+                    $data = [
+                        'docket' => $task->docket,
+                        'company_name' => $task->customer['company_name'],
+                        'price' => $task->d_price,
+                        'net' => $task->d_net,
+                        'vat' => $task->d_vat,
+                        'extra' => $task->d_extra,
+                        'tprice' => $task->d_tprice,
+                        'job_date' => $task->job_date,
+                        'target_payment_date' => $task->target_payment_date
+                    ];
+                    Mail::to($driver_email)->send(new DriverProcess1Mail($data));
+                }
             }
 
             // pending_payment to cp_payment
@@ -341,6 +391,22 @@ class TaskController extends Controller
                         'worker' => 'system'
                     ]
                 );
+                $task = Task::with(['driver', 'customer'])->find($task->id);
+                $driver_email = $task->driver ? $task->driver['email'] : '';
+                if (!empty($driver_email)) {
+                    $data = [
+                        'docket' => $task->docket,
+                        'company_name' => $task->customer['company_name'],
+                        'price' => $task->d_price,
+                        'net' => $task->d_net,
+                        'vat' => $task->d_vat,
+                        'extra' => $task->d_extra,
+                        'tprice' => $task->d_tprice,
+                        'job_date' => $task->job_date,
+                        'target_payment_date' => $task->target_payment_date
+                    ];
+                    Mail::to($driver_email)->send(new DriverProcess2Mail($data));
+                }
             }
 
             // cp_payment to completed
@@ -403,9 +469,10 @@ class TaskController extends Controller
                         'payment_date' => $payment_date,
                         'task_data' => $task_data,
                     ];
-                    Mail::to($driver_email)->send(new DriverPaymentCompleteMail($data));
+                    Mail::to($driver_email)->send(new DriverPaidMail($data));
                 }
             }
+            $task = Task::with(['customer', 'driver', '_status'])->where('id', $id)->first();
             DB::commit();
             $ret['code'] = 200;
             $ret['data'] = $task;
@@ -433,11 +500,14 @@ class TaskController extends Controller
         $tasks = Task::with(['customer', 'driver', '_status'])
         ->leftJoin('customer', function($join){
             $join->on('task.customer_id', '=', 'customer.id');
-        })->leftJoin('driver', function($join){
+        })
+        ->leftJoin('driver', function($join){
             $join->on('task.driver_id', '=', 'driver.id');
-        })->leftJoin('task_status', function($join){
+        })
+        ->leftJoin('task_status', function($join){
             $join->on('task.status', '=', 'task_status.id');
-        });
+        })->select(['task.*'])
+        ;
 
         if ($status != 0) {
             $tasks = $tasks->where('status', $status);
@@ -566,7 +636,7 @@ class TaskController extends Controller
                     'job_date' => $task->job_date,
                     'target_payment_date' => $task->target_payment_date
                 ];
-                Mail::to($driver_email)->send(new DriverPendingPaymentMail($data));
+                Mail::to($driver_email)->send(new DriverProcess1Mail($data));
             }
             // add to status history
             // insert task-status-history
@@ -630,7 +700,7 @@ class TaskController extends Controller
                     'payment_date' => $payment_date,
                     'task_data' => $task_data,
                 ];
-                Mail::to($driver_email)->send(new DriverPaymentCompleteMail($data));
+                Mail::to($driver_email)->send(new DriverPaidMail($data));
             }
             // add to status history
             $completed = constants('status.completed');

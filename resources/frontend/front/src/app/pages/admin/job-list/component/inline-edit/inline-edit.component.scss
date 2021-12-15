@@ -57,6 +57,12 @@ td {
         font-size: 0.8rem;
         line-height: 1;
     }
+    .form-check-inline {
+        margin: 0px !important;
+    }
+    .form-control.is-invalid{
+        border-color: #c21223 !important;
+    }
 }
 .w-145 {
     max-width: 145px;

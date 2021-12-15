@@ -1,5 +1,5 @@
 <div style="text-align: center; margin: 10%;">
-    <h4>Receive Invoice</h4>
+    <h4>Complete Process 2</h4>
     <p>Hi , a new account application has been made online. Please click <a href="#">here</a>a> to view and process the request</p>
     <p>Task ID: {{ $data['docket'] }}</p>
     <p> Company Name: {{ $data['company_name'] }}</p>

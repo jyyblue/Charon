@@ -6,6 +6,20 @@ import { ThemeSettingsService } from '../vendor/libs/theme-settings/theme-settin
 export class AppService {
   constructor(private titleService: Title, private themeSettingsService: ThemeSettingsService) {}
 
+  // showLoading
+  showLoading(){
+    const loadingScreen = document.querySelector('.app-loading-screen');
+    if(loadingScreen) {
+      loadingScreen.classList.remove('d-none')
+    }
+  }
+  hideLoading(){
+    const loadingScreen = document.querySelector('.app-loading-screen');
+    if(loadingScreen) {
+      loadingScreen.classList.add('d-none')
+    }
+  }
+
   // Set page title
   set pageTitle(value: string) {
     this.titleService.setTitle(`${value} - Charon`);

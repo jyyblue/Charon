@@ -44,6 +44,8 @@ class Task extends Model
         'd_vat_total',
         'd_tprice',
         'source',
+        'mileage',
+        'stop_number',
         'invoice_date',
         'invoice_received_date',
         'invoice_number',

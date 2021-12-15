@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { AuthServiceService } from 'src/app/shared/services/auth-service.service';
@@ -12,21 +12,66 @@ import { DropzoneComponent, DropzoneDirective } from 'ngx-dropzone-wrapper';
 import { Task } from 'src/app/shared/models/task.model';
 const now = new Date();
 declare var $: any;
+import { ComponentChangedEvent } from '../../../../../shared/models/component-changed-event.model';
 
 @Component({
   selector: '[app-inline-add]',
   templateUrl: './inline-add.component.html',
   styles: [
+  ],
+  styleUrls: [
+    '../inline-edit/inline-edit.component.scss',
   ]
 })
 export class InlineAddComponent implements OnInit {
+
+  @Input()
+  set cOptions(options){
+    this.customerOptions = this.customerOptions.concat(options);
+  };
+
+  @Input()
+  set cTotal(cTotal) {
+    this.customerTotal = cTotal;
+  }
+
+  @Input()
+  set dOptions(options){
+    this.driverOptions = this.driverOptions.concat(options);
+  };
+
+  @Input()
+  set dTotal(dTotal) {
+    this.driverTotal = dTotal;
+  }
+
+  @Input()
+  set vhOptions(data) {
+    this.vehicleOptions = data;
+  }
+
+  @Input()
+  set tOptions(data) {
+    this.typeOptions = data;
+  }
+
+  @Input()
+  set vOptions(data) {
+    this.vatOptions = data;
+  }
+
+  @Input()
+  filterStatus;
+
+  @Output()
+  componentChange: EventEmitter<ComponentChangedEvent> = new EventEmitter();
+
   @ViewChild(DropzoneComponent, { static: false }) componentRef?: DropzoneComponent;
   @ViewChild(DropzoneDirective, { static: false }) directiveRef?: DropzoneDirective;
 
   disableDropZone = false;
   dataForm: FormGroup;
   data = new Task();
-
 
   customerOptions = [];
   customerLoading = false;
@@ -103,10 +148,6 @@ export class InlineAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadCustomer();
-    this.loadDriver();
-    this.loadOptions();
-    this.loadStatus();
     this.dataForm = this.formBuilder.group({
       customer_id: [this.data.customer_id, Validators.required],
       docket: [ this.data.docket, Validators.required],
@@ -127,6 +168,8 @@ export class InlineAddComponent implements OnInit {
       c_vat_total: [ this.data.c_vat_total.toFixed(2),[]],
       c_tprice: [ this.data.c_tprice.toFixed(2), Validators.min(1)],
       source: [ this.data.source, [Validators.required]],
+      mileage: [this.data.mileage, []],
+      stop_number: [this.data.stop_number, []],
       has_pod: [this.data.has_pod, []],
 
       driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
@@ -222,6 +265,8 @@ export class InlineAddComponent implements OnInit {
       'c_vat_total': this.f.c_vat_total.value,
       'c_tprice': this.f.c_tprice.value,
       'source': this.f.source.value,
+      'mileage': this.f.mileage.value,
+      'stop_number': this.f.stop_number.value,
       'has_pod': this.f.has_pod.value,
       'driver_id': this.f.driver_id.value,
       'job_ref': this.f.job_ref.value,
@@ -263,7 +308,7 @@ export class InlineAddComponent implements OnInit {
       let code = res.code;
       if (code == 200) {
         this.taskid = res.data.id;
-        this.showConfirmModal();
+        this.addJobList(res.data);
       } else {
         let msg = res.msg;
         this.toastrService.warning(msg, 'Warning', {
@@ -273,84 +318,6 @@ export class InlineAddComponent implements OnInit {
     }).catch(err => {
 
     })
-  }
-
-  onCreateNew() {
-    let dz = this.directiveRef.dropzone();
-    dz.removeAllFiles();
-    this.submitted = false;
-    this.journey = [];
-    this.journeyError = false;
-    this.data = new Task();
-    this.dataForm = this.formBuilder.group({
-      customer_id: [this.data.customer_id, Validators.required],
-      docket: [ this.data.docket, Validators.required],
-      job_date: [this.data.job_date, Validators.required],
-      vehicle_type: [this.data.vehicle_type, Validators.required],
-      c_price: [this.data.c_price.toFixed(2), ],
-      c_vat: [this.data.c_vat, [Validators.required]],
-      c_price_total: [ this.data.c_price_total.toFixed(2), []],
-      c_extra: [ this.data.c_extra.toFixed(2), []],
-      c_extra_vat: [ this.data.c_extra_vat, []],
-      c_extra_total: [this.data.c_extra_total.toFixed(2), []],
-
-      c_extra_0: [ this.data.c_extra_0.toFixed(2), []],
-      c_extra_vat_0: [ this.data.c_extra_vat_0.toFixed(2), []],
-      c_extra_total_0: [this.data.c_extra_total_0.toFixed(2), []],
-
-      c_net: [ this.data.c_net.toFixed(2), []],
-      c_vat_total: [ this.data.c_vat_total.toFixed(2),[]],
-      c_tprice: [ this.data.c_tprice.toFixed(2), Validators.min(1)],
-      source: [ this.data.source, [Validators.required]],
-      has_pod: [this.data.has_pod, []],
-
-      driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
-      job_ref: [this.data.job_ref, []],
-      call_sign: [ this.data.call_sign, []],
-      driver_type: [ this.data.driver_type, []],
-      cx_number: [ this.data.driver ?  this.data.driver.cx_number : '', []],
-      driver_vehicle: [ this.data.driver_vehicle ? this.data.driver_vehicle : '', []],
-      d_price: [ this.data.d_price ? this.data.d_price.toFixed(2): (0).toFixed(2), []],
-      d_vat: [ this.data.d_vat, []],
-      d_price_total: [ this.data.d_price_total ? this.data.d_price_total.toFixed(2) : (0).toFixed(2), []],
-      d_extra: [ this.data.d_extra ? this.data.d_extra.toFixed(2) : (0).toFixed(2), []],
-      d_extra_vat: [ this.data.d_extra_vat, []],
-      d_extra_total: [ this.data.d_extra_total ? this.data.d_extra_total.toFixed(2) : (0).toFixed(2), []],
-      d_extra_0: [ this.data.d_extra_0 ? this.data.d_extra_0.toFixed(2) : (0).toFixed(2), []],
-      d_extra_vat_0: [ this.data.d_extra_vat_0, []],
-      d_extra_total_0: [ this.data.d_extra_total_0 ? this.data.d_extra_total_0.toFixed(2) : (0).toFixed(2), []],
-      d_net: [ this.data.d_net ? this.data.d_net.toFixed(2) : (0).toFixed(2), []],
-      d_vat_total: [ this.data.d_vat_total ? this.data.d_vat_total.toFixed(2) : (0).toFixed(2),[]],
-      d_tprice: [ this.data.d_tprice ? this.data.d_tprice.toFixed(2) : (0).toFixed(2), []],
-
-      invoice_date: [this.data.invoice_date, []],
-      invoice_received_date: [this.data.invoice_received_date, []],
-      target_payment_date: [this.data.target_payment_date, []],
-      invoice_number: [ this.data.invoice_number, []],
-      pod_file: [this.data.pod_file, []],
-      check_price: [this.data.check_price == 1 ? true: false, []],
-      check_docket_off: [this.data.check_docket_off == 1 ? true : false, []],
-      check_bank: [this.data.check_bank == 1 ? true : false, []],
-
-      payment_date: [this.data.payment_date, []],
-      payment_reference: [this.data.payment_reference, []],
-      total_payment: [this.data.total_payment.toFixed(2), []],
-      profit: [this.data.profit.toFixed(2), []],
-      profitpercent: [this.data.profitpercent.toFixed(2), []]
-    });
-
-    $('#confirmModal').modal('hide');
-  }
-  showConfirmModal() {
-    $('#confirmModal').modal('show');
-  }
-  onGoJobList() {
-    this.router.navigate(['admin/job/list']);
-    $('#confirmModal').modal('hide');
-  }
-  editTask() {
-    this.router.navigate(['admin/job/edit', this.taskid]);
-    $('#confirmModal').modal('hide');
   }
 
   validateJourney() {
@@ -521,12 +488,7 @@ export class InlineAddComponent implements OnInit {
       this.vehicleLoading = false;
     });
   }
-  loadStatus() {
-    let params = {};
-    this.apiService.getTaskStatus(params).then(res => {
-      this.taskStatus = res;
-    })
-  }
+
   addJourney() {
     this.journey.push({ 'src': '', 'dst': '' });
   }
@@ -669,5 +631,79 @@ export class InlineAddComponent implements OnInit {
   changeVehicle() {
     let vehicleType = this.f.vehicle_type.value;
     this.f.driver_vehicle.setValue(vehicleType);
+  }
+
+  addJobList(task) {
+    const compChgEvent = new ComponentChangedEvent(null, null, task);
+    compChgEvent.action = 'add';
+    this.componentChange.emit(compChgEvent);
+    this.onCreateNew();
+  }
+
+  onCreateNew() {
+    let dz = this.directiveRef.dropzone();
+    dz.removeAllFiles();
+    this.submitted = false;
+    this.journey = [];
+    this.journeyError = false;
+    this.data = new Task();
+    this.dataForm = this.formBuilder.group({
+      customer_id: [this.data.customer_id, Validators.required],
+      docket: [ this.data.docket, Validators.required],
+      job_date: [this.data.job_date, Validators.required],
+      vehicle_type: [this.data.vehicle_type, Validators.required],
+      c_price: [this.data.c_price.toFixed(2), ],
+      c_vat: [this.data.c_vat, [Validators.required]],
+      c_price_total: [ this.data.c_price_total.toFixed(2), []],
+      c_extra: [ this.data.c_extra.toFixed(2), []],
+      c_extra_vat: [ this.data.c_extra_vat, []],
+      c_extra_total: [this.data.c_extra_total.toFixed(2), []],
+
+      c_extra_0: [ this.data.c_extra_0.toFixed(2), []],
+      c_extra_vat_0: [ this.data.c_extra_vat_0.toFixed(2), []],
+      c_extra_total_0: [this.data.c_extra_total_0.toFixed(2), []],
+
+      c_net: [ this.data.c_net.toFixed(2), []],
+      c_vat_total: [ this.data.c_vat_total.toFixed(2),[]],
+      c_tprice: [ this.data.c_tprice.toFixed(2), Validators.min(1)],
+      source: [ this.data.source, [Validators.required]],
+      has_pod: [this.data.has_pod, []],
+
+      driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
+      job_ref: [this.data.job_ref, []],
+      call_sign: [ this.data.call_sign, []],
+      driver_type: [ this.data.driver_type, []],
+      cx_number: [ this.data.driver ?  this.data.driver.cx_number : '', []],
+      driver_vehicle: [ this.data.driver_vehicle ? this.data.driver_vehicle : '', []],
+      d_price: [ this.data.d_price ? this.data.d_price.toFixed(2): (0).toFixed(2), []],
+      d_vat: [ this.data.d_vat, []],
+      d_price_total: [ this.data.d_price_total ? this.data.d_price_total.toFixed(2) : (0).toFixed(2), []],
+      d_extra: [ this.data.d_extra ? this.data.d_extra.toFixed(2) : (0).toFixed(2), []],
+      d_extra_vat: [ this.data.d_extra_vat, []],
+      d_extra_total: [ this.data.d_extra_total ? this.data.d_extra_total.toFixed(2) : (0).toFixed(2), []],
+      d_extra_0: [ this.data.d_extra_0 ? this.data.d_extra_0.toFixed(2) : (0).toFixed(2), []],
+      d_extra_vat_0: [ this.data.d_extra_vat_0, []],
+      d_extra_total_0: [ this.data.d_extra_total_0 ? this.data.d_extra_total_0.toFixed(2) : (0).toFixed(2), []],
+      d_net: [ this.data.d_net ? this.data.d_net.toFixed(2) : (0).toFixed(2), []],
+      d_vat_total: [ this.data.d_vat_total ? this.data.d_vat_total.toFixed(2) : (0).toFixed(2),[]],
+      d_tprice: [ this.data.d_tprice ? this.data.d_tprice.toFixed(2) : (0).toFixed(2), []],
+
+      invoice_date: [this.data.invoice_date, []],
+      invoice_received_date: [this.data.invoice_received_date, []],
+      target_payment_date: [this.data.target_payment_date, []],
+      invoice_number: [ this.data.invoice_number, []],
+      pod_file: [this.data.pod_file, []],
+      check_price: [this.data.check_price == 1 ? true: false, []],
+      check_docket_off: [this.data.check_docket_off == 1 ? true : false, []],
+      check_bank: [this.data.check_bank == 1 ? true : false, []],
+
+      payment_date: [this.data.payment_date, []],
+      payment_reference: [this.data.payment_reference, []],
+      total_payment: [this.data.total_payment.toFixed(2), []],
+      profit: [this.data.profit.toFixed(2), []],
+      profitpercent: [this.data.profitpercent.toFixed(2), []]
+    });
+
+    $('#confirmModal').modal('hide');
   }
 }

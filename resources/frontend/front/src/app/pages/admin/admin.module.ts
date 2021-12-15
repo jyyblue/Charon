@@ -37,6 +37,7 @@ import { JobListCpPaymentComponent } from './job-list-cp-payment/job-list-cp-pay
 import { JobEditCpPaymentComponent } from './job-edit-cp-payment/job-edit-cp-payment.component';
 import { InlineEditComponent } from './job-list/component/inline-edit/inline-edit.component';
 import { InlineAddComponent } from './job-list/component/inline-add/inline-add.component';
+import { JobListHeaderComponent } from './job-list/component/job-list-header/job-list-header.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { InlineAddComponent } from './job-list/component/inline-add/inline-add.c
     JobEditCpPaymentComponent,
     InlineEditComponent,
     InlineAddComponent,
+    JobListHeaderComponent,
   ],
   imports: [
     CommonModule,
