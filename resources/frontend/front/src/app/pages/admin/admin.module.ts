@@ -7,6 +7,7 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { QuillModule } from '../../../vendor/libs/quill/quill.module';
 
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { NgxSummernoteModule } from 'ngx-summernote';
@@ -38,6 +39,7 @@ import { JobEditCpPaymentComponent } from './job-edit-cp-payment/job-edit-cp-pay
 import { InlineEditComponent } from './job-list/component/inline-edit/inline-edit.component';
 import { InlineAddComponent } from './job-list/component/inline-add/inline-add.component';
 import { JobListHeaderComponent } from './job-list/component/job-list-header/job-list-header.component';
+import { PodEmailSendComponent } from './pod-email-send/pod-email-send.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +69,7 @@ import { JobListHeaderComponent } from './job-list/component/job-list-header/job
     InlineEditComponent,
     InlineAddComponent,
     JobListHeaderComponent,
+    PodEmailSendComponent,
   ],
   imports: [
     CommonModule,
@@ -81,6 +84,7 @@ import { JobListHeaderComponent } from './job-list/component/job-list-header/job
     TextMaskModule,
     NgSelectModule,
     FileUploadModule,
+    QuillModule,
   ]
 })
 export class AdminModule { }

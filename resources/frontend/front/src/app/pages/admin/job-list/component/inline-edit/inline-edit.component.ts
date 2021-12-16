@@ -13,6 +13,7 @@ import { DropzoneComponent, DropzoneDirective } from 'ngx-dropzone-wrapper';
 import { environment } from 'src/environments/environment';
 const now = new Date();
 import { common as Const } from 'src/app/shared/const/common';
+import { AppService } from 'src/app/app.service';
 
 @Component({
   selector: 'tr[app-inline-edit]',
@@ -175,6 +176,8 @@ export class InlineEditComponent implements OnInit {
       source: [this.data.source, []],
       mileage: [this.data.mileage, []],
       stop_number: [this.data.stop_number, []],
+      c_ref_1: [this.data.c_ref_1, []],
+      c_ref_2: [this.data.c_ref_2, []],
       has_pod: [this.data.has_pod, []],
 
       driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
@@ -236,7 +239,8 @@ export class InlineEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthServiceService,
-    private readonly changeDetectorRef: ChangeDetectorRef
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private appService: AppService,
   ) { 
     const token = this.authService.getToken();
     this.dropzoneConfig = {
@@ -245,30 +249,17 @@ export class InlineEditComponent implements OnInit {
         Authorization: `Bearer ${token}`,
       },
       maxFiles: 1,
-      addRemoveLinks: true,
-      // acceptedFiles: '*/*',
+      addRemoveLinks: false,
+      acceptedFiles: ".pdf",
       // autoReset: 20000,
       previewTemplate: `
-        <div class="dz-preview dz-file-preview" style="width: 11.25rem;">
-          <div class="dz-details">
-            <div class="dz-thumbnail">
-              <img data-dz-thumbnail>
-              <span class="dz-nopreview">No preview</span>
-              <div class="dz-success-mark" style="background-color: rgba(24,28,33,.1);"></div>
-              <div class="dz-error-mark" style="background-color: rgba(24,28,33,.1);"></div>
-              <div class="dz-error-message"><span data-dz-errormessage></span></div>
-              <div class="progress">
-                <div class="progress-bar progress-bar-primary"
-                  role="progressbar"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                  data-dz-uploadprogress></div>
-              </div>
-            </div>
-            <div class="dz-filename" data-dz-name></div>
-            <div class="dz-size" data-dz-size></div>
-          </div>
-        </div>`
+      <div class="progress">
+        <div class="progress-bar progress-bar-primary"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          data-dz-uploadprogress></div>
+      </div>`
     };
   }
   ngAfterViewChecked(): void {
@@ -346,6 +337,8 @@ export class InlineEditComponent implements OnInit {
       'source': this.f.source.value,
       'mileage': this.f.mileage.value,
       'stop_number': this.f.stop_number.value,
+      'c_ref_1': this.f.c_ref_1.value,
+      'c_ref_2': this.f.c_ref_2.value,
       'has_pod': this.f.has_pod.value,
       'driver_id': this.f.driver_id.value,
       'job_ref': this.f.job_ref.value,
@@ -384,16 +377,12 @@ export class InlineEditComponent implements OnInit {
       'total_payment': this.f.total_payment.value,
     }
 
+    this.appService.showLoading();
     this.apiService.updateTaskAuto(params).then(res => {
+      this.appService.hideLoading();
       let code = res.code;
       if(code == 200) {
-        // this.toastrService.success('Job updated successfully!', 'Success', {
-        //   timeOut: 1500,
-        // });
         this.updateJobList(res.data);
-        // this.onGoJobList();
-        // this.getJob();
-        // this.showConfirmModal();
       }else{
         let message = res.msg;
         this.toastrService.error(message, 'Error', {

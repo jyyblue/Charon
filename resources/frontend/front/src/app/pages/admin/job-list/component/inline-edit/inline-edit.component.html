@@ -82,6 +82,18 @@
             [ngClass]="{'is-invalid' : submitted && f.stop_number.errors}" />
     </form>
 </td>
+<td class="align-middle">
+    <form [formGroup]="dataForm">
+        <input type="text" class="form-control" formControlName="c_ref_1" name="c_ref_1" (change)="saveTask()"
+            [ngClass]="{'is-invalid' : submitted && f.c_ref_1.errors}" />
+    </form>
+</td>
+<td class="align-middle">
+    <form [formGroup]="dataForm">
+        <input type="text" class="form-control" formControlName="c_ref_2" name="c_ref_2" (change)="saveTask()"
+            [ngClass]="{'is-invalid' : submitted && f.c_ref_2.errors}" />
+    </form>
+</td>
 
 <td class="align-middle">
     <form [formGroup]="dataForm">
@@ -338,7 +350,7 @@
 
 <td class="align-middle">
     <div class="" *ngIf="data.pod_file">
-        <a href="{{ downloadurl }}?filename={{ data.pod_file }}" class="btn btn-info rounded-pill">Download</a>
+        <a href="{{ downloadurl }}?filename={{ data.pod_file }}" class="btn btn-info rounded-pill">POD File</a>
     </div>
 </td>
 

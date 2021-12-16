@@ -41,6 +41,8 @@ export class Task {
     public source: string;
     public mileage: number;
     public stop_number: number;
+    public c_ref_1: string;
+    public c_ref_2: string;
     public invoice_date: NgbDateStruct;
     public invoice_received_date: NgbDateStruct;
     public target_payment_date: string;
@@ -106,6 +108,8 @@ export class Task {
         this.source = null;
         this.mileage = 0;
         this.stop_number = 0;
+        this.c_ref_1 = '';
+        this.c_ref_2 = '';
         this.invoice_date = null;
         this.invoice_received_date = null;
         this.target_payment_date = '';

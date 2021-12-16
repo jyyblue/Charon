@@ -46,6 +46,8 @@ class Task extends Model
         'source',
         'mileage',
         'stop_number',
+        'c_ref_1',
+        'c_ref_2',
         'invoice_date',
         'invoice_received_date',
         'invoice_number',

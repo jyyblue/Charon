@@ -23,6 +23,7 @@ import { JobEditPendingPaymentComponent } from './job-edit-pending-payment/job-e
 import { JobEditQueryComponent } from './job-edit-query/job-edit-query.component';
 import { JobListCpPaymentComponent } from './job-list-cp-payment/job-list-cp-payment.component';
 import { JobEditCpPaymentComponent } from './job-edit-cp-payment/job-edit-cp-payment.component';
+import { PodEmailSendComponent } from './pod-email-send/pod-email-send.component';
 
 const routes: Routes = [
 	{ path: 'dashboard', component: DashboardComponent },
@@ -49,7 +50,9 @@ const routes: Routes = [
 	{ path: 'job/edit-pending-payment/:id', component: JobEditPendingPaymentComponent },
 	{ path: 'job/edit-cp-payment/:id', component: JobEditCpPaymentComponent },
 	
-	{ path: 'import/job', component: JobImportComponent }
+	{ path: 'import/job', component: JobImportComponent },
+
+	{ path: 'pod-email/:id', component: PodEmailSendComponent }
 ];
 
 @NgModule({

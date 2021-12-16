@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { ViewChild } from '@angular/core';
 import { DropzoneComponent, DropzoneDirective } from 'ngx-dropzone-wrapper';
 import { Task } from 'src/app/shared/models/task.model';
+import { AppService } from 'src/app/app.service';
+
 const now = new Date();
 declare var $: any;
 
@@ -74,6 +76,7 @@ export class JobAddComponent implements OnInit {
     private toastrService: ToastrService,
     private router: Router,
     private authService: AuthServiceService,
+    private appService: AppService,
   ) {
     const token = this.authService.getToken();
     this.dropzoneConfig = {
@@ -136,6 +139,8 @@ export class JobAddComponent implements OnInit {
       source: [ this.data.source, [Validators.required]],
       mileage: [this.data.mileage, []],
       stop_number: [this.data.stop_number, []],
+      c_ref_1: [this.data.c_ref_1, []],
+      c_ref_2: [this.data.c_ref_2, []],
       has_pod: [this.data.has_pod, []],
 
       driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
@@ -233,6 +238,8 @@ export class JobAddComponent implements OnInit {
       'source': this.f.source.value,
       'mileage': this.f.mileage.value,
       'stop_number': this.f.stop_number.value,
+      'c_ref_1': this.f.c_ref_1.value,
+      'c_ref_2': this.f.c_ref_2.value,
       'has_pod': this.f.has_pod.value,
       'driver_id': this.f.driver_id.value,
       'job_ref': this.f.job_ref.value,
@@ -269,8 +276,9 @@ export class JobAddComponent implements OnInit {
       'payment_reference': this.f.payment_reference.value,
       'total_payment': this.f.total_payment.value,
     }
-
+    this.appService.showLoading();
     this.apiService.saveTask(params).then(res => {
+      this.appService.hideLoading();
       let code = res.code;
       if (code == 200) {
         this.taskid = res.data.id;
@@ -315,6 +323,8 @@ export class JobAddComponent implements OnInit {
       source: [ this.data.source, [Validators.required]],
       mileage: [this.data.mileage, []],
       stop_number: [this.data.stop_number, []],
+      c_ref_1: [this.data.c_ref_1, []],
+      c_ref_2: [this.data.c_ref_2, []],
       has_pod: [this.data.has_pod, []],
 
       driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],

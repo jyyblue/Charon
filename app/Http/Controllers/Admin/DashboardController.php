@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Mail\PodMail;
+use App\Models\VehicleType;
+use Illuminate\Support\Facades\Mail;
 
 class DashboardController extends Controller
 {
@@ -136,7 +140,7 @@ class DashboardController extends Controller
                 }
             }
             array_push($labelData, $label);
-            array_push($profitData, $profit);
+            array_push($profitData, number_format($profit, 2));
             array_push($jobData, $job);
 
             $temp = date('Y-m-d 00:00:00', strtotime($temp . ' +1 day'));
@@ -160,5 +164,47 @@ class DashboardController extends Controller
          $ret['total_job'] = $total_job;
          $ret['chart1Data'] = $chart1_data;
          return response()->json($ret, 200);
+    }
+
+    public function getPodEmailTemplate(Request $request) {
+        $taskid = $request->get('taskid');
+        $task = Task::with(['customer', 'driver', '_status'])->find($taskid);
+        $pod_file = $request->getSchemeAndHttpHost().'/api/admin/v1/task/downloadpod?filename='.$task->pod_file;
+        $vehicle_type = VehicleType::find($task->vehicle_type);
+        $data = [
+            'docket' => $task->docket,
+            'company_name' => $task->customer->company_name,
+            'pod_file' => $pod_file,
+            'c_ref_1' => $task->c_ref_1,
+            'c_ref_2' => $task->c_ref_2,
+            'job_date' => date('m d, Y', strtotime($task->job_date)),
+            'journey' => $task->journey,
+            'vehicle_size' => $vehicle_type ? $vehicle_type->name : '',
+        ];
+        $template = view('email.pod_mail')->with(['data'=>$data])->render();
+        $template2 = view('email.pod_mail2')->with(['data'=>$data])->render();
+        $template3 = view('email.pod_mail3')->with(['data'=>$data])->render();
+
+        $templates = array();
+        array_push($templates, $template);
+        array_push($templates, $template2);
+        array_push($templates, $template3);
+        $ret['templates'] = $templates;
+        $ret['task'] = $task;
+        return $ret;
+    }
+
+    public function sendPodMail(Request $request) {
+        $to = $request->get('to');
+        $taskid = $request->get('taskid');
+        $content = $request->get('content');
+        $task = Task::with(['customer', 'driver', '_status'])->find($taskid);
+        $pod_file = $task->pod_file;
+        $data = [
+            'content' => $content,
+            'pod_file' => $pod_file
+        ];
+        Mail::to($to)->send(new PodMail($data));
+        return true;
     }
 }

@@ -116,6 +116,13 @@ export class ApiService extends ServiceBase {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/getDashboardData`, params, null, false);
   }
   
+  public getPodEmailTemplate(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/getPodEmailTemplate`, params, null, false);
+  }
+  public sendPodMail(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/sendPodMail`, params, null, false);
+  }
+  
   /**
    * call with Rxjs
    */

@@ -48,6 +48,14 @@
         Number Of Stop<i class="ion text-muted ml-2" *ngIf="sortBy=='stop_number'"
             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
     </th>
+    <th class="text-nowrap cursor-pointer" (click)="setSort('c_ref_1')">
+        Customer Reference 1<i class="ion text-muted ml-2" *ngIf="sortBy=='c_ref_1'"
+            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+    </th>
+    <th class="text-nowrap cursor-pointer" (click)="setSort('c_ref_2')">
+        Customer Reference 2<i class="ion text-muted ml-2" *ngIf="sortBy=='c_ref_2'"
+            [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+    </th>
     <th class="text-nowrap cursor-pointer" (click)="setSort('c_price')">
         Journey Price<i class="ion text-muted ml-2" *ngIf="sortBy=='c_price'"
             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>

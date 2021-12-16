@@ -85,6 +85,19 @@
 </td>
 <td class="align-middle">
     <form [formGroup]="dataForm">
+        <input type="text" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_ref_1" name="c_ref_1" 
+            [ngClass]="{'is-invalid' : submitted && f.c_ref_1.errors}" />
+    </form>
+</td>
+<td class="align-middle">
+    <form [formGroup]="dataForm">
+        <input type="text" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_ref_2" name="c_ref_2" 
+            [ngClass]="{'is-invalid' : submitted && f.c_ref_2.errors}" />
+    </form>
+</td>
+
+<td class="align-middle">
+    <form [formGroup]="dataForm">
         <div class="input-group" [ngClass]="{'is-invalid' : submitted && f.d_extra.errors}">
             <div class="input-group-prepend">
                 <span class="input-group-text">&pound;</span>
@@ -338,7 +351,7 @@
 
 <td class="align-middle">
     <div class="" *ngIf="data.pod_file">
-        <a href="{{ downloadurl }}?filename={{ data.pod_file }}" class="btn btn-info rounded-pill">Download</a>
+        <a href="{{ downloadurl }}?filename={{ data.pod_file }}" class="btn btn-info rounded-pill">POD File</a>
     </div>
 </td>
 

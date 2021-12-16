@@ -119,6 +119,26 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label class="form-label">Customer Reference 1</label>
+                                    <input class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_ref_1"
+                                        name="c_ref_1" [ngClass]="{'is-invalid' : submitted && f.c_ref_1.errors}" />
+                                    <div *ngIf="f.c_ref_1.errors && submitted" class="invalid-feedback">
+                                        <div *ngIf="f.c_ref_1.errors.required">This field is Required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="form-label">Customer Reference 2</label>
+                                    <input class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_ref_2"
+                                        name="c_ref_2" [ngClass]="{'is-invalid' : submitted && f.c_ref_2.errors}" />
+                                    <div *ngIf="f.c_ref_2.errors && submitted" class="invalid-feedback">
+                                        <div *ngIf="f.c_ref_2.errors.required">This field is Required
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
 
                         <!-- <div class="form-group">

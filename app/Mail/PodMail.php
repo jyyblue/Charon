@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class DriverResolveMail extends Mailable
+class PodMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -22,6 +22,7 @@ class DriverResolveMail extends Mailable
         $this->data = $data;
         //
     }
+
     /**
      * Build the message.
      *
@@ -29,9 +30,13 @@ class DriverResolveMail extends Mailable
      */
     public function build()
     {
+        $path = storage_path() . "/app/public/job/attachments/" . $this->data['pod_file'];
+
         return $this->from(env('MAIL_FROM_ADDRESS', 'operations@gjsservices.com'), 'GJS Operations Team')
-        ->view('email.driver_resolve_mail')
-        ->subject("Charon | Dispute is resolved")
-        ->with('data', $this->data);
+        ->view('email.pod_mail_bucket')
+        ->subject("Charon | You got pod mail")
+        ->with('data', $this->data)
+        // ->attach($path)
+        ;
     }
 }

@@ -30,7 +30,7 @@ class DriverPaidMail extends Mailable
      */
     public function build()
     {
-        return $this->from(env('MAIL_FROM_ADDRESS', 'operations@gjsservices.com'), 'Charon')
+        return $this->from(env('MAIL_FROM_ADDRESS', 'operations@gjsservices.com'), 'GJS Operations Team')
         ->view('email.driver_paid_mail')
         ->subject("Charon | You got payment")
         ->with('data', $this->data);

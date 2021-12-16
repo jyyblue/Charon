@@ -1,0 +1,75 @@
+<h4 class="m-0">
+  POD mail
+</h4>
+<hr class="my-4">
+
+<div class="form-group">
+  <label class="form-label">To:</label>
+  <input [(ngModel)]="to" type="text" class="form-control">
+</div>
+
+<div class="form-group">
+  <label class="form-label">Templates</label>
+  <select [(ngModel)]="template" class="form-control" (change)="changeTemplate()">
+    <option value="" disabled>Select Template</option>
+    <option *ngFor="let item of templates; let i=index;" value="{{i}}" >Template {{ i + 1 }}</option>
+  </select>
+</div>
+<form [formGroup]="mailForm">
+<div class="form-group mt-4">
+  <quill-editor formControlName="editorContent" name="editorContent" placeholder="Type something">
+    <div quill-editor-toolbar>
+      <span class="ql-formats">
+        <select class="ql-font"></select>
+        <select class="ql-size"></select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-bold"></button>
+        <button class="ql-italic"></button>
+        <button class="ql-underline"></button>
+        <button class="ql-strike"></button>
+      </span>
+      <span class="ql-formats">
+        <select class="ql-color"></select>
+        <select class="ql-background"></select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-script" value="sub"></button>
+        <button class="ql-script" value="super"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-header" value="1"></button>
+        <button class="ql-header" value="2"></button>
+        <button class="ql-blockquote"></button>
+        <button class="ql-code-block"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-list" value="ordered"></button>
+        <button class="ql-list" value="bullet"></button>
+        <button class="ql-indent" value="-1"></button>
+        <button class="ql-indent" value="+1"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-direction" value="rtl"></button>
+        <select class="ql-align"></select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-link"></button>
+        <button class="ql-image"></button>
+        <button class="ql-video"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-clean"></button>
+      </span>
+    </div>
+  </quill-editor>
+  <!-- <textarea [(ngModel)]="editorContent" class="form-control" style="height: 400px" *ngIf="isIE10"></textarea> -->
+  <div *ngIf="f.content.errors && submitted" class="">
+    <div class="small text-danger">Thie field is Required</div>
+</div>
+</div>
+</form>
+
+<div class="text-right mt-4">
+  <button type="button" class="btn btn-primary ml-2" (click)="sendPodMail()"><i class="ion ion-ios-paper-plane"></i>&nbsp; Send</button>
+</div>

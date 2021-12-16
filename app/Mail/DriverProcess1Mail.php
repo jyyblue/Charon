@@ -30,7 +30,7 @@ class DriverProcess1Mail extends Mailable
      */
     public function build()
     {
-        return $this->from(env('MAIL_FROM_ADDRESS', 'operations@gjsservices.com'), 'Charon')
+        return $this->from(env('MAIL_FROM_ADDRESS', 'operations@gjsservices.com'), 'GJS Operations Team')
         ->view('email.driver_process1_mail')
         ->subject("Charon | Your invoice is arrived")
         ->with('data', $this->data);

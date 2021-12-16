@@ -29,7 +29,7 @@ class DriverDisputeMail extends Mailable
      */
     public function build()
     {
-        return $this->from(env('MAIL_FROM_ADDRESS', 'operations@gjsservices.com'), 'Charon')
+        return $this->from(env('MAIL_FROM_ADDRESS', 'operations@gjsservices.com'), 'GJS Operations Team')
         ->view('email.driver_dispute_mail')
         ->subject("Charon | Problem in invoice")
         ->with('data', $this->data);

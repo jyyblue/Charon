@@ -12,6 +12,8 @@ declare var $: any;
 import { environment } from 'src/environments/environment';
 import { common as Const } from 'src/app/shared/const/common';
 import { Task } from 'src/app/shared/models/task.model';
+import { AppService } from 'src/app/app.service';
+
 @Component({
   selector: 'app-job-edit',
   templateUrl: './job-edit.component.html',
@@ -80,7 +82,8 @@ export class JobEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthServiceService,
-    private readonly changeDetectorRef: ChangeDetectorRef
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private appService: AppService,
   ) { 
     const token = this.authService.getToken();
     this.dropzoneConfig = {
@@ -148,6 +151,8 @@ export class JobEditComponent implements OnInit {
       source: [this.data.source, []],
       mileage: [this.data.mileage, []],
       stop_number: [this.data.stop_number, []],
+      c_ref_1: [this.data.c_ref_1, []],
+      c_ref_2: [this.data.c_ref_2, []],
       has_pod: [this.data.has_pod, []],
 
       driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
@@ -202,9 +207,10 @@ export class JobEditComponent implements OnInit {
     let params = {
       'taskid': this.taskid,
     }
+    this.appService.showLoading();
     this.apiService.getTaskDetail(params).then(res => {
+      this.appService.hideLoading();
       let code = res.code;
-      
       if(code == 200) {
         this.data = res.data;
         console.log(this.data);
@@ -273,6 +279,8 @@ export class JobEditComponent implements OnInit {
           source: [this.data.source, []],
           mileage: [this.data.mileage, []],
           stop_number: [this.data.stop_number, []],
+          c_ref_1: [this.data.c_ref_1, []],
+          c_ref_2: [this.data.c_ref_2, []],
           has_pod: [this.data.has_pod, []],
 
           driver_id: [this.data.driver_id ? this.data.driver_id : 0, []],
@@ -403,6 +411,8 @@ export class JobEditComponent implements OnInit {
       'source': this.f.source.value,
       'mileage': this.f.mileage.value,
       'stop_number': this.f.stop_number.value,
+      'c_ref_1': this.f.c_ref_1.value,
+      'c_ref_2': this.f.c_ref_2.value,
       'has_pod': this.f.has_pod.value,
       'driver_id': this.f.driver_id.value,
       'job_ref': this.f.job_ref.value,
@@ -441,7 +451,9 @@ export class JobEditComponent implements OnInit {
       'total_payment': this.f.total_payment.value,
     }
 
+    this.appService.showLoading();
     this.apiService.updateTaskAuto(params).then(res => {
+      this.appService.hideLoading();
       let code = res.code;
       if(code == 200) {
         this.toastrService.success('Job updated successfully!', 'Success', {
@@ -502,7 +514,9 @@ export class JobEditComponent implements OnInit {
       'taskid': this.taskid,
       'description': this.df.description.value
     };
+    this.appService.showLoading();
     this.apiService.disputeTask(params).then(res => {
+      this.appService.hideLoading();
       let code = res.code;
       if(code == 200) {
         this.toastrService.warning('Dispute Job!', 'Success', {
@@ -852,7 +866,9 @@ export class JobEditComponent implements OnInit {
       'taskid': this.taskid,
       'description': this.rf.description.value
     };
+    this.appService.showLoading();
     this.apiService.resolveDisputeTask(params).then(res => {
+      this.appService.hideLoading();
       let code = res.code;
       if(code == 200) {
         this.toastrService.success('Resolve dispute successfully!', 'Success', {
@@ -870,5 +886,9 @@ export class JobEditComponent implements OnInit {
   onResolveClose() {
     this.rf.description.setValue('');
     $('#resolveModal').modal('hide');
+  }
+
+  podPage() {
+    this.router.navigate(['admin/pod-email', this.taskid]);
   }
 }

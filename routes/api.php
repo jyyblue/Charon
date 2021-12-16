@@ -62,6 +62,8 @@ Route::prefix('admin')->group(function () {
 
                 // getDashboard Data
                 Route::post('/getDashboardData', 'DashboardController@getDashboardData')->name('admin.get.dashboarddata');
+                Route::post('/getPodEmailTemplate', 'DashboardController@getPodEmailTemplate')->name('admin.get.getPodEmailTemplate');
+                Route::post('/sendPodMail', 'DashboardController@sendPodMail')->name('admin.get.sendPodMail');
                 
             });
         });

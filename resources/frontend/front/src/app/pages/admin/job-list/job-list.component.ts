@@ -228,7 +228,9 @@ export class JobListComponent implements OnInit {
       'payment_date': pd,
       'payment_reference': this.f.payment_reference.value,
     };
+    this.appService.showLoading();
     this.apiService.updatePendingPaymentTasks(param).then(res=> {
+      this.appService.hideLoading();
       let code = res.code;
       if(code == 200) {
         this.toastrService.success("Confirmed Payment", "Success");
@@ -249,7 +251,7 @@ export class JobListComponent implements OnInit {
     $("#paymentModal").modal("hide");
   }
 
-  protected async onSubComponentChange(event: ComponentChangedEvent) {
+  async onSubComponentChange(event: ComponentChangedEvent) {
     let taskid = event.taskid;
     let action = event.action;
     
