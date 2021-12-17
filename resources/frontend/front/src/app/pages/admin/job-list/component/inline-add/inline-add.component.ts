@@ -702,4 +702,11 @@ export class InlineAddComponent implements OnInit {
 
     $('#confirmModal').modal('hide');
   }
+
+  cancelTask() {
+    const compChgEvent = new ComponentChangedEvent(null, null, null);
+    compChgEvent.action = 'cancel_new_task';
+    this.componentChange.emit(compChgEvent);
+    this.onCreateNew();
+  }
 }

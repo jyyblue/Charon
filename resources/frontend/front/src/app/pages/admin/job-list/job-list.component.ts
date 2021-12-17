@@ -309,6 +309,8 @@ export class JobListComponent implements OnInit {
       let task = event.entity;
       this.taskData.unshift(task);
       this.newJob = false;
+    }else if(action == 'cancel_new_task'){
+      this.newJob = false;
     }else if(action == 'check') {
       let check = event.field;
       let checked = check == 'true' ? true : false;

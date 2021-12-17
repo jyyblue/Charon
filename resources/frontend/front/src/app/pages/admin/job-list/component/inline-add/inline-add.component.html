@@ -664,7 +664,12 @@
     <input class="form-control" readonly>
 </td>
 <td class="align-middle sticky-last">
-    <a class="btn btn-default  icon-btn md-btn-flat" ngbtooltip="Edit" (click)="saveTask()">
-        <i class="ion ion-md-save"></i>
-    </a>
+    <div class="d-inline-flex">
+        <a class="btn btn-default  icon-btn md-btn-flat" ngbtooltip="Edit" (click)="saveTask()">
+            <i class="ion ion-md-save"></i>
+        </a>
+        <a class="btn btn-default  icon-btn md-btn-flat" ngbtooltip="Cancle" (click)="cancelTask()">
+            <i class="ion ion-md-close"></i>
+        </a>
+    </div>
 </td>
