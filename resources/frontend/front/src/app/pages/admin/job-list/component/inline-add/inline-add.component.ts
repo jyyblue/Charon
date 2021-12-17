@@ -23,6 +23,7 @@ import { ComponentChangedEvent } from '../../../../../shared/models/component-ch
   ],
   styleUrls: [
     '../inline-edit/inline-edit.component.scss',
+    '../../job-list.component.scss'
   ]
 })
 export class InlineAddComponent implements OnInit {

@@ -22,16 +22,10 @@ import { AppService } from 'src/app/app.service';
   ],
   styleUrls: [
     './inline-edit.component.scss',
+    '../../job-list.component.scss'
   ]
 })
 export class InlineEditComponent implements OnInit {
-  resolveForm: FormGroup;
-  submitted3 = false;
-
-  disputeForm: FormGroup;
-  submitted2 = false;
-
-
   @ViewChild(DropzoneComponent, { static: false }) componentRef?: DropzoneComponent;
   @ViewChild(DropzoneDirective, { static: false }) directiveRef?: DropzoneDirective;
 
@@ -267,18 +261,11 @@ export class InlineEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.disputeForm = this.formBuilder.group({
-      description: [null, [Validators.required]],
-    });
 
-    this.resolveForm = this.formBuilder.group({
-      description: [null, [Validators.required]],
-    });
   }
 
   get f(): any { return this.dataForm.controls; }
-  get df(): any { return this.disputeForm.controls; }
-  get rf(): any { return this.resolveForm.controls; }
+
 
   saveTask() {
     this.submitted = true;
@@ -400,37 +387,6 @@ export class InlineEditComponent implements OnInit {
   }
   stayHere() {
     $('#confirmModal').modal('hide');
-  }
-  disputeTask() {
-    this.submitted2 = true;
-    // stop here if form is invalid
-    if (this.disputeForm.invalid) {
-      return;
-    }
-    
-    let params = {
-      'taskid': this.taskid,
-      'description': this.df.description.value
-    };
-    this.apiService.disputeTask(params).then(res => {
-      let code = res.code;
-      if(code == 200) {
-        this.toastrService.warning('Dispute Job!', 'Success', {
-          timeOut: 1500,
-        });
-        $('#disputeModal').modal('hide');
-        // this.getJob();
-      }else{
-        this.toastrService.error('Something wrong!', 'Error', {
-          timeOut: 1500,
-        });
-      }
-    });
-  }
-
-  onDisputeClose() {
-    this.df.description.setValue('');
-    $('#disputeModal').modal('hide');
   }
 
   
@@ -742,37 +698,6 @@ export class InlineEditComponent implements OnInit {
     this.saveTask();
   }
 
-  // resolve query 
-  resolveTask() {
-    this.submitted3 = true;
-    // stop here if form is invalid
-    if (this.resolveForm.invalid) {
-      return;
-    }
-    
-    let params = {
-      'taskid': this.taskid,
-      'description': this.rf.description.value
-    };
-    this.apiService.resolveDisputeTask(params).then(res => {
-      let code = res.code;
-      if(code == 200) {
-        this.toastrService.success('Resolve dispute successfully!', 'Success', {
-          timeOut: 1500,
-        });
-        $('#resolveModal').modal('hide');
-        // this.getJob();
-      }else{
-        this.toastrService.error('Something wrong!', 'Error', {
-          timeOut: 1500,
-        });
-      }
-    });
-  }
-  onResolveClose() {
-    this.rf.description.setValue('');
-    $('#resolveModal').modal('hide');
-  }
 
 
   editTask() {
@@ -793,6 +718,18 @@ export class InlineEditComponent implements OnInit {
     }
     const compChgEvent = new ComponentChangedEvent(this.taskid.toString(), checked, null);
     compChgEvent.action = 'check';
+    this.componentChange.emit(compChgEvent);
+  }
+
+  disputeTask() {
+    const compChgEvent = new ComponentChangedEvent(this.taskid.toString(), null, this.data);
+    compChgEvent.action = 'dispute';
+    this.componentChange.emit(compChgEvent);
+  }
+
+  resolveTask() {
+    const compChgEvent = new ComponentChangedEvent(this.taskid.toString(), null, this.data);
+    compChgEvent.action = 'resolve';
     this.componentChange.emit(compChgEvent);
   }
 }

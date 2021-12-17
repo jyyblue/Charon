@@ -412,6 +412,7 @@ class TaskController extends Controller
             // cp_payment to completed
             $payment_date = $request->get('payment_date', '');
             $payment_reference = $request->get('payment_reference', '');
+            $total_payment = $request->get('total_payment', 0);
             if (
                 $status == constants('status.cp_payment') &&
                 !empty($payment_date) &&
@@ -429,25 +430,6 @@ class TaskController extends Controller
                         'worker' => 'system'
                     ]
                 );
-            }
-            $data['status'] = $status;
-
-            $task->update($data);
-
-            $task = Task::where('id', $id)->first();
-            TaskDistance::where('task_id', $id)->delete();
-            foreach ($journey as $key => $item) {
-                $taskDistance = new TaskDistance;
-                $taskDistance->create([
-                    'task_id' => $task->id,
-                    'source' => $item['src'],
-                    'destination' => $item['dst'],
-                ]);
-            }
-
-            // completed payment
-            if ($status == constants('status.completed')) {
-                // send mail to driver for payment complete
                 $driver = Driver::find($driver_id);
                 $driver_email = $driver->email;
                 $task = Task::with(['customer'])->where('id', $task->id)->first();
@@ -467,12 +449,33 @@ class TaskController extends Controller
                     $data = [
                         'payment_reference' => $payment_reference,
                         'payment_date' => $payment_date,
+                        'total_payment' => $total_payment,
                         'task_data' => $task_data,
                     ];
                     Mail::to($driver_email)->send(new DriverPaidMail($data));
                 }
             }
-            $task = Task::with(['customer', 'driver', '_status'])->where('id', $id)->first();
+            $data['status'] = $status;
+
+            $task->update($data);
+
+            $task = Task::where('id', $id)->first();
+            TaskDistance::where('task_id', $id)->delete();
+            foreach ($journey as $key => $item) {
+                $taskDistance = new TaskDistance;
+                $taskDistance->create([
+                    'task_id' => $task->id,
+                    'source' => $item['src'],
+                    'destination' => $item['dst'],
+                ]);
+            }
+
+            // completed payment
+            if ($status == constants('status.completed')) {
+                // send mail to driver for payment complete
+                
+            }
+            $task = Task::with(['customer', 'driver', '_status', 'queryHistory'])->where('id', $id)->first();
             DB::commit();
             $ret['code'] = 200;
             $ret['data'] = $task;
@@ -493,11 +496,11 @@ class TaskController extends Controller
         $customer_id = $request->get('customer_id', 0);
         $sortDesc = $request->get('sortDesc', true);
         $sortBy = $request->get('sortBy', 'key');
-
+        $filterVal = $request->get('filterVal', '');
         $skip = ($page - 1) * $pageSize;
 
         // $tasks = Task::with(['customer', 'driver', '_status']);
-        $tasks = Task::with(['customer', 'driver', '_status'])
+        $tasks = Task::with(['customer', 'driver', '_status', 'queryHistory'])
         ->leftJoin('customer', function($join){
             $join->on('task.customer_id', '=', 'customer.id');
         })
@@ -519,6 +522,11 @@ class TaskController extends Controller
 
         if ($customer_id != 0) {
             $tasks = $tasks->where('customer_id', $customer_id);
+        }
+
+        // filter
+        if($filterVal != '') {
+            $tasks = $tasks->where('task.docket', 'like', '%'.$filterVal.'%');
         }
         if($sortBy != '') {
             $direction = 'DESC';
@@ -655,7 +663,7 @@ class TaskController extends Controller
         }
     }
 
-    // unused
+    // used for job list page bulk update for complete payment
     public function updatePendingPaymentTasks(Request $request)
     {
         try {
@@ -669,11 +677,13 @@ class TaskController extends Controller
             $driver_id = $driver_ids[0];
             $payment_date = $request->get('payment_date', '');
             $payment_reference = $request->get('payment_reference', '');
+            $total_payment = $request->get('total_payment', 0);
 
             Task::whereIn('id', $taskids)->update([
                 'payment_date' => $payment_date,
                 'payment_reference' => $payment_reference,
-                'status' => 4 // payment complete status
+                'total_payment' => $total_payment,
+                'status' => constants('status.completed') // payment complete status
             ]);
 
             // send mail to driver for payment complete
@@ -698,6 +708,7 @@ class TaskController extends Controller
                 $data = [
                     'payment_reference' => $payment_reference,
                     'payment_date' => $payment_date,
+                    'total_payment' => $total_payment,
                     'task_data' => $task_data,
                 ];
                 Mail::to($driver_email)->send(new DriverPaidMail($data));
@@ -713,7 +724,9 @@ class TaskController extends Controller
                     ]
                 );
             }
+            $tasks = Task::with(['customer', 'driver', '_status', 'queryHistory'])->whereIn('id', $taskids)->get();
             $ret['code'] = 200;
+            $ret['tasks'] = $tasks;
             return response()->json($ret, 200);
         } catch (\Exception $e) {
             throw ($e);
@@ -750,7 +763,9 @@ class TaskController extends Controller
                 'query' => 1
             ]
         );
+        $task = Task::with(['customer', 'driver', '_status', 'queryHistory'])->where('id', $taskid)->first();
         $ret['code'] = 200;
+        $ret['task'] = $task;
         return response()->json($ret, 200);
     }
 
@@ -789,7 +804,9 @@ class TaskController extends Controller
                 'query' => 1
             ]
         );
+        $task = Task::with(['customer', 'driver', '_status', 'queryHistory'])->where('id', $taskid)->first();
         $ret['code'] = 200;
+        $ret['task'] = $task;
         return response()->json($ret, 200);
     }
 

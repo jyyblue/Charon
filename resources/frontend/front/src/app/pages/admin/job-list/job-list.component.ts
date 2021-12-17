@@ -11,12 +11,14 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { ComponentChangedEvent } from 'src/app/shared/models/component-changed-event.model';
+import { Task } from 'src/app/shared/models/task.model';
 
 @Component({
   selector: 'app-job-list',
   templateUrl: './job-list.component.html',
   styles: ['.job-list-table td{ padding: 2px 2px; border:none;}'],
   styleUrls: [
+    './job-list.component.scss',
     '../../../../vendor/libs/ng-select/ng-select.scss',
     '../../../../vendor/libs/ngb-datepicker/ngb-datepicker.scss',
     '../../../../vendor/libs/ngx-dropzone-wrapper/ngx-dropzone-wrapper.scss'
@@ -85,6 +87,14 @@ export class JobListComponent implements OnInit {
   vatOptions = [];
   
   newJob = false;
+
+  resolveForm: FormGroup;
+  submitted3 = false;
+
+  disputeForm: FormGroup;
+  submitted2 = false;
+  data = new Task();
+
   constructor(
     private http: HttpClient, 
     private appService: AppService,
@@ -106,10 +116,20 @@ export class JobListComponent implements OnInit {
     this.dataForm = this.formBuilder.group({
       payment_date: [this.model, [Validators.required]],
       payment_reference: [null, [Validators.required]],
+      total_payment: [null, [Validators.required]],
+    });
+    this.disputeForm = this.formBuilder.group({
+      description: [null, [Validators.required]],
+    });
+
+    this.resolveForm = this.formBuilder.group({
+      description: [null, [Validators.required]],
     });
   }
 
   get f(): any { return this.dataForm.controls; }
+  get df(): any { return this.disputeForm.controls; }
+  get rf(): any { return this.resolveForm.controls; }
 
   loadData() {
     let params = {
@@ -117,9 +137,11 @@ export class JobListComponent implements OnInit {
       'pagesize': this.perPage,
       'status': this.filterStatus,
       'sortBy': this.sortBy,
-      'sortDesc': this.sortDesc
+      'sortDesc': this.sortDesc,
+      'filterVal': this.filterVal
     };
     this.apiService.getTaskList(params).then((res) => {
+      this.appService.hideLoading();
       this.taskData = res.data;
       this.totalItems = res.total;
     }).catch((err) => {
@@ -138,7 +160,11 @@ export class JobListComponent implements OnInit {
   }
 
   update() {
-    console.log(this.currentPage);
+    this.appService.showLoading();
+    this.loadData();
+  }
+
+  updateFilter() {
     this.loadData();
   }
 
@@ -157,9 +183,10 @@ export class JobListComponent implements OnInit {
   }
 
   onSelectAll(checked) {
-    if (checked == 'true') {
+    if (checked == true) {
       this.taskData.forEach(element => {
         element['checked'] = true;
+
         this.selectedTask.push(element['id']);
       });
     } else {
@@ -204,6 +231,11 @@ export class JobListComponent implements OnInit {
     }
   }
 
+  changeTotalPayment() {
+    let total_payment = this.f.total_payment.value;
+    this.f.total_payment.setValue(total_payment.toFixed(2));
+  }
+
   onPaymentSubmit() {
     this.submitted = true;
     // stop here if form is invalid
@@ -227,6 +259,7 @@ export class JobListComponent implements OnInit {
       'driver_ids': selectedDriver,
       'payment_date': pd,
       'payment_reference': this.f.payment_reference.value,
+      'total_payment': this.f.total_payment.value,
     };
     this.appService.showLoading();
     this.apiService.updatePendingPaymentTasks(param).then(res=> {
@@ -236,6 +269,12 @@ export class JobListComponent implements OnInit {
         this.toastrService.success("Confirmed Payment", "Success");
       }else if(code == 201) {
         let msg = res.message;
+        let tasks = res.tasks;
+        tasks.forEach(element => {
+          let taskid = element.id;
+          let taskIdx = this.taskData.findIndex(item => { return item['id'] == taskid; });
+          this.taskData[taskIdx] = element;
+        });
         this.toastrService.warning( msg, "Warning");
       }
     });
@@ -248,6 +287,7 @@ export class JobListComponent implements OnInit {
     e.preventDefault();
     this.f.payment_date.setValue(this.model);
     this.f.payment_reference.setValue('');
+    this.f.total_payment.setValue(0);
     $("#paymentModal").modal("hide");
   }
 
@@ -280,6 +320,14 @@ export class JobListComponent implements OnInit {
     }else if(action == 'setSort') {
       let key = event.field;
       this.setSort(key);
+    }else if(action == 'dispute') {
+      let data = event.entity;
+      this.data = data;
+      $('#disputeModal').modal('show');
+    }else if(action == 'resolve') {
+      let data = event.entity;
+      this.data = data;
+      $('#resolveModal').modal('show');
     }
   }
 
@@ -331,5 +379,81 @@ export class JobListComponent implements OnInit {
 
   addJob(flag) {
     this.newJob = true;
+  }
+
+  disputeTask() {
+    this.submitted2 = true;
+    // stop here if form is invalid
+    if (this.disputeForm.invalid) {
+      return;
+    }
+    
+    let params = {
+      'taskid': this.data.id,
+      'description': this.df.description.value
+    };
+    this.appService.showLoading();
+    this.apiService.disputeTask(params).then(res => {
+      this.appService.hideLoading();
+      let code = res.code;
+      if(code == 200) {
+        this.toastrService.warning('Dispute Job!', 'Success', {
+          timeOut: 1500,
+        });
+        $('#disputeModal').modal('hide');
+        let temp = res.task;
+        let taskid = temp.id;
+        let taskIdx = this.taskData.findIndex(item => { return item['id'] == taskid; });
+        this.taskData[taskIdx] = temp;
+        // this.getJob();
+        // this.updateJobList(res.task);
+      }else{
+        this.toastrService.error('Something wrong!', 'Error', {
+          timeOut: 1500,
+        });
+      }
+    });
+  }
+
+  onDisputeClose() {
+    this.df.description.setValue('');
+    $('#disputeModal').modal('hide');
+  }
+  // resolve query 
+  resolveTask() {
+    this.submitted3 = true;
+    // stop here if form is invalid
+    if (this.resolveForm.invalid) {
+      return;
+    }
+    
+    let params = {
+      'taskid': this.data.id,
+      'description': this.rf.description.value
+    };
+    this.appService.showLoading();
+    this.apiService.resolveDisputeTask(params).then(res => {
+      this.appService.hideLoading();
+      let code = res.code;
+      if(code == 200) {
+        this.toastrService.success('Resolve dispute successfully!', 'Success', {
+          timeOut: 1500,
+        });
+        $('#resolveModal').modal('hide');
+        let temp = res.task;
+        let taskid = temp.id;
+        let taskIdx = this.taskData.findIndex(item => { return item['id'] == taskid; });
+        let task_old = this.taskData[taskIdx];
+        this.taskData[taskIdx] = temp;
+      }else{
+        this.toastrService.error('Something wrong!', 'Error', {
+          timeOut: 1500,
+        });
+      }
+    });
+  }
+  onResolveClose() {
+    this.rf.description.setValue('');
+    $('#resolveModal').modal('hide');
   }
 }

@@ -1060,9 +1060,9 @@
             <div class="card-body">
                 <div class="" *ngFor="let item of data.query_history">
                     <div class="col-md">
-                        <label class="form-label btn-sm rounded-pill" *ngIf="item.status == 2"
+                        <label class="form-label btn-sm rounded-pill text-white" *ngIf="item.status == 2"
                             [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Query</label>
-                        <label class="form-label btn-sm rounded-pill" *ngIf="item.status != 2"
+                        <label class="form-label btn-sm rounded-pill text-white" *ngIf="item.status != 2"
                             [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Resolve</label>
                         <p class="">
                             {{ item.description }}

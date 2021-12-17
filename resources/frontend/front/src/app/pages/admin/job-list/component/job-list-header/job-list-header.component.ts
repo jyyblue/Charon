@@ -6,6 +6,9 @@ import { ComponentChangedEvent } from '../../../../../shared/models/component-ch
   selector: '[app-job-list-header]',
   templateUrl: './job-list-header.component.html',
   styles: [
+  ],
+  styleUrls: [
+    '../../job-list.component.scss'
   ]
 })
 export class JobListHeaderComponent implements OnInit {

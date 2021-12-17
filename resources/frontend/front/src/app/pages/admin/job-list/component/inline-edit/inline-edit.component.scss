@@ -73,3 +73,7 @@ td {
     max-width: 90px;
     min-width: 90px;
 }
+
+.noClick {
+    pointer-events: none;
+    color: #ad9e9e; }

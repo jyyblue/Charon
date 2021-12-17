@@ -1,0 +1,15 @@
+.job-list-table > thead > tr > td:last-child, html:not([dir=rtl]) .card-table > thead > tr > th:last-child, 
+.job-list-table > tbody > tr > td:last-child, html:not([dir=rtl]) .card-table > tbody > tr > th:last-child, 
+.job-list-table > tfoot > tr > td:last-child, html:not([dir=rtl]) .card-table > tfoot > tr > th:last-child {
+    padding-right: 1.5rem;
+    border-right: 0;
+    position: sticky !important;
+    right: 0rem !important;
+}
+
+.sticky-last {
+    position: sticky !important;
+    right: 0rem !important;
+    background: #fff;
+}
+
