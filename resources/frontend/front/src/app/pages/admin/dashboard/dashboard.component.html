@@ -323,7 +323,7 @@
                                 <tr *ngFor="let item of d_profit; let i=index">
                                     <td>{{ i+1 }}</td>
                                     <td>{{ item.subcontractor }}</td>
-                                    <td>{{ item.cc }}</td>
+                                    <td>&pound; {{ item.cc }}</td>
                                     <td>
                                         <button class="btn" (click)="viewDriver(item.id)">View</button>
                                     </td>
@@ -348,7 +348,7 @@
                                 <tr *ngFor="let item of d_bill; let i=index">
                                     <td>{{ i+1 }}</td>
                                     <td>{{ item.subcontractor }}</td>
-                                    <td>{{ item.cc }}</td>
+                                    <td>&pound; {{ item.cc }}</td>
                                     <td>
                                         <button class="btn" (click)="viewDriver(item.id)">View</button>
                                     </td>
