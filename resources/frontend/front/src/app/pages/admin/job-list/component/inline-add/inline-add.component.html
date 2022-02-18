@@ -10,6 +10,36 @@
 <td class="align-middle  "
     [ngStyle]="{background: data._status ? data._status.color : '#fff', color: data && data.status == 5 ? '#fff' : '#000'}">
     {{data._status.name}}</td>
+<td class="align-middle">
+    <div class="" *ngIf="data.pod_file">
+        <a href="{{ downloadurl }}?filename={{ data.pod_file }}" class="btn btn-info rounded-pill">POD File</a>
+    </div>
+</td>
+
+<td class="align-middle">
+    <form [formGroup]="dataForm">
+        <div class="">
+            <div class="w-100 border-success" style="border: 2px dashed"
+                [ngClass]="{'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 && f.has_pod.value != true }">
+                <div class="job-list dropzone dropzone-container" [dropzone]="dropzoneConfig" (reset)="resetThumbnail()"
+                    (error)="onErrorThumb($event)" (success)="onSuccessThumb($event)" (canceled)="onCancel($event)"
+                    [disabled]="disableDropZone" [ngClass]="{'is-invalid':  submitted && f.pod_file.errors }">
+                    <div class="dz-message needsclick">
+                        Drop or click
+                    </div>
+                </div>
+                <input class="form-control" formControlName="pod_file" type="hidden" name="pod_file"
+                    [ngClass]="{'is-invalid':  submitted && f.pod_file.errors }">
+            </div>
+        </div>
+    </form>
+</td>
+
+<td class="align-middle">
+    <div class="w-100 d-flex" style="direction:rtl;">
+        <button class="btn btn-primary" (click)="onReset()">Reset</button>
+    </div>
+</td>
 <!-- Customer section -->
 
 <td class="align-middle">
@@ -17,7 +47,7 @@
 
         <ng-select [items]="customerOptions" bindLabel="dispName" bindValue="id" formControlName="customer_id"
             name="customer_id" [loading]="customerLoading" class="job-list CUSTOMER_UPLOAD_COMPLETE"
-            [ngClass]="{'is-invalid' : submitted && f.customer_id.errors }"  [virtualScroll]="true"
+            [ngClass]="{'is-invalid' : submitted && f.customer_id.errors }" [virtualScroll]="true"
             (scrollToEnd)="onScrollToEnd()" (search)="customerSearchFn($event)" (open)="customerOpen($event)">
             <ng-template ng-label-tmp let-item="item">
                 <span class="ng-value-label">{{item['dispName']}}</span>
@@ -29,19 +59,31 @@
         </ng-select>
     </form>
 </td>
+<td class="align-middle">
+    <form [formGroup]="dataForm">
+        <input type="text" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_ref_1" name="c_ref_1"
+            [ngClass]="{'is-invalid' : submitted && f.c_ref_1.errors}" />
+    </form>
+</td>
+<td class="align-middle">
+    <form [formGroup]="dataForm">
+        <input type="text" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_ref_2" name="c_ref_2"
+            [ngClass]="{'is-invalid' : submitted && f.c_ref_2.errors}" />
+    </form>
+</td>
 <td class="align-middle  ">
     <form [formGroup]="dataForm">
         <input type="text" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="docket" name="docket"
-            [ngClass]="{'is-invalid' : submitted && f.docket.errors }" >
+            [ngClass]="{'is-invalid' : submitted && f.docket.errors }">
     </form>
 </td>
 <td class="align-middle w-145 ">
     <form [formGroup]="dataForm">
 
         <div class="input-group">
-            <input class="form-control CUSTOMER_UPLOAD_COMPLETE" placeholder="yyyy-mm-dd" ngbDatepicker formControlName="job_date"
-                name="job_date" #d="ngbDatepicker" [ngClass]="{'is-invalid' : submitted && f.job_date.errors }"
-                 readonly>
+            <input class="form-control CUSTOMER_UPLOAD_COMPLETE" placeholder="yyyy-mm-dd" ngbDatepicker
+                formControlName="job_date" name="job_date" #d="ngbDatepicker"
+                [ngClass]="{'is-invalid' : submitted && f.job_date.errors }" readonly>
             <div class="input-group-append">
                 <button class="input-group-text" (click)="d.toggle()" type="button">
                     <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
@@ -67,34 +109,23 @@
 </td>
 <td class="align-middle">
     <form [formGroup]="dataForm">
-        <input class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="source" name="source" 
+        <input class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="source" name="source"
             [ngClass]="{'is-invalid' : submitted && f.source.errors}" />
     </form>
 </td>
 <td class="align-middle">
     <form [formGroup]="dataForm">
-        <input type="number" min="0" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="mileage" name="mileage" 
-            [ngClass]="{'is-invalid' : submitted && f.mileage.errors}" />
+        <input type="number" min="0" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="mileage"
+            name="mileage" [ngClass]="{'is-invalid' : submitted && f.mileage.errors}" />
     </form>
 </td>
 <td class="align-middle">
     <form [formGroup]="dataForm">
-        <input type="number" min="0" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="stop_number" name="stop_number" 
-            [ngClass]="{'is-invalid' : submitted && f.stop_number.errors}" />
+        <input type="number" min="0" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="stop_number"
+            name="stop_number" [ngClass]="{'is-invalid' : submitted && f.stop_number.errors}" />
     </form>
 </td>
-<td class="align-middle">
-    <form [formGroup]="dataForm">
-        <input type="text" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_ref_1" name="c_ref_1" 
-            [ngClass]="{'is-invalid' : submitted && f.c_ref_1.errors}" />
-    </form>
-</td>
-<td class="align-middle">
-    <form [formGroup]="dataForm">
-        <input type="text" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_ref_2" name="c_ref_2" 
-            [ngClass]="{'is-invalid' : submitted && f.c_ref_2.errors}" />
-    </form>
-</td>
+
 
 <td class="align-middle">
     <form [formGroup]="dataForm">
@@ -102,8 +133,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">&pound;</span>
             </div>
-            <input type="number" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_price" name="c_price" (change)="changePrice()"
-                step="0.01">
+            <input type="number" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_price" name="c_price"
+                (change)="changePrice()" step="0.01">
         </div>
     </form>
 </td>
@@ -128,7 +159,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">&pound;</span>
             </div>
-            <input typ="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_price_total" readonly />
+            <input typ="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE"
+                formControlName="c_price_total" readonly />
         </div>
     </form>
 </td>
@@ -139,8 +171,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">&pound;</span>
             </div>
-            <input type="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_extra" name="c_extra"
-                (change)="changePrice()">
+            <input type="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_extra"
+                name="c_extra" (change)="changePrice()">
         </div>
     </form>
 </td>
@@ -155,7 +187,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">&pound;</span>
             </div>
-            <input typ="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_extra_total" readonly />
+            <input typ="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE"
+                formControlName="c_extra_total" readonly />
         </div>
     </form>
 </td>
@@ -165,8 +198,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">&pound;</span>
             </div>
-            <input type="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_extra_0" name="c_extra_0"
-                (change)="changePrice()">
+            <input type="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_extra_0"
+                name="c_extra_0" (change)="changePrice()">
         </div>
     </form>
 </td>
@@ -181,7 +214,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">&pound;</span>
             </div>
-            <input typ="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_extra_total_0" readonly />
+            <input typ="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE"
+                formControlName="c_extra_total_0" readonly />
         </div>
     </form>
 </td>
@@ -191,7 +225,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">&pound;</span>
             </div>
-            <input type="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_net" name="c_net" readonly>
+            <input type="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_net"
+                name="c_net" readonly>
         </div>
     </form>
 </td>
@@ -201,8 +236,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">&pound;</span>
             </div>
-            <input type="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_vat_total" name="c_vat_total"
-                readonly>
+            <input type="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_vat_total"
+                name="c_vat_total" readonly>
         </div>
     </form>
 </td>
@@ -212,7 +247,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">&pound;</span>
             </div>
-            <input type="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_tprice" name="c_tprice" readonly>
+            <input type="number" step="0.01" class="form-control CUSTOMER_UPLOAD_COMPLETE" formControlName="c_tprice"
+                name="c_tprice" readonly>
         </div>
     </form>
 </td>
@@ -239,14 +275,14 @@
 <td class="align-middle">
     <form [formGroup]="dataForm">
 
-        <input type="text" class="form-control" formControlName="call_sign" name="call_sign" 
+        <input type="text" class="form-control" formControlName="call_sign" name="call_sign"
             [ngClass]="{'is-invalid' : f.call_sign.value == '' , 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 1}">
     </form>
 </td>
 <td class="align-middle">
     <form [formGroup]="dataForm">
         <ng-select [items]="typeOptions" bindLabel="label" bindValue="value" formControlName="driver_type"
-            placeholder="Select Type" class="job-list" 
+            placeholder="Select Type" class="job-list"
             [ngClass]="{'is-invalid' : f.driver_type.value == undefined, 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 1}">
             <ng-template ng-label-tmp let-item="item">
                 <span class="ng-value-label">{{item['label']}}</span>
@@ -261,7 +297,7 @@
 <td class="align-middle">
     <form [formGroup]="dataForm">
 
-        <input type="text" class="form-control" formControlName="cx_number" name="cx_number" 
+        <input type="text" class="form-control" formControlName="cx_number" name="cx_number"
             [ngClass]="{'is-invalid' : f.cx_number.value == '', 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 1 }">
     </form>
 </td>
@@ -269,7 +305,7 @@
     <form [formGroup]="dataForm">
 
         <ng-select [items]="vehicleOptions" bindLabel="label" bindValue="value" formControlName="driver_vehicle"
-            placeholder="Select Type" class="job-list" 
+            placeholder="Select Type" class="job-list"
             [ngClass]="{'is-invalid' : f.driver_vehicle.value == undefined , 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 1}">
             <ng-template ng-label-tmp let-item="item">
                 <span class="ng-value-label">{{item['label']}}</span>
@@ -284,7 +320,7 @@
 <td class="align-middle">
     <form [formGroup]="dataForm">
 
-        <input type="text" class="form-control" formControlName="job_ref" name="job_ref" 
+        <input type="text" class="form-control" formControlName="job_ref" name="job_ref"
             [ngClass]="{'is-invalid' : f.job_ref.value == '' , 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3}">
     </form>
 </td>
@@ -306,7 +342,6 @@
 <td class="align-middle">
     <form [formGroup]="dataForm">
         <input type="text" class="form-control" formControlName="invoice_number" name="invoice_number"
-            
             [ngClass]="{'is-invalid' : f.invoice_number.value == '' , 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3}">
     </form>
 </td>
@@ -315,8 +350,7 @@
     <form [formGroup]="dataForm">
         <div class="input-group">
             <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
-                formControlName="invoice_received_date" name="invoice_received_date" #d3="ngbDatepicker"
-                 readonly
+                formControlName="invoice_received_date" name="invoice_received_date" #d3="ngbDatepicker" readonly
                 [ngClass]="{'is-invalid' : f.invoice_received_date.value == undefined, 'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 }">
             <div class="input-group-append">
                 <button class="input-group-text" (click)="d3.toggle()" type="button">
@@ -349,36 +383,7 @@
     </form>
 </td>
 
-<td class="align-middle">
-    <div class="" *ngIf="data.pod_file">
-        <a href="{{ downloadurl }}?filename={{ data.pod_file }}" class="btn btn-info rounded-pill">POD File</a>
-    </div>
-</td>
 
-<td class="align-middle">
-    <form [formGroup]="dataForm">
-        <div class="">
-            <div class="w-100 border-success" style="border: 2px dashed"
-                [ngClass]="{'DRIVER_PROCESS_2_COMPLETE_READY_TO_PAY' : data._status != null && data._status.id == 3 && f.has_pod.value != true }">
-                <div class="job-list dropzone dropzone-container" [dropzone]="dropzoneConfig" (reset)="resetThumbnail()"
-                    (error)="onErrorThumb($event)" (success)="onSuccessThumb($event)" (canceled)="onCancel($event)"
-                    [disabled]="disableDropZone" [ngClass]="{'is-invalid':  submitted && f.pod_file.errors }">
-                    <div class="dz-message needsclick">
-                        Drop or click
-                    </div>
-                </div>
-                <input class="form-control" formControlName="pod_file" type="hidden" name="pod_file"
-                    [ngClass]="{'is-invalid':  submitted && f.pod_file.errors }">
-            </div>
-        </div>
-    </form>
-</td>
-
-<td class="align-middle">
-    <div class="w-100 d-flex" style="direction:rtl;">
-        <button class="btn btn-primary" (click)="onReset()">Reset</button>
-    </div>
-</td>
 
 <td class="align-middle">
     <form [formGroup]="dataForm">
@@ -611,7 +616,7 @@
 
         <div class="input-group" [ngClass]="{'is-invalid': submitted && f.payment_date.errors}">
             <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker formControlName="payment_date"
-                name="payment_date" #d2="ngbDatepicker" readonly 
+                name="payment_date" #d2="ngbDatepicker" readonly
                 [ngClass]="{'is-invalid': f.payment_date.value == undefined , 'PAID' : data._status != null && data._status.id == 4}">
             <div class="input-group-append">
                 <button class="input-group-text" (click)="d2.toggle()" type="button">
@@ -624,7 +629,6 @@
 <td class="align-middle">
     <form [formGroup]="dataForm">
         <input type="text" class="form-control" formControlName="payment_reference" name="payment_reference"
-            
             [ngClass]="{'is-invalid': f.payment_reference.value == '', 'PAID' : data._status != null && data._status.id == 4}">
     </form>
 </td>
@@ -635,7 +639,7 @@
                 <span class="input-group-text">&pound;</span>
             </div>
             <input type="number" step="0.01" class="form-control" formControlName="total_payment" name="total_payment"
-                [ngClass]="{'PAID' : data._status != null && data._status.id == 4}" >
+                [ngClass]="{'PAID' : data._status != null && data._status.id == 4}">
         </div>
     </form>
 </td>

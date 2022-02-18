@@ -42,10 +42,10 @@
     <link rel="stylesheet" href="/vendor/styles/appwork.css" class="theme-settings-appwork-css">
     <link rel="stylesheet" href="/vendor/styles/theme-corporate.css" class="theme-settings-theme-css">
     <link rel="stylesheet" href="/vendor/styles/colors.css" class="theme-settings-colors-css">
-    <link rel="stylesheet" href="/vendor/styles/uikit.css"> -->
+    <link rel="stylesheet" href="/vendor/styles/uikit.css">
 
     <script src="/assets/vendor/js/material-ripple.js"></script>
-    <script src="/assets/vendor/js/layout-helpers.js"></script>
+    <script src="/assets/vendor/js/layout-helpers.js"></script> -->
     
     <!-- for dev -->
     <!-- Theme settings -->
@@ -84,7 +84,7 @@
 
     <!-- Custom elements polyfill -->
     <!-- <script>this.customElements||document.write('<script src="//unpkg.com/document-register-element"><\x2fscript>');</script> -->
-  <link rel="stylesheet" href="/assets/angular/styles.48ba85cdf975fc49df1c.css"></head>
+  <link rel="stylesheet" href="/assets/angular/styles.b54cc097e5e9bc71b978.css"></head>
   <body>
 
     <!-- Splash screen -->
@@ -116,5 +116,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.7/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> -->
 
-  <script src="/assets/angular/runtime.7962a5b127c016b6ee29.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.886766c896dbef5ab292.js" defer></script><script src="/assets/angular/main.e6d88d2b36595749a9a1.js" defer></script></body>
+  <script src="/assets/angular/runtime.55007fdd91a874970aad.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.886766c896dbef5ab292.js" defer></script><script src="/assets/angular/main.e6d88d2b36595749a9a1.js" defer></script></body>
 </html>
