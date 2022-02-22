@@ -23,7 +23,10 @@ import { JobEditPendingPaymentComponent } from './job-edit-pending-payment/job-e
 import { JobEditQueryComponent } from './job-edit-query/job-edit-query.component';
 import { JobListCpPaymentComponent } from './job-list-cp-payment/job-list-cp-payment.component';
 import { JobEditCpPaymentComponent } from './job-edit-cp-payment/job-edit-cp-payment.component';
-import { PodEmailSendComponent } from './pod-email-send/pod-email-send.component';
+import { TemplateListComponent } from './template-list/template-list.component';
+import { TemplateCreateComponent } from './template-create/template-create.component';
+import { TemplateEditComponent } from './template-edit/template-edit.component';
+import { OutboxComponent } from './outbox/outbox.component';
 
 const routes: Routes = [
 	{ path: 'dashboard', component: DashboardComponent },
@@ -52,7 +55,10 @@ const routes: Routes = [
 	
 	{ path: 'import/job', component: JobImportComponent },
 
-	{ path: 'pod-email/:id', component: PodEmailSendComponent }
+	{ path: 'mail-manager/template/list', component: TemplateListComponent},
+	{ path: 'mail-manager/template/create', component: TemplateCreateComponent },
+	{ path: 'mail-manager/template/edit/:id', component: TemplateEditComponent },
+	{ path: 'mail-manager/outbox', component: OutboxComponent }
 ];
 
 @NgModule({

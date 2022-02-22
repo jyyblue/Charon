@@ -123,6 +123,31 @@ export class ApiService extends ServiceBase {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/sendPodMail`, params, null, false);
   }
   
+  // mail manager api
+  public getTemplate(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/mail/template/getTemplate`, params, null, false);
+  }
+  
+  public checkTemplate(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/mail/template/checkMailTeamplte`, params, null, false);
+  }
+
+  public storeTemplate(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/mail/template/store`, params, null, false);
+  }
+
+  public getMailTemplateList(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/mail/template/list`, params, null, false);
+  }
+  
+  public deleteTemplate(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/mail/template/delete`, params, null, false);
+  }
+  
+  public updateTemplate(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/mail/template/update`, params, null, false);
+  }
+  
   /**
    * call with Rxjs
    */

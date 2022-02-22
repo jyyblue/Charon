@@ -32,6 +32,8 @@ export class JobEditComponent implements OnInit {
   disputeForm: FormGroup;
   submitted2 = false;
 
+  podForm: FormGroup;
+  submittedPod = false;
 
   @ViewChild(DropzoneComponent, { static: false }) componentRef?: DropzoneComponent;
   @ViewChild(DropzoneDirective, { static: false }) directiveRef?: DropzoneDirective;
@@ -74,6 +76,19 @@ export class JobEditComponent implements OnInit {
   submitted = false;
 
   taskStatus = [];
+
+  summernote_content;
+  suggestItems = [];
+  editor;
+  typeList = [];
+
+
+  resolve_content;
+  resolve_editor;
+
+  pod_content;
+  pod_editor;
+
   constructor(
     private formBuilder: FormBuilder,
     private apiService: ApiService,
@@ -191,17 +206,24 @@ export class JobEditComponent implements OnInit {
     });
 
     this.disputeForm = this.formBuilder.group({
-      description: [null, [Validators.required]],
+      type_slug: [null, [Validators.required]],
     });
 
     this.resolveForm = this.formBuilder.group({
       description: [null, [Validators.required]],
     });
+
+    this.podForm = this.formBuilder.group({
+      receiver: [null, [Validators.required]],
+    });
+
+    
   }
 
   get f(): any { return this.dataForm.controls; }
   get df(): any { return this.disputeForm.controls; }
   get rf(): any { return this.resolveForm.controls; }
+  get pf(): any { return this.podForm.controls; }
 
   getJob() {
     let params = {
@@ -212,6 +234,25 @@ export class JobEditComponent implements OnInit {
       this.appService.hideLoading();
       let code = res.code;
       if(code == 200) {
+        this.typeList = res.disputeTemplates;
+        this.suggestItems = res.suggestItems;
+        this.initSummernote();
+
+        let resolveTemplate = res.resolveTemplate;
+        this.resolve_content = resolveTemplate != undefined ? resolveTemplate.content : '';
+        this.initResolveSummernote();
+
+        let podTemplate = res.podTemplate;
+        this.pod_content = podTemplate != undefined ? podTemplate.content : '';
+        this.initPodSummernote();
+        let _pod_customer = res.data.customer;
+        if(_pod_customer != undefined) {
+          let _pod_customer_mail = _pod_customer.company_email;
+          this.podForm  = this.formBuilder.group({
+            receiver: [_pod_customer_mail, [Validators.required]],
+          });
+        }
+
         this.data = res.data;
         console.log(this.data);
         this.driver = this.data.driver;
@@ -505,6 +546,16 @@ export class JobEditComponent implements OnInit {
   }
   disputeTask() {
     this.submitted2 = true;
+    let summernote_valid = false;
+    if (this.editor != undefined) {
+      let summernote_content = this.editor.summernote('code');
+      let text = $(summernote_content).text();
+      summernote_valid = summernote_content.length > 0 ? true : false;
+    }
+    if (summernote_valid == false) {
+      $('#summernote-error').css('display', 'inline-block');
+      return;
+    }
     // stop here if form is invalid
     if (this.disputeForm.invalid) {
       return;
@@ -512,7 +563,8 @@ export class JobEditComponent implements OnInit {
     
     let params = {
       'taskid': this.taskid,
-      'description': this.df.description.value
+      'content': this.summernote_content,
+      'type_slug': this.df.type_slug.value
     };
     this.appService.showLoading();
     this.apiService.disputeTask(params).then(res => {
@@ -533,7 +585,7 @@ export class JobEditComponent implements OnInit {
   }
 
   onDisputeClose() {
-    this.df.description.setValue('');
+    this.summernote_content = '';
     $('#disputeModal').modal('hide');
   }
 
@@ -858,13 +910,20 @@ export class JobEditComponent implements OnInit {
   resolveTask() {
     this.submitted3 = true;
     // stop here if form is invalid
-    if (this.resolveForm.invalid) {
+    let summernote_valid = false;
+    if (this.resolve_editor != undefined) {
+      let summernote_content = this.resolve_editor.summernote('code');
+      let text = $(summernote_content).text();
+      summernote_valid = summernote_content.length > 0 ? true : false;
+    }
+    if (summernote_valid == false) {
+      $('#resolve-summernote-error').css('display', 'inline-block');
       return;
     }
     
     let params = {
       'taskid': this.taskid,
-      'description': this.rf.description.value
+      'content': this.resolve_content
     };
     this.appService.showLoading();
     this.apiService.resolveDisputeTask(params).then(res => {
@@ -890,5 +949,154 @@ export class JobEditComponent implements OnInit {
 
   podPage() {
     this.router.navigate(['admin/pod-email', this.taskid]);
+  }
+
+  initSummernote() {
+    let self = this;
+    let search = function (keyword) {
+      var result = [];
+      for (let id = 0; id < self.suggestItems.length; id++) {
+        let item = self.suggestItems[id];
+        if (item.match(new RegExp(keyword))) {
+          result.push(item);
+        }
+      }
+      return result;
+    }
+
+    this.editor = $("#summernote-content").summernote({
+      height: 200,
+      callbacks: {
+        onInit: function () {
+          console.log('Summernote is launched');
+        },
+        onChange: function (contents, $editable) {
+          console.log('onChange:', contents, $editable);
+          $('#summernote-error').css('display', 'none');
+        }
+      }
+    });
+    this.editor.summernote('autoComplete.setDataSrc', function (keyword, callback) {
+      callback(search(keyword));
+    }, "{");
+    this.editor.summernote('autoComplete.on', 'insertSuggestion', function (suggestion) {
+      console.log("The uesr has get the suggestion:" + suggestion);
+    })
+  }
+
+  initResolveSummernote() {
+    let self = this;
+    let resolve_search = function (keyword) {
+      var result = [];
+      for (let id = 0; id < self.suggestItems.length; id++) {
+        let item = self.suggestItems[id];
+        if (item.match(new RegExp(keyword))) {
+          result.push(item);
+        }
+      }
+      return result;
+    }
+
+    this.resolve_editor = $("#resolve-summernote-content").summernote({
+      height: 200,
+      callbacks: {
+        onInit: function () {
+          console.log('Summernote is launched');
+        },
+        onChange: function (contents, $editable) {
+          console.log('onChange:', contents, $editable);
+          $('#resolve-summernote-error').css('display', 'none');
+        }
+      }
+    });
+    this.resolve_editor.summernote('autoComplete.setDataSrc', function (keyword, callback) {
+      callback(resolve_search(keyword));
+    }, "{");
+    this.resolve_editor.summernote('autoComplete.on', 'insertSuggestion', function (suggestion) {
+      console.log("The uesr has get the suggestion:" + suggestion);
+    })
+  }
+
+  initPodSummernote() {
+    let self = this;
+    let pod_search = function (keyword) {
+      var result = [];
+      for (let id = 0; id < self.suggestItems.length; id++) {
+        let item = self.suggestItems[id];
+        if (item.match(new RegExp(keyword))) {
+          result.push(item);
+        }
+      }
+      return result;
+    }
+
+    this.pod_editor = $("#pod-summernote-content").summernote({
+      height: 200,
+      callbacks: {
+        onInit: function () {
+          console.log('Summernote is launched');
+        },
+        onChange: function (contents, $editable) {
+          console.log('onChange:', contents, $editable);
+          $('#pod-summernote-error').css('display', 'none');
+        }
+      }
+    });
+    this.pod_editor.summernote('autoComplete.setDataSrc', function (keyword, callback) {
+      callback(pod_search(keyword));
+    }, "{");
+    this.pod_editor.summernote('autoComplete.on', 'insertSuggestion', function (suggestion) {
+      console.log("The uesr has get the suggestion:" + suggestion);
+    })
+  }
+
+  changeDisputeTemplate() {
+    let type_slug = this.df.type_slug.value;
+    let item = this.typeList.find(element => {
+      return element.type_slug == type_slug;
+    });
+    this.summernote_content = item.content;
+  }
+
+  sendPodMail() {
+    this.submittedPod = true;
+    // stop here if form is invalid
+    let summernote_valid = false;
+    if (this.pod_editor != undefined) {
+      let summernote_content = this.pod_editor.summernote('code');
+      let text = $(summernote_content).text();
+      summernote_valid = summernote_content.length > 0 ? true : false;
+    }
+    if (summernote_valid == false) {
+      $('#pod-summernote-error').css('display', 'inline-block');
+      return;
+    }
+    if(this.podForm.invalid) {
+      return; 
+    }
+    let params = {
+      'to': this.pf.receiver.value,
+      'taskid': this.taskid,
+      'content': this.pod_content
+    };
+    this.appService.showLoading();
+    this.apiService.sendPodMail(params).then(res => {
+      this.appService.hideLoading();
+      let code = res.code;
+      $('#podModal').modal('hide');
+      if(code == 200) {
+        this.toastrService.success('Pod Mail sent successfully!', 'Success', {
+          timeOut: 1500,
+        });
+      }else{
+        this.toastrService.error('Something wrong!', 'Error', {
+          timeOut: 1500,
+        });
+      }
+    });
+  }
+
+  onPodClose() {
+    $('#podModal').modal('hide');
   }
 }

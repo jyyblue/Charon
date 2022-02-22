@@ -19,14 +19,16 @@ use App\Mail\DriverProcess2Mail;
 use App\Mail\DriverPaidMail;
 use App\Mail\DriverDisputeMail;
 use App\Mail\DriverResolveMail;
-
+use App\Mail\SendMail;
 use App\Models\Driver;
 use App\Models\DriverType;
+use App\Models\MailTemplate;
 use App\Models\TaskStatus;
 use App\Models\Vat;
 use App\Models\VehicleType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
+use StringTemplate\Engine as StringTemplateEngine;
 
 class TaskController extends Controller
 {
@@ -88,7 +90,7 @@ class TaskController extends Controller
                 !empty($driver_id) &&
                 !empty($call_sign) &&
                 !empty($driver_vehicle) &&
-                !empty($driver_type) 
+                !empty($driver_type)
             ) {
                 $status = constants('status.pending_payment');
                 TaskStatusHistory::updateOrCreate(
@@ -135,7 +137,7 @@ class TaskController extends Controller
             $check_bank = $request->get('check_bank', false);
             $has_pod = $request->get('has_pod', false);
 
-            if(!$has_pod && empty($pod_file)) {
+            if (!$has_pod && empty($pod_file)) {
                 $has_pod = false;
             }
             if (
@@ -262,19 +264,20 @@ class TaskController extends Controller
             $task = Task::where('id', $id)->first();
             $task->update($data);
 
-            $task = Task::leftJoin('customer', function($join){
+            $task = Task::leftJoin('customer', function ($join) {
                 $join->on('task.customer_id', '=', 'customer.id');
-            })->leftJoin('driver', function($join){
+            })->leftJoin('driver', function ($join) {
                 $join->on('task.driver_id', '=', 'driver.id');
-            })->leftJoin('task_status', function($join){
+            })->leftJoin('task_status', function ($join) {
                 $join->on('task.status', '=', 'task_status.id');
-            })->select(['task.*', 
-            'customer.company_name', 
-            'customer.account_code',
-            'driver.call_sign', 
-            DB::raw('driver.email as d_email'), 
-            DB::raw('task_status.name as status_name'),
-            DB::raw('task_status.color as status_color')
+            })->select([
+                'task.*',
+                'customer.company_name',
+                'customer.account_code',
+                'driver.call_sign',
+                DB::raw('driver.email as d_email'),
+                DB::raw('task_status.name as status_name'),
+                DB::raw('task_status.color as status_color')
             ])->where('task.id', $id)->first();
 
             DB::commit();
@@ -291,6 +294,8 @@ class TaskController extends Controller
     public function updateAuto(Request $request)
     {
         try {
+            $engine = new StringTemplateEngine;
+
             DB::beginTransaction();
             $data = $request->except(['journey', 'id']);
             $journey = $request->get('journey', []);
@@ -310,13 +315,14 @@ class TaskController extends Controller
             $driver_vehicle = $request->get('driver_vehicle', 0);
             $driver_type = $request->get('driver_type', 0);
 
-
+            $mail_type = '';
+            $driver_email = '';
             if (
                 $status == constants('status.pending') &&
                 !empty($driver_id) &&
                 !empty($call_sign) &&
                 !empty($driver_vehicle) &&
-                !empty($driver_type) 
+                !empty($driver_type)
             ) {
                 $status = constants('status.pending_payment');
                 TaskStatusHistory::updateOrCreate(
@@ -331,21 +337,7 @@ class TaskController extends Controller
                     ]
                 );
                 $task = Task::with(['driver', 'customer'])->find($task->id);
-                $driver_email = $task->driver ? $task->driver['email'] : '';
-                if (!empty($driver_email)) {
-                    $data = [
-                        'docket' => $task->docket,
-                        'company_name' => $task->customer['company_name'],
-                        'price' => $task->d_price,
-                        'net' => $task->d_net,
-                        'vat' => $task->d_vat,
-                        'extra' => $task->d_extra,
-                        'tprice' => $task->d_tprice,
-                        'job_date' => $task->job_date,
-                        'target_payment_date' => $task->target_payment_date
-                    ];
-                    Mail::to($driver_email)->send(new DriverProcess1Mail($data));
-                }
+                $mail_type = constants('mailType.pending_payment');
             }
 
             // pending_payment to cp_payment
@@ -361,7 +353,7 @@ class TaskController extends Controller
             $check_docket_off = $request->get('check_docket_off', false);
             $check_bank = $request->get('check_bank', false);
 
-            if(!$has_pod && empty($pod_file)) {
+            if (!$has_pod && empty($pod_file)) {
                 $has_pod = false;
             }
 
@@ -391,22 +383,7 @@ class TaskController extends Controller
                         'worker' => 'system'
                     ]
                 );
-                $task = Task::with(['driver', 'customer'])->find($task->id);
-                $driver_email = $task->driver ? $task->driver['email'] : '';
-                if (!empty($driver_email)) {
-                    $data = [
-                        'docket' => $task->docket,
-                        'company_name' => $task->customer['company_name'],
-                        'price' => $task->d_price,
-                        'net' => $task->d_net,
-                        'vat' => $task->d_vat,
-                        'extra' => $task->d_extra,
-                        'tprice' => $task->d_tprice,
-                        'job_date' => $task->job_date,
-                        'target_payment_date' => $task->target_payment_date
-                    ];
-                    Mail::to($driver_email)->send(new DriverProcess2Mail($data));
-                }
+                $mail_type = constants('mailType.cp_payment');
             }
 
             // cp_payment to completed
@@ -419,6 +396,7 @@ class TaskController extends Controller
                 !empty($payment_reference)
             ) {
                 $status = constants('status.completed');
+                $mail_type = constants('mailType.completed');
                 TaskStatusHistory::updateOrCreate(
                     [
                         'task_id' => $task->id,
@@ -432,6 +410,7 @@ class TaskController extends Controller
                 );
                 $driver = Driver::find($driver_id);
                 $driver_email = $driver->email;
+
                 $task = Task::with(['customer'])->where('id', $task->id)->first();
                 $task_data = array();
                 $item = [
@@ -445,21 +424,12 @@ class TaskController extends Controller
                     'job_date' => $task->job_date,
                 ];
                 array_push($task_data, $item);
-                if (!empty($driver_email)) {
-                    $data = [
-                        'payment_reference' => $payment_reference,
-                        'payment_date' => $payment_date,
-                        'total_payment' => $total_payment,
-                        'task_data' => $task_data,
-                    ];
-                    Mail::to($driver_email)->send(new DriverPaidMail($data));
-                }
             }
             $data['status'] = $status;
 
             $task->update($data);
 
-            $task = Task::where('id', $id)->first();
+            $task = Task::with(['driver', 'customer'])->find($task->id);
             TaskDistance::where('task_id', $id)->delete();
             foreach ($journey as $key => $item) {
                 $taskDistance = new TaskDistance;
@@ -469,16 +439,32 @@ class TaskController extends Controller
                     'destination' => $item['dst'],
                 ]);
             }
+            $driver_email = $task->driver ? $task->driver['email'] : '';
+            if (!empty($driver_email)) {
+                $mailTemplate = MailTemplate::where('type_slug', $mail_type)->where('active', 1)->first();
+                if (!empty($mailTemplate)) {
+                    $customer = $task->customer;
+                    $driver = $task->driver;
+                    $job = $task;
 
-            // completed payment
-            if ($status == constants('status.completed')) {
-                // send mail to driver for payment complete
-                
+                    $val = getValueForMailTemplate($customer, $driver, $job);
+                    $content = $mailTemplate->content;
+                    $mail_content = $engine->render($content, $val);
+                    $mail_subject = $mailTemplate->subject;
+                    $data = [
+                        'subject' => $mail_subject,
+                        'content' => $mail_content,
+                    ];
+                    Mail::to($driver_email)->send(new SendMail($data));
+                }
             }
-            $task = Task::with(['customer', 'driver', '_status', 'queryHistory'])->where('id', $id)->first();
+
             DB::commit();
             $ret['code'] = 200;
             $ret['data'] = $task;
+            $ret['status'] = $status;
+            $ret['mail_type'] = $mail_type;
+            $ret['driver_email'] = $driver_email;
             return response()->json($ret, 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -501,16 +487,15 @@ class TaskController extends Controller
 
         // $tasks = Task::with(['customer', 'driver', '_status']);
         $tasks = Task::with(['customer', 'driver', '_status', 'queryHistory'])
-        ->leftJoin('customer', function($join){
-            $join->on('task.customer_id', '=', 'customer.id');
-        })
-        ->leftJoin('driver', function($join){
-            $join->on('task.driver_id', '=', 'driver.id');
-        })
-        ->leftJoin('task_status', function($join){
-            $join->on('task.status', '=', 'task_status.id');
-        })->select(['task.*'])
-        ;
+            ->leftJoin('customer', function ($join) {
+                $join->on('task.customer_id', '=', 'customer.id');
+            })
+            ->leftJoin('driver', function ($join) {
+                $join->on('task.driver_id', '=', 'driver.id');
+            })
+            ->leftJoin('task_status', function ($join) {
+                $join->on('task.status', '=', 'task_status.id');
+            })->select(['task.*']);
 
         if ($status != 0) {
             $tasks = $tasks->where('status', $status);
@@ -525,12 +510,12 @@ class TaskController extends Controller
         }
 
         // filter
-        if($filterVal != '') {
-            $tasks = $tasks->where('task.docket', 'like', '%'.$filterVal.'%');
+        if ($filterVal != '') {
+            $tasks = $tasks->where('task.docket', 'like', '%' . $filterVal . '%');
         }
-        if($sortBy != '') {
+        if ($sortBy != '') {
             $direction = 'DESC';
-            if($sortDesc == false) {
+            if ($sortDesc == false) {
                 $direction = 'ASC';
             }
             $column = '';
@@ -566,7 +551,7 @@ class TaskController extends Controller
                     $column = 'task.docket';
                     break;
             }
-            $tasks = $tasks->orderby( DB::raw($column), $direction);
+            $tasks = $tasks->orderby(DB::raw($column), $direction);
         }
         $count = count($tasks->get());
 
@@ -603,9 +588,21 @@ class TaskController extends Controller
     {
         $taskid = $request->get('taskid', '');
         $task = Task::with(['customer', 'driver', '_status', 'distances', 'queryHistory'])->find($taskid);
+        $disputeTemplates = getDisputeTempletes();
+        $suggestItems = getVariableForMailTemplate();
+
+        $resolve_slug = constants('mailType.resolve');
+        $pod_slug = constants('mailType.pod_mail');
+        $resolveTemplate = MailTemplate::where('type_slug', $resolve_slug)->first();
+        $podTemplate = MailTemplate::where('type_slug', $pod_slug)->first();
+
         if ($task) {
             $ret['code'] = 200;
             $ret['data'] = $task;
+            $ret['disputeTemplates'] = $disputeTemplates;
+            $ret['suggestItems'] = $suggestItems;
+            $ret['resolveTemplate'] = $resolveTemplate;
+            $ret['podTemplate'] = $podTemplate;
             return response()->json($ret, 200);
         } else {
             $ret['code'] = 400;
@@ -735,8 +732,11 @@ class TaskController extends Controller
 
     public function disputeTask(Request $request)
     {
+        $engine = new StringTemplateEngine;
+
         $taskid = $request->get('taskid', 0);
-        $description = $request->get('description', '');
+        $content = $request->get('content', '');
+        $type_slug = $request->get('type_slug');
         $status = constants('status.query');
 
         $task = Task::with(['driver', 'customer'])->find($taskid);
@@ -746,19 +746,30 @@ class TaskController extends Controller
 
         // send mail to driver for receive invoice
         $driver_email = $task->driver ? $task->driver['email'] : '';
+        $mail_content ='';
         if (!empty($driver_email)) {
-            $data = [
-                'docket' => $task->docket,
-                'company_name' => $task->customer['company_name'],
-                'description' => $description,
-            ];
-            Mail::to($driver_email)->send(new DriverDisputeMail($data));
+            $mailTemplate = MailTemplate::where('type_slug', $type_slug)->where('active', 1)->first();
+            if (!empty($mailTemplate)) {
+                $customer = $task->customer;
+                $driver = $task->driver;
+                $job = $task;
+
+                $val = getValueForMailTemplate($customer, $driver, $job);
+                // $content = $mailTemplate->content;
+                $mail_content = $engine->render($content, $val);
+                $mail_subject = $mailTemplate->subject;
+                $data = [
+                    'subject' => $mail_subject,
+                    'content' => $mail_content,
+                ];
+                Mail::to($driver_email)->send(new SendMail($data));
+            }
         }
         TaskStatusHistory::create(
             [
                 'task_id' => $taskid,
                 'status' => $status,
-                'description' => $description,
+                'description' => $mail_content,
                 'worker' => 'system',
                 'query' => 1
             ]
@@ -771,8 +782,10 @@ class TaskController extends Controller
 
     public function resolveDisputeTask(Request $request)
     {
+        $engine = new StringTemplateEngine;
+
         $taskid = $request->get('taskid', 0);
-        $description = $request->get('description', '');
+        $content = $request->get('content', '');
         $query = constants('status.query');
         $last_status = TaskStatusHistory::where('task_id', $taskid)->where('status', '<>', $query)->orderby('id', 'DESC')->first();
 
@@ -782,29 +795,38 @@ class TaskController extends Controller
             $last_status = constants('status.pending');
         }
 
-        $task = Task::with('driver')->find($taskid);
+        $task = Task::with(['driver', 'customer'])->find($taskid);
         $task->update([
             'status' => $last_status, // pending payment status
         ]);
         $driver_email = $task->driver ? $task->driver['email'] : '';
+        $task = Task::with(['customer', 'driver', '_status', 'queryHistory'])->where('id', $taskid)->first();
+        $mail_content = '';
         if (!empty($driver_email)) {
+            $type_slug = constants('mailType.resolve');
+            $mailTemplate = MailTemplate::where('type_slug', $type_slug)->where('active', 1)->first();
+            $customer = $task->customer;
+            $driver = $task->driver;
+            $job = $task;
+
+            $val = getValueForMailTemplate($customer, $driver, $job);
+            $mail_content = $engine->render($content, $val);
+            $mail_subject = isset($mailTemplate->subject) ? $mailTemplate->subject: constants('mailTemplate.resolveTitle');
             $data = [
-                'docket' => $task->docket,
-                'company_name' => $task->customer['company_name'],
-                'description' => $description,
+                'subject' => $mail_subject,
+                'content' => $mail_content,
             ];
-            Mail::to($driver_email)->send(new DriverResolveMail($data));
+            Mail::to($driver_email)->send(new SendMail($data));
         }
         TaskStatusHistory::create(
             [
                 'task_id' => $taskid,
                 'status' => $last_status,
-                'description' => $description,
+                'description' => $mail_content,
                 'worker' => 'system',
                 'query' => 1
             ]
         );
-        $task = Task::with(['customer', 'driver', '_status', 'queryHistory'])->where('id', $taskid)->first();
         $ret['code'] = 200;
         $ret['task'] = $task;
         return response()->json($ret, 200);
@@ -821,6 +843,7 @@ class TaskController extends Controller
         $ret['vehicle_type'] = $vehicel_type;
         return response()->json($ret, 200);
     }
+
     public function downloadPodFile(Request $request)
     {
         $filename = $request->get('filename', '');
@@ -834,4 +857,38 @@ class TaskController extends Controller
         $taskstatus = TaskStatus::orderby('order_id', 'ASC')->get();
         return $taskstatus;
     }
+
+    public function sendPodMail(Request $request)
+    {
+        $engine = new StringTemplateEngine;
+
+        $to = $request->get('to');
+        $taskid = $request->get('taskid');
+        $content = $request->get('content');
+        $task = Task::with(['driver', 'customer'])->find($taskid);
+        
+        $mail_content = '';
+        if (!empty($to)) {
+            $type_slug = constants('mailType.pod_mail');
+            $mailTemplate = MailTemplate::where('type_slug', $type_slug)->where('active', 1)->first();
+            $customer = $task->customer;
+            $driver = $task->driver;
+            $job = $task;
+
+            $val = getValueForMailTemplate($customer, $driver, $job);
+            $mail_content = $engine->render($content, $val);
+            $mail_subject = isset($mailTemplate->subject) ? $mailTemplate->subject: constants('mailTemplate.podTitle');
+            $data = [
+                'subject' => $mail_subject,
+                'content' => $mail_content,
+                'pod_file' => $task->pod_file,
+            ];
+            Mail::to($to)->send(new SendMail($data));
+        }
+        
+        $ret['code'] = 200;
+        $ret['task'] = $task;
+        return response()->json($ret, 200);
+    }
+
 }

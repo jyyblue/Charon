@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "doctrine/dbal": "^3.1",
+        "doctrine/dbal": "^2.10",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.3",
         "laravel/framework": "^8.54",
@@ -15,6 +15,8 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3",
         "maatwebsite/excel": "^3.1",
+        "nicmart/string-template": "^0.1.2",
+        "shvetsgroup/laravel-email-database-log": "^9.0",
         "yajra/laravel-datatables-oracle": "^9.18"
     },
     "require-dev": {

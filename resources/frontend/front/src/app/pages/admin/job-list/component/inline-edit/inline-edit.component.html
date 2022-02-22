@@ -48,7 +48,7 @@
     <form [formGroup]="dataForm">
 
         <ng-select [items]="customerOptions" bindLabel="dispName" bindValue="id" formControlName="customer_id"
-            name="customer_id" [loading]="customerLoading" class="job-list" class="CUSTOMER_UPLOAD_COMPLETE_2"
+            name="customer_id" [loading]="customerLoading" class="job-list CUSTOMER_UPLOAD_COMPLETE_2"
             [ngClass]="{'is-invalid' : submitted && f.customer_id.errors }" (change)="saveTask()" [virtualScroll]="true"
             (scrollToEnd)="onScrollToEnd()" (search)="customerSearchFn($event)" (open)="customerOpen($event)">
             <ng-template ng-label-tmp let-item="item">
@@ -97,7 +97,7 @@
 <td class="align-middle">
     <form [formGroup]="dataForm">
         <ng-select [items]="vehicleOptions" bindLabel="label" bindValue="value" formControlName="vehicle_type"
-            name="vehicle_type" [loading]="vehicleLoading" class="job-list" class="CUSTOMER_UPLOAD_COMPLETE_2"
+            name="vehicle_type" [loading]="vehicleLoading" class="job-list CUSTOMER_UPLOAD_COMPLETE_2"
             [ngClass]="{'is-invalid' : submitted && f.vehicle_type.errors }" (change)="changeVehicle()">
             <ng-template ng-label-tmp let-item="item">
                 <span class="ng-value-label">{{item['label']}}</span>
@@ -143,7 +143,7 @@
 <td class="align-middle">
     <form [formGroup]="dataForm">
         <ng-select [items]="vatOptions" bindLabel="label" bindValue="value" formControlName="c_vat" name="c_vat"
-            placeholder="Select VAT" (change)="changePrice()" class="job-list" class="CUSTOMER_UPLOAD_COMPLETE_2"
+            placeholder="Select VAT" (change)="changePrice()" class="job-list CUSTOMER_UPLOAD_COMPLETE_2"
             [ngClass]="{'is-invalid' : submitted && f.c_vat.errors }">
             <ng-template ng-label-tmp let-item="item">
                 <span class="ng-value-label">{{item['label']}}</span>

@@ -52,7 +52,8 @@ Route::prefix('admin')->group(function () {
                 Route::post('/task/resolveDisputeTask', 'TaskController@resolveDisputeTask')->name('admin.task.resolveDisputeTask');
                 Route::post('/job/options', 'TaskController@getOptions')->name('admin.vehicel.list');
                 Route::post('/task/status', 'TaskController@getTaskStatus')->name('admin.task.status.list');
-               
+                Route::post('/sendPodMail', 'TaskController@sendPodMail')->name('admin.get.sendPodMail');
+
                 // Driver 
                 Route::post('/driver/list', 'DriverController@getList')->name('admin.driver.list');
                 Route::post('/driver/detail', 'DriverController@getDetail')->name('admin.driver.detail');
@@ -63,8 +64,15 @@ Route::prefix('admin')->group(function () {
                 // getDashboard Data
                 Route::post('/getDashboardData', 'DashboardController@getDashboardData')->name('admin.get.dashboarddata');
                 Route::post('/getPodEmailTemplate', 'DashboardController@getPodEmailTemplate')->name('admin.get.getPodEmailTemplate');
-                Route::post('/sendPodMail', 'DashboardController@sendPodMail')->name('admin.get.sendPodMail');
                 
+                // mail template
+                
+                Route::post('/mail/template/getTemplate', 'MailTemplateController@getTemplate')->name('admin.mailtemplate.getStatus');
+                Route::post('/mail/template/checkMailTeamplte', 'MailTemplateController@checkMailTeamplte')->name('admin.mailtemplate.checkMailTeamplte');
+                Route::post('/mail/template/store', 'MailTemplateController@store')->name('admin.mailtemplate.store');
+                Route::post('/mail/template/list', 'MailTemplateController@getList')->name('admin.mailtemplate.list');
+                Route::post('/mail/template/update', 'MailTemplateController@update')->name('admin.mailtemplate.update');
+                Route::post('/mail/template/delete', 'MailTemplateController@destroy')->name('admin.mailtemplate.delete');
             });
         });
     });

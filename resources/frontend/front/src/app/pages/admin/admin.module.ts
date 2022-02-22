@@ -39,7 +39,10 @@ import { JobEditCpPaymentComponent } from './job-edit-cp-payment/job-edit-cp-pay
 import { InlineEditComponent } from './job-list/component/inline-edit/inline-edit.component';
 import { InlineAddComponent } from './job-list/component/inline-add/inline-add.component';
 import { JobListHeaderComponent } from './job-list/component/job-list-header/job-list-header.component';
-import { PodEmailSendComponent } from './pod-email-send/pod-email-send.component';
+import { TemplateListComponent } from './template-list/template-list.component';
+import { TemplateCreateComponent } from './template-create/template-create.component';
+import { TemplateEditComponent } from './template-edit/template-edit.component';
+import { OutboxComponent } from './outbox/outbox.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +72,10 @@ import { PodEmailSendComponent } from './pod-email-send/pod-email-send.component
     InlineEditComponent,
     InlineAddComponent,
     JobListHeaderComponent,
-    PodEmailSendComponent,
+    TemplateListComponent,
+    TemplateCreateComponent,
+    TemplateEditComponent,
+    OutboxComponent,
   ],
   imports: [
     CommonModule,

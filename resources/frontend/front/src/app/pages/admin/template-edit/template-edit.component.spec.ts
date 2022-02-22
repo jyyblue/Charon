@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PodEmailSendComponent } from './pod-email-send.component';
+import { TemplateEditComponent } from './template-edit.component';
 
-describe('PodEmailSendComponent', () => {
-  let component: PodEmailSendComponent;
-  let fixture: ComponentFixture<PodEmailSendComponent>;
+describe('TemplateEditComponent', () => {
+  let component: TemplateEditComponent;
+  let fixture: ComponentFixture<TemplateEditComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PodEmailSendComponent ]
+      declarations: [ TemplateEditComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PodEmailSendComponent);
+    fixture = TestBed.createComponent(TemplateEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -193,18 +193,4 @@ class DashboardController extends Controller
         $ret['task'] = $task;
         return $ret;
     }
-
-    public function sendPodMail(Request $request) {
-        $to = $request->get('to');
-        $taskid = $request->get('taskid');
-        $content = $request->get('content');
-        $task = Task::with(['customer', 'driver', '_status'])->find($taskid);
-        $pod_file = $task->pod_file;
-        $data = [
-            'content' => $content,
-            'pod_file' => $pod_file
-        ];
-        Mail::to($to)->send(new PodMail($data));
-        return true;
-    }
 }

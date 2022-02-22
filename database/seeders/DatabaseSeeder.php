@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             VatSeeder::class,
             TaskStatusSeeder::class,
             VehicelTypeSeeder::class,
+            ConstOptionSeeder::class
         ]);
     }
 }

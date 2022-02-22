@@ -89,11 +89,14 @@
               { "input": "src/vendor/styles/rtl/theme-twitlight-dark.scss", "bundleName": "vendor/styles/theme-twitlight-dark", "lazy": true },
               { "input": "src/vendor/styles/rtl/theme-vibrant.scss", "bundleName": "vendor/styles/theme-vibrant", "lazy": true },
               { "input": "src/vendor/styles/rtl/theme-vibrant-material.scss", "bundleName": "vendor/styles/theme-vibrant-material", "lazy": true },
-              { "input": "src/vendor/styles/rtl/theme-vibrant-dark.scss", "bundleName": "vendor/styles/theme-vibrant-dark", "lazy": true }
+              { "input": "src/vendor/styles/rtl/theme-vibrant-dark.scss", "bundleName": "vendor/styles/theme-vibrant-dark", "lazy": true },
+              "node_modules/summernote/dist/summernote-lite.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js", 
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/summernote/dist/summernote-lite.min.js",
+              "src/assets/vendor/js/summernote.plugin.autocomplete.js"
             ]
           },
           "configurations": {

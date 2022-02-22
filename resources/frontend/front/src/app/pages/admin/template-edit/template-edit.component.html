@@ -1,0 +1,51 @@
+<h4 class="d-flex justify-content-between align-items-center w-100 font-weight-bold py-3 mb-4">
+    <div>Edit Mail Template</div>
+    <button type="button" (click)="onSubmit()" class="btn btn-primary rounded-pill d-block" >&nbsp;Update&nbsp;</button>
+</h4>
+<div class="row">
+    <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="form-group">
+                    <form [formGroup]="dataForm" class="">
+                        <label class="form-label ">Type</label>
+                        <select formControlName="type" class="form-control form-control-sm " disabled placeholder="Choose Mail Type">
+                            <option *ngFor="let item of typeList" value="{{ item.key }}">{{ item.value }}</option>
+                        </select>
+                        <div *ngIf="f.type.errors && submitted" class="invalid-feedback">
+                            <div *ngIf="f.type.errors.required">Thie field is Required</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="form-group">
+                    <form [formGroup]="dataForm" class="">
+                        <label class="form-label">Subject</label>
+                        <input type="text" formControlName="subject" class="form-control form-control-sm ">
+                        <div *ngIf="f.subject.errors && submitted" class="invalid-feedback">
+                            <div *ngIf="f.subject.errors.required">Thie field is Required</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="form-group">
+                    <div class="">
+                        <label class="form-label ">Content</label>
+                        <textarea class="form-control " id="summernote-content" [ngxSummernote]
+                            [(ngModel)]="content"></textarea>
+                        <label id="summernote-error" class="error jquery-validation-error small form-text invalid-feedback" for="subject" style="display: none;">This field is required.</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <form [formGroup]="dataForm" class="">
+                        <label class="form-label">Active</label>
+                        <input type="checkbox" formControlName="active" class="form-control form-control-sm ">
+                        <div *ngIf="f.active.errors && submitted" class="invalid-feedback">
+                            <div *ngIf="f.active.errors.required">Thie field is Required</div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -24,6 +24,15 @@
       <sidenav-router-link route="/admin/job/list-complete" [active]="isActive('/admin/job/list-complete')">Completed Job</sidenav-router-link>
       <sidenav-router-link route="/admin/job/list-query" [active]="isActive('/admin/job/list-query')">Query Job</sidenav-router-link> -->
     </sidenav-menu>
+    <sidenav-menu icon="fas fa-tasks" text="Email Manger" [active]="isMenuActive('/admin/mail-manager')" [open]="isMenuOpen('/admin/mail-manager')">
+      <sidenav-router-link route="/admin/mail-manager/template/list" [active]="isActive('/admin/mail-manager/template')">Templates</sidenav-router-link>
+      <sidenav-router-link route="/admin/mail-manager/outbox" [active]="isActive('/admin/mail-manager/outbox')">Outbox</sidenav-router-link>
+      <!-- <sidenav-router-link route="/admin/job/list-pending" [active]="isActive('/admin/job/list-pending')">Pending Job</sidenav-router-link>
+      <sidenav-router-link route="/admin/job/list-pending-payment" [active]="isActive('/admin/job/list-pending-payment')">Pending Payment Job</sidenav-router-link>
+      <sidenav-router-link route="/admin/job/list-cp-payment" [active]="isActive('/admin/job/list-cp-payment')">Complete Pending Payment</sidenav-router-link>
+      <sidenav-router-link route="/admin/job/list-complete" [active]="isActive('/admin/job/list-complete')">Completed Job</sidenav-router-link>
+      <sidenav-router-link route="/admin/job/list-query" [active]="isActive('/admin/job/list-query')">Query Job</sidenav-router-link> -->
+    </sidenav-menu>
     <sidenav-menu icon="fas fa-tasks" text="Import" [active]="isMenuActive('/admin/import')" [open]="isMenuOpen('/admin/import')">
       <sidenav-router-link route="/admin/import/job" [active]="isActive('/admin/import/job')">Import Job</sidenav-router-link>
     </sidenav-menu>
