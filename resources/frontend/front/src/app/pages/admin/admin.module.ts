@@ -27,15 +27,6 @@ import { CustomDaterangePicker2Component } from './custom-daterange-picker/custo
 import { TextMaskModule } from 'angular2-text-mask';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FileUploadModule } from 'ng2-file-upload';
-import { JobListCompleteComponent } from './job-list-complete/job-list-complete.component';
-import { JobListPendingPaymentComponent } from './job-list-pending-payment/job-list-pending-payment.component';
-import { JobListQueryComponent } from './job-list-query/job-list-query.component';
-import { JobListPendingComponent } from './job-list-pending/job-list-pending.component';
-import { JobEditPendingComponent } from './job-edit-pending/job-edit-pending.component';
-import { JobEditPendingPaymentComponent } from './job-edit-pending-payment/job-edit-pending-payment.component';
-import { JobEditQueryComponent } from './job-edit-query/job-edit-query.component';
-import { JobListCpPaymentComponent } from './job-list-cp-payment/job-list-cp-payment.component';
-import { JobEditCpPaymentComponent } from './job-edit-cp-payment/job-edit-cp-payment.component';
 import { InlineEditComponent } from './job-list/component/inline-edit/inline-edit.component';
 import { InlineAddComponent } from './job-list/component/inline-add/inline-add.component';
 import { JobListHeaderComponent } from './job-list/component/job-list-header/job-list-header.component';
@@ -60,15 +51,6 @@ import { OutboxComponent } from './outbox/outbox.component';
     JobAddComponent,
     JobImportComponent,
     JobEditComponent,
-    JobListCompleteComponent,
-    JobListPendingPaymentComponent,
-    JobListQueryComponent,
-    JobListPendingComponent,
-    JobEditPendingComponent,
-    JobEditPendingPaymentComponent,
-    JobEditQueryComponent,
-    JobListCpPaymentComponent,
-    JobEditCpPaymentComponent,
     InlineEditComponent,
     InlineAddComponent,
     JobListHeaderComponent,

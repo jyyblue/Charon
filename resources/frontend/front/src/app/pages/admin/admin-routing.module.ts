@@ -14,15 +14,15 @@ import { JobAddComponent } from './job-add/job-add.component';
 import { JobEditComponent } from './job-edit/job-edit.component';
 import { JobImportComponent } from './job-import/job-import.component';
 import { JobListComponent } from './job-list/job-list.component';
-import { JobListCompleteComponent } from './job-list-complete/job-list-complete.component';
-import { JobListPendingComponent } from './job-list-pending/job-list-pending.component';
-import { JobListPendingPaymentComponent } from './job-list-pending-payment/job-list-pending-payment.component';
-import { JobListQueryComponent } from './job-list-query/job-list-query.component';
-import { JobEditPendingComponent } from './job-edit-pending/job-edit-pending.component';
-import { JobEditPendingPaymentComponent } from './job-edit-pending-payment/job-edit-pending-payment.component';
-import { JobEditQueryComponent } from './job-edit-query/job-edit-query.component';
-import { JobListCpPaymentComponent } from './job-list-cp-payment/job-list-cp-payment.component';
-import { JobEditCpPaymentComponent } from './job-edit-cp-payment/job-edit-cp-payment.component';
+// import { JobListCompleteComponent } from './job-list-complete/job-list-complete.component';
+// import { JobListPendingComponent } from './job-list-pending/job-list-pending.component';
+// import { JobListPendingPaymentComponent } from './job-list-pending-payment/job-list-pending-payment.component';
+// import { JobListQueryComponent } from './job-list-query/job-list-query.component';
+// import { JobEditPendingComponent } from './job-edit-pending/job-edit-pending.component';
+// import { JobEditPendingPaymentComponent } from './job-edit-pending-payment/job-edit-pending-payment.component';
+// import { JobEditQueryComponent } from './job-edit-query/job-edit-query.component';
+// import { JobListCpPaymentComponent } from './job-list-cp-payment/job-list-cp-payment.component';
+// import { JobEditCpPaymentComponent } from './job-edit-cp-payment/job-edit-cp-payment.component';
 import { TemplateListComponent } from './template-list/template-list.component';
 import { TemplateCreateComponent } from './template-create/template-create.component';
 import { TemplateEditComponent } from './template-edit/template-edit.component';
@@ -40,18 +40,8 @@ const routes: Routes = [
 	{ path: 'driver/show/:id', component: DriverShowComponent },
 	{ path: 'job/list', component: JobListComponent },
 
-	{ path: 'job/list-complete', component: JobListCompleteComponent },
-	{ path: 'job/list-pending', component: JobListPendingComponent },
-	{ path: 'job/list-pending-payment', component: JobListPendingPaymentComponent },
-	{ path: 'job/list-cp-payment', component: JobListCpPaymentComponent },
-	{ path: 'job/list-query', component: JobListQueryComponent },
-
 	{ path: 'job/add', component: JobAddComponent },
 	{ path: 'job/edit/:id', component: JobEditComponent },
-	{ path: 'job/edit-pending/:id', component: JobEditPendingComponent },
-	{ path: 'job/edit-query/:id', component: JobEditQueryComponent },
-	{ path: 'job/edit-pending-payment/:id', component: JobEditPendingPaymentComponent },
-	{ path: 'job/edit-cp-payment/:id', component: JobEditCpPaymentComponent },
 	
 	{ path: 'import/job', component: JobImportComponent },
 
