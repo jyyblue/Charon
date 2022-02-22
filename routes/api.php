@@ -39,14 +39,13 @@ Route::prefix('admin')->group(function () {
                 
                 
                 Route::post('/task/create', 'TaskController@create')->name('admin.task.saveTask');
-                Route::post('/task/update', 'TaskController@update')->name('admin.task.update');
+                // Route::post('/task/update', 'TaskController@update')->name('admin.task.update');
                 Route::post('/task/updateAuto', 'TaskController@updateAuto')->name('admin.task.updateAuto');
                 
                 Route::post('/task/list', 'TaskController@getTaskList')->name('admin.task.list');
                 Route::post('/task/detail', 'TaskController@getTaskDetail')->name('admin.task.detail');
-                // Route::get('/task/downloadpod', 'TaskController@downloadPodFile')->name('admin.task.download');
                 
-                Route::post('/task/updatePendingTask', 'TaskController@updatePendingTask')->name('admin.task.updatePendingTask');
+                // Route::post('/task/updatePendingTask', 'TaskController@updatePendingTask')->name('admin.task.updatePendingTask');
                 Route::post('/task/updatePendingPaymentTasks', 'TaskController@updatePendingPaymentTasks')->name('admin.task.updatePendingPaymentTasks');
                 Route::post('/task/disputeTask', 'TaskController@disputeTask')->name('admin.task.disputeTask');
                 Route::post('/task/resolveDisputeTask', 'TaskController@resolveDisputeTask')->name('admin.task.resolveDisputeTask');
@@ -63,7 +62,7 @@ Route::prefix('admin')->group(function () {
 
                 // getDashboard Data
                 Route::post('/getDashboardData', 'DashboardController@getDashboardData')->name('admin.get.dashboarddata');
-                Route::post('/getPodEmailTemplate', 'DashboardController@getPodEmailTemplate')->name('admin.get.getPodEmailTemplate');
+                // Route::post('/getPodEmailTemplate', 'DashboardController@getPodEmailTemplate')->name('admin.get.getPodEmailTemplate');
                 
                 // mail template
                 

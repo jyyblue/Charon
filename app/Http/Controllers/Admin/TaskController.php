@@ -253,44 +253,6 @@ class TaskController extends Controller
         }
     }
 
-    // not used for now in frontend.
-    public function update(Request $request)
-    {
-        try {
-            DB::beginTransaction();
-            $data = $request->except(['journey', 'id']);
-            $id = $request->get('id', '');
-
-            $task = Task::where('id', $id)->first();
-            $task->update($data);
-
-            $task = Task::leftJoin('customer', function ($join) {
-                $join->on('task.customer_id', '=', 'customer.id');
-            })->leftJoin('driver', function ($join) {
-                $join->on('task.driver_id', '=', 'driver.id');
-            })->leftJoin('task_status', function ($join) {
-                $join->on('task.status', '=', 'task_status.id');
-            })->select([
-                'task.*',
-                'customer.company_name',
-                'customer.account_code',
-                'driver.call_sign',
-                DB::raw('driver.email as d_email'),
-                DB::raw('task_status.name as status_name'),
-                DB::raw('task_status.color as status_color')
-            ])->where('task.id', $id)->first();
-
-            DB::commit();
-            $ret['code'] = 200;
-            $ret['data'] = $task;
-            return response()->json($ret, 200);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $ret['code'] = 300;
-            return response()->json($ret, 200);
-            throw $e;
-        }
-    }
     public function updateAuto(Request $request)
     {
         try {
@@ -588,6 +550,7 @@ class TaskController extends Controller
     {
         $taskid = $request->get('taskid', '');
         $task = Task::with(['customer', 'driver', '_status', 'distances', 'queryHistory'])->find($taskid);
+        
         $disputeTemplates = getDisputeTempletes();
         $suggestItems = getVariableForMailTemplate();
 
@@ -608,55 +571,6 @@ class TaskController extends Controller
             $ret['code'] = 400;
             $ret['message'] = 'not found!';
             return response()->json($ret, 200);
-        }
-    }
-
-    // unused
-    public function updatePendingTask(Request $request)
-    {
-        try {
-            $pending_payment_status = constants('status.pending_payment');
-            $taskid = $request->get('taskid', '');
-            $invoice_date = $request->get('invoice_date', '');
-            $payment_date = $request->get('payment_date', '');
-            $invoice_number = $request->get('invoice_number', '');
-            $task = Task::with(['driver', 'customer'])->find($taskid);
-            $task->update([
-                'invoice_date' => $invoice_date,
-                'target_payment_date' => $payment_date,
-                'invoice_number' => $invoice_number,
-                'status' => $pending_payment_status, // pending payment status
-            ]);
-            // send mail to driver for receive invoice
-            $driver_email = $task->driver ? $task->driver['email'] : '';
-            if (!empty($driver_email)) {
-                $data = [
-                    'docket' => $task->docket,
-                    'company_name' => $task->customer['company_name'],
-                    'price' => $task->d_price,
-                    'net' => $task->d_net,
-                    'vat' => $task->d_vat,
-                    'extra' => $task->d_extra,
-                    'tprice' => $task->d_tprice,
-                    'job_date' => $task->job_date,
-                    'target_payment_date' => $task->target_payment_date
-                ];
-                Mail::to($driver_email)->send(new DriverProcess1Mail($data));
-            }
-            // add to status history
-            // insert task-status-history
-            TaskStatusHistory::create(
-                [
-                    'task_id' => $task->id,
-                    'status' => $pending_payment_status,
-                    'worker' => 'system'
-                ]
-            );
-            $ret['code'] = 200;
-            $ret['data'] = $task;
-            return response()->json($ret, 200);
-        } catch (\Exception $e) {
-            throw $e;
         }
     }
 
@@ -834,13 +748,27 @@ class TaskController extends Controller
 
     public function getOptions(Request $request)
     {
+
         $vehicel_type = VehicleType::select([DB::raw('id as value'), DB::raw('name as label')])->get();
         $driver_type = DriverType::select([DB::raw('id as value'), DB::raw('name as label')])->get();
         $vat_type = Vat::select([DB::raw('id as value'), DB::raw('name as label')])->get();
+
+        $disputeTemplates = getDisputeTempletes();
+        $suggestItems = getVariableForMailTemplate();
+
+        $resolve_slug = constants('mailType.resolve');
+        $pod_slug = constants('mailType.pod_mail');
+        $resolveTemplate = MailTemplate::where('type_slug', $resolve_slug)->first();
+        $podTemplate = MailTemplate::where('type_slug', $pod_slug)->first();
+
         $ret['code'] = 200;
         $ret['driver_type'] = $driver_type;
         $ret['vat_type'] = $vat_type;
         $ret['vehicle_type'] = $vehicel_type;
+        $ret['disputeTemplates'] = $disputeTemplates;
+        $ret['suggestItems'] = $suggestItems;
+        $ret['resolveTemplate'] = $resolveTemplate;
+        $ret['podTemplate'] = $podTemplate;
         return response()->json($ret, 200);
     }
 

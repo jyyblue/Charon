@@ -76,9 +76,9 @@ export class ApiService extends ServiceBase {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/task/detail`, params, null, false);
   }
 
-  public updateTask(params: any): Promise<any> {
-    return this.postData<any>(`${environment.apiUrl}/admin/v1/task/update`, params, null, false);
-  }
+  // public updateTask(params: any): Promise<any> {
+  //   return this.postData<any>(`${environment.apiUrl}/admin/v1/task/update`, params, null, false);
+  // }
 
   public updateTaskAuto(params: any): Promise<any> {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/task/updateAuto`, params, null, false);
@@ -88,9 +88,9 @@ export class ApiService extends ServiceBase {
     return this.getData<any>(`${environment.apiUrl}/admin/v1/task/downloadpod`, params, null);
   }
   
-  public updatePendingTask(params: any): Promise<any> {
-    return this.postData<any>(`${environment.apiUrl}/admin/v1/task/updatePendingTask`, params, null, false);
-  }
+  // public updatePendingTask(params: any): Promise<any> {
+  //   return this.postData<any>(`${environment.apiUrl}/admin/v1/task/updatePendingTask`, params, null, false);
+  // }
 
   public updatePendingPaymentTasks(params: any): Promise<any> {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/task/updatePendingPaymentTasks`, params, null, false);
@@ -116,9 +116,10 @@ export class ApiService extends ServiceBase {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/getDashboardData`, params, null, false);
   }
   
-  public getPodEmailTemplate(params: any): Promise<any> {
-    return this.postData<any>(`${environment.apiUrl}/admin/v1/getPodEmailTemplate`, params, null, false);
-  }
+  // public getPodEmailTemplate(params: any): Promise<any> {
+  //   return this.postData<any>(`${environment.apiUrl}/admin/v1/getPodEmailTemplate`, params, null, false);
+  // }
+
   public sendPodMail(params: any): Promise<any> {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/sendPodMail`, params, null, false);
   }

@@ -85,7 +85,7 @@ export class JobListComponent implements OnInit {
   vehicleOptions = [];
   typeOptions = [];
   vatOptions = [];
-  
+
   newJob = false;
 
   resolveForm: FormGroup;
@@ -95,14 +95,24 @@ export class JobListComponent implements OnInit {
   submitted2 = false;
   data = new Task();
 
+  // dispute, resolve task
+  summernote_content;
+  suggestItems = [];
+  editor;
+  typeList = [];
+
+
+  resolve_content;
+  resolve_editor;
+
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private appService: AppService,
     private router: Router,
     private apiService: ApiService,
     private formBuilder: FormBuilder,
     private toastrService: ToastrService
-    ) {
+  ) {
 
 
     this.appService.pageTitle = 'User list - Pages';
@@ -119,7 +129,7 @@ export class JobListComponent implements OnInit {
       total_payment: [null, [Validators.required]],
     });
     this.disputeForm = this.formBuilder.group({
-      description: [null, [Validators.required]],
+      type_slug: [null, [Validators.required]],
     });
 
     this.resolveForm = this.formBuilder.group({
@@ -243,16 +253,16 @@ export class JobListComponent implements OnInit {
       return;
     }
     //True if all the fields are filled
-    let payment_date = this.f.payment_date.value; 
+    let payment_date = this.f.payment_date.value;
     let pd = payment_date.year + "-" + payment_date.month + "-" + payment_date.day;
     let selectedDriver = [];
     this.selectedTask.forEach(taskid => {
-        let index = this.taskData.findIndex(item => { return item['id'] == taskid; });
-        let task = this.taskData[index];
-        let driver_id = task['driver_id'];
-        if(!selectedDriver.includes(driver_id)) {
-          selectedDriver.push(driver_id);
-        }
+      let index = this.taskData.findIndex(item => { return item['id'] == taskid; });
+      let task = this.taskData[index];
+      let driver_id = task['driver_id'];
+      if (!selectedDriver.includes(driver_id)) {
+        selectedDriver.push(driver_id);
+      }
     });
     let param = {
       'taskids': this.selectedTask,
@@ -262,12 +272,12 @@ export class JobListComponent implements OnInit {
       'total_payment': this.f.total_payment.value,
     };
     this.appService.showLoading();
-    this.apiService.updatePendingPaymentTasks(param).then(res=> {
+    this.apiService.updatePendingPaymentTasks(param).then(res => {
       this.appService.hideLoading();
       let code = res.code;
-      if(code == 200) {
+      if (code == 200) {
         this.toastrService.success("Confirmed Payment", "Success");
-      }else if(code == 201) {
+      } else if (code == 201) {
         let msg = res.message;
         let tasks = res.tasks;
         tasks.forEach(element => {
@@ -275,7 +285,7 @@ export class JobListComponent implements OnInit {
           let taskIdx = this.taskData.findIndex(item => { return item['id'] == taskid; });
           this.taskData[taskIdx] = element;
         });
-        this.toastrService.warning( msg, "Warning");
+        this.toastrService.warning(msg, "Warning");
       }
     });
     if (this.submitted) {
@@ -294,39 +304,39 @@ export class JobListComponent implements OnInit {
   async onSubComponentChange(event: ComponentChangedEvent) {
     let taskid = event.taskid;
     let action = event.action;
-    
+
     console.log(event);
-    if(action == 'edit') {
+    if (action == 'edit') {
       this.router.navigate(['admin/job/edit', taskid]);
-    }else if(action == 'update') {
+    } else if (action == 'update') {
       let data = event.entity;
       let taskIdx = this.taskData.findIndex(item => { return item['id'] == taskid; });
       let task_old = this.taskData[taskIdx];
       this.taskData[taskIdx] = data;
       this.toastrService.success('Updated Successfully!');
-    }else if(action == 'add') {
+    } else if (action == 'add') {
       // add new task at top of job list or refresh
       let task = event.entity;
       this.taskData.unshift(task);
       this.newJob = false;
-    }else if(action == 'cancel_new_task'){
+    } else if (action == 'cancel_new_task') {
       this.newJob = false;
-    }else if(action == 'check') {
+    } else if (action == 'check') {
       let check = event.field;
       let checked = check == 'true' ? true : false;
       this.onSelectTask(taskid, checked);
-    }else if(action == 'check_all') {
+    } else if (action == 'check_all') {
       let check = event.field;
       let checked = check == 'true' ? true : false;
       this.onSelectAll(checked);
-    }else if(action == 'setSort') {
+    } else if (action == 'setSort') {
       let key = event.field;
       this.setSort(key);
-    }else if(action == 'dispute') {
+    } else if (action == 'dispute') {
       let data = event.entity;
       this.data = data;
       $('#disputeModal').modal('show');
-    }else if(action == 'resolve') {
+    } else if (action == 'resolve') {
       let data = event.entity;
       this.data = data;
       $('#resolveModal').modal('show');
@@ -343,16 +353,16 @@ export class JobListComponent implements OnInit {
     this.apiService.getUserList(params).then((res) => {
       this.customerLoading = false;
       let code = res.code;
-      if(code == 200) {
+      if (code == 200) {
         this.customerOptions = this.customerOptions.concat(res.data);
         this.customerTotal = res.total;
       }
-    }).catch(err=>{
+    }).catch(err => {
       this.customerLoading = false;
     })
   }
 
-  loadDriver(key='') {
+  loadDriver(key = '') {
     this.driverLoading = true;
     let params = {
       'page': this.customerPage,
@@ -362,7 +372,7 @@ export class JobListComponent implements OnInit {
     this.apiService.getDriverList(params).then((res) => {
       this.driverLoading = false;
       let code = res.code;
-      if(code == 200) {
+      if (code == 200) {
         this.driverOptions = this.driverOptions.concat(res.data);
         this.driverTotal = res.total;
       }
@@ -376,6 +386,15 @@ export class JobListComponent implements OnInit {
       this.vehicleOptions = res.vehicle_type;
       this.typeOptions = res.driver_type;
       this.vatOptions = res.vat_type;
+
+      this.typeList = res.disputeTemplates;
+      this.suggestItems = res.suggestItems;
+      this.initSummernote();
+
+      let resolveTemplate = res.resolveTemplate;
+      this.resolve_content = resolveTemplate != undefined ? resolveTemplate.content : '';
+      this.initResolveSummernote();
+
     });
   }
 
@@ -385,20 +404,33 @@ export class JobListComponent implements OnInit {
 
   disputeTask() {
     this.submitted2 = true;
+
+    let summernote_valid = false;
+    if (this.editor != undefined) {
+      let summernote_content = this.editor.summernote('code');
+      let text = $(summernote_content).text();
+      summernote_valid = summernote_content.length > 0 ? true : false;
+    }
+    if (summernote_valid == false) {
+      $('#summernote-error').css('display', 'inline-block');
+      return;
+    }
+
     // stop here if form is invalid
     if (this.disputeForm.invalid) {
       return;
     }
-    
+
     let params = {
       'taskid': this.data.id,
-      'description': this.df.description.value
+      'content': this.summernote_content,
+      'type_slug': this.df.type_slug.value
     };
     this.appService.showLoading();
     this.apiService.disputeTask(params).then(res => {
       this.appService.hideLoading();
       let code = res.code;
-      if(code == 200) {
+      if (code == 200) {
         this.toastrService.warning('Dispute Job!', 'Success', {
           timeOut: 1500,
         });
@@ -409,7 +441,7 @@ export class JobListComponent implements OnInit {
         this.taskData[taskIdx] = temp;
         // this.getJob();
         // this.updateJobList(res.task);
-      }else{
+      } else {
         this.toastrService.error('Something wrong!', 'Error', {
           timeOut: 1500,
         });
@@ -418,26 +450,34 @@ export class JobListComponent implements OnInit {
   }
 
   onDisputeClose() {
-    this.df.description.setValue('');
+    this.summernote_content = '';
     $('#disputeModal').modal('hide');
   }
   // resolve query 
   resolveTask() {
     this.submitted3 = true;
-    // stop here if form is invalid
-    if (this.resolveForm.invalid) {
+
+    let summernote_valid = false;
+    if (this.resolve_editor != undefined) {
+      let summernote_content = this.resolve_editor.summernote('code');
+      let text = $(summernote_content).text();
+      summernote_valid = summernote_content.length > 0 ? true : false;
+    }
+    if (summernote_valid == false) {
+      $('#resolve-summernote-error').css('display', 'inline-block');
       return;
     }
-    
+
+
     let params = {
       'taskid': this.data.id,
-      'description': this.rf.description.value
+      'content': this.resolve_content
     };
     this.appService.showLoading();
     this.apiService.resolveDisputeTask(params).then(res => {
       this.appService.hideLoading();
       let code = res.code;
-      if(code == 200) {
+      if (code == 200) {
         this.toastrService.success('Resolve dispute successfully!', 'Success', {
           timeOut: 1500,
         });
@@ -447,7 +487,7 @@ export class JobListComponent implements OnInit {
         let taskIdx = this.taskData.findIndex(item => { return item['id'] == taskid; });
         let task_old = this.taskData[taskIdx];
         this.taskData[taskIdx] = temp;
-      }else{
+      } else {
         this.toastrService.error('Something wrong!', 'Error', {
           timeOut: 1500,
         });
@@ -457,5 +497,79 @@ export class JobListComponent implements OnInit {
   onResolveClose() {
     this.rf.description.setValue('');
     $('#resolveModal').modal('hide');
+  }
+
+  changeDisputeTemplate() {
+    let type_slug = this.df.type_slug.value;
+    let item = this.typeList.find(element => {
+      return element.type_slug == type_slug;
+    });
+    this.summernote_content = item.content;
+  }
+
+  initSummernote() {
+    let self = this;
+    let search = function (keyword) {
+      var result = [];
+      for (let id = 0; id < self.suggestItems.length; id++) {
+        let item = self.suggestItems[id];
+        if (item.match(new RegExp(keyword))) {
+          result.push(item);
+        }
+      }
+      return result;
+    }
+
+    this.editor = $("#summernote-content").summernote({
+      height: 200,
+      callbacks: {
+        onInit: function () {
+          console.log('Summernote is launched');
+        },
+        onChange: function (contents, $editable) {
+          console.log('onChange:', contents, $editable);
+          $('#summernote-error').css('display', 'none');
+        }
+      }
+    });
+    this.editor.summernote('autoComplete.setDataSrc', function (keyword, callback) {
+      callback(search(keyword));
+    }, "{");
+    this.editor.summernote('autoComplete.on', 'insertSuggestion', function (suggestion) {
+      console.log("The uesr has get the suggestion:" + suggestion);
+    })
+  }
+
+  initResolveSummernote() {
+    let self = this;
+    let resolve_search = function (keyword) {
+      var result = [];
+      for (let id = 0; id < self.suggestItems.length; id++) {
+        let item = self.suggestItems[id];
+        if (item.match(new RegExp(keyword))) {
+          result.push(item);
+        }
+      }
+      return result;
+    }
+
+    this.resolve_editor = $("#resolve-summernote-content").summernote({
+      height: 200,
+      callbacks: {
+        onInit: function () {
+          console.log('Summernote is launched');
+        },
+        onChange: function (contents, $editable) {
+          console.log('onChange:', contents, $editable);
+          $('#resolve-summernote-error').css('display', 'none');
+        }
+      }
+    });
+    this.resolve_editor.summernote('autoComplete.setDataSrc', function (keyword, callback) {
+      callback(resolve_search(keyword));
+    }, "{");
+    this.resolve_editor.summernote('autoComplete.on', 'insertSuggestion', function (suggestion) {
+      console.log("The uesr has get the suggestion:" + suggestion);
+    })
   }
 }

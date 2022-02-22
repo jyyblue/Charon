@@ -16,15 +16,17 @@
                 </select>
                 <input type="text" [(ngModel)]="filterVal" (input)="currentPage = 1; updateFilter()"
                     class="form-control form-control-sm d-inline-block w-auto " placeholder="Search...">
-                <select [(ngModel)]="filterStatus" (change)="update()" class="form-control form-control-sm d-inline-block w-auto">
+                <select [(ngModel)]="filterStatus" (change)="update()"
+                    class="form-control form-control-sm d-inline-block w-auto">
                     <option value="0">All</option>
                     <option *ngFor="let item of taskStatus" value="{{ item.id }}">{{ item.name }}</option>
                 </select>
             </div>
-            <div class="col" >
+            <div class="col">
                 <div class="btn-group btn-group-sm float-right">
                     <button type="button" class="btn btn-primary" (click)="addJob(1)">Add Job</button>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal" *ngIf="selectedTask.length > 0">Confirm Payment</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal"
+                        *ngIf="selectedTask.length > 0">Confirm Payment</button>
                 </div>
             </div>
         </div>
@@ -35,37 +37,19 @@
     <hr class="border-light m-0">
     <div class="table-responsive">
         <table class="table table-striped table-bordered card-table job-list-table">
-            <thead app-job-list-header
-            [filterStatus]="filterStatus"
-            [intermediate]="intermediate"
-            [checkAll]="checkAll"
-            [sortBy]="sortBy"
-            [sortDesc]="sortDesc"
-            (componentChange)="onSubComponentChange($event)">
-        </thead>
+            <thead app-job-list-header [filterStatus]="filterStatus" [intermediate]="intermediate" [checkAll]="checkAll"
+                [sortBy]="sortBy" [sortDesc]="sortDesc" (componentChange)="onSubComponentChange($event)">
+            </thead>
             <tbody class="job-list-table">
-                <tr *ngIf="newJob" app-inline-add
-                    [cOptions] = "customerOptions"
-                    [cTotal] = "customerTotal"
-                    [dOptions] = "driverOptions"
-                    [dTotal] = "driverTotal"
-                    [vhOptions] = "vehicleOptions"
-                    [tOptions] ="typeOptions"
-                    [vOptions] ="vatOptions"
-                    [filterStatus]="filterStatus"
+                <tr *ngIf="newJob" app-inline-add [cOptions]="customerOptions" [cTotal]="customerTotal"
+                    [dOptions]="driverOptions" [dTotal]="driverTotal" [vhOptions]="vehicleOptions"
+                    [tOptions]="typeOptions" [vOptions]="vatOptions" [filterStatus]="filterStatus"
                     (componentChange)="onSubComponentChange($event)">
                 </tr>
-                <tr *ngFor="let task of taskData" app-inline-edit 
-                    [task]="task" 
-                    [cOptions] = "customerOptions"
-                    [cTotal] = "customerTotal"
-                    [dOptions] = "driverOptions"
-                    [dTotal] = "driverTotal"
-                    [vhOptions] = "vehicleOptions"
-                    [tOptions] ="typeOptions"
-                    [vOptions] ="vatOptions"
-                    [filterStatus]="filterStatus"
-                    (componentChange)="onSubComponentChange($event)">
+                <tr *ngFor="let task of taskData" app-inline-edit [task]="task" [cOptions]="customerOptions"
+                    [cTotal]="customerTotal" [dOptions]="driverOptions" [dTotal]="driverTotal"
+                    [vhOptions]="vehicleOptions" [tOptions]="typeOptions" [vOptions]="vatOptions"
+                    [filterStatus]="filterStatus" (componentChange)="onSubComponentChange($event)">
                 </tr>
             </tbody>
         </table>
@@ -80,16 +64,9 @@
                 <span class="text-muted" *ngIf="totalItems">Page {{ currentPage }} of {{ totalPages }}</span>
             </div>
             <div class="col-sm pt-3">
-                <ngb-pagination 
-                [collectionSize]="totalItems" 
-                [pageSize]="perPage" 
-                [(page)]="currentPage" 
-                [maxSize]="5" 
-                [rotate]="true" 
-                [boundaryLinks]="true"
-                (pageChange)="update()" 
-                size="sm" 
-                class="d-flex justify-content-center justify-content-sm-end m-0">
+                <ngb-pagination [collectionSize]="totalItems" [pageSize]="perPage" [(page)]="currentPage" [maxSize]="5"
+                    [rotate]="true" [boundaryLinks]="true" (pageChange)="update()" size="sm"
+                    class="d-flex justify-content-center justify-content-sm-end m-0">
                 </ngb-pagination>
             </div>
         </div>
@@ -100,7 +77,8 @@
 
 
 
-<div class="modal" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -125,7 +103,8 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Payment Reference</label>
-                        <input type="text" class="form-control" formControlName="payment_reference" name="payment_reference"
+                        <input type="text" class="form-control" formControlName="payment_reference"
+                            name="payment_reference"
                             [ngClass]="{'is-invalid': submitted && f.payment_reference.errors }">
                         <div *ngIf="submitted && f.payment_reference.errors" class="invalid-feedback">
                             <div *ngIf="f.payment_reference.errors.required">This field is Required</div>
@@ -133,13 +112,14 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Total Payment</label>
-                        <input type="number" step="0.01" class="form-control" formControlName="total_payment" name="total_payment" (change)="changeTotalPayment()"
+                        <input type="number" step="0.01" class="form-control" formControlName="total_payment"
+                            name="total_payment" (change)="changeTotalPayment()"
                             [ngClass]="{'is-invalid': submitted && f.total_payment.errors }">
                         <div *ngIf="submitted && f.total_payment.errors" class="invalid-feedback">
                             <div *ngIf="f.total_payment.errors.required">This field is Required</div>
                         </div>
                     </div>
-                    
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -165,27 +145,33 @@
                                 [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Query</label>
                             <label class="form-label btn-sm rounded-pill text-white" *ngIf="item.status != 2"
                                 [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Resolve</label>
-                            <p class="">
-                                {{ item.description }}
-                            </p>
-    
+                            
+                            <div innerHTML="{{ item.description }}"></div>
+
                         </div>
                     </div>
                 </div>
                 <form [formGroup]="disputeForm">
                     <div class="form-group">
-                        <label class="form-label">Please note the reason of dispute</label>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <textarea type="text" class="form-control" formControlName="description" name="description"
-                            [ngClass]="{'is-invalid': submitted2 && df.description.errors }"></textarea>
-
-                        <div *ngIf="submitted2 && df.description.errors" class="invalid-feedback">
-                            <div *ngIf="df.description.errors.required">This field is Required</div>
+                        <label class="form-label">Mail Type</label>
+                        <select class="form-control" formControlName="type_slug" name="type_slug"
+                            (change)="changeDisputeTemplate()"
+                            [ngClass]="{'is-invalid': submitted2 && df.type_slug.errors }">
+                            <option *ngFor="let item of typeList" value="{{ item.type_slug }}">{{ item.type.value }}
+                            </option>
+                        </select>
+                        <div *ngIf="submitted2 && df.type_slug.errors" class="invalid-feedback">
+                            <div *ngIf="df.type_slug.errors.required">This field is Required</div>
                         </div>
                     </div>
                 </form>
+                <div class="form-group">
+                    <label class="form-label">Content</label>
+                    <textarea class="form-control " id="summernote-content" [ngxSummernote]
+                        [(ngModel)]="summernote_content"></textarea>
+                    <label id="summernote-error" class="error jquery-validation-error small form-text invalid-feedback"
+                        for="subject" style="display: none;">This field is required.</label>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-danger" (click)="disputeTask()">Submit</button>
@@ -210,27 +196,22 @@
                                 [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Query</label>
                             <label class="form-label btn-sm rounded-pill text-white" *ngIf="item.status != 2"
                                 [ngStyle]="{background: item._status ? item._status.color  : '#fff'}">Resolve</label>
-                            <p class="">
-                                {{ item.description }}
-                            </p>
-    
+                            <div innerHTML="{{ item.description }}"></div>
                         </div>
                     </div>
                 </div>
-                <form [formGroup]="resolveForm">
-                    <div class="form-group">
-                        <label class="form-label">Please note the reason of resolve</label>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <textarea type="text" class="form-control" formControlName="description" name="description"
-                            [ngClass]="{'is-invalid': submitted3 && rf.description.errors }"></textarea>
+                <div class="form-group">
+                    <label class="form-label">Please note the reason of resolve</label>
+                </div>
 
-                        <div *ngIf="submitted3 && rf.description.errors" class="invalid-feedback">
-                            <div *ngIf="rf.description.errors.required">This field is Required</div>
-                        </div>
-                    </div>
-                </form>
+                <div class="form-group">
+                    <label class="form-label">Content</label>
+                    <textarea class="form-control " id="resolve-summernote-content" [ngxSummernote]
+                        [(ngModel)]="resolve_content"></textarea>
+                    <label id="resolve-summernote-error"
+                        class="error jquery-validation-error small form-text invalid-feedback" for="subject"
+                        style="display: none;">This field is required.</label>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-warning" (click)="resolveTask()">Submit</button>

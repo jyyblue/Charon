@@ -165,32 +165,4 @@ class DashboardController extends Controller
          $ret['chart1Data'] = $chart1_data;
          return response()->json($ret, 200);
     }
-
-    public function getPodEmailTemplate(Request $request) {
-        $taskid = $request->get('taskid');
-        $task = Task::with(['customer', 'driver', '_status'])->find($taskid);
-        $pod_file = $request->getSchemeAndHttpHost().'/api/admin/v1/task/downloadpod?filename='.$task->pod_file;
-        $vehicle_type = VehicleType::find($task->vehicle_type);
-        $data = [
-            'docket' => $task->docket,
-            'company_name' => $task->customer->company_name,
-            'pod_file' => $pod_file,
-            'c_ref_1' => $task->c_ref_1,
-            'c_ref_2' => $task->c_ref_2,
-            'job_date' => date('m d, Y', strtotime($task->job_date)),
-            'journey' => $task->journey,
-            'vehicle_size' => $vehicle_type ? $vehicle_type->name : '',
-        ];
-        $template = view('email.pod_mail')->with(['data'=>$data])->render();
-        $template2 = view('email.pod_mail2')->with(['data'=>$data])->render();
-        $template3 = view('email.pod_mail3')->with(['data'=>$data])->render();
-
-        $templates = array();
-        array_push($templates, $template);
-        array_push($templates, $template2);
-        array_push($templates, $template3);
-        $ret['templates'] = $templates;
-        $ret['task'] = $task;
-        return $ret;
-    }
 }
