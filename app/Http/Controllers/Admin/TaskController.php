@@ -10,15 +10,11 @@ use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\TaskStatusHistory;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\CustomerOpen;
 use App\Models\Task;
 use App\Models\TaskDistance;
 
-use App\Mail\DriverProcess1Mail;
-use App\Mail\DriverProcess2Mail;
 use App\Mail\DriverPaidMail;
-use App\Mail\DriverDisputeMail;
-use App\Mail\DriverResolveMail;
+
 use App\Mail\SendMail;
 use App\Models\Driver;
 use App\Models\DriverType;
@@ -45,6 +41,8 @@ class TaskController extends Controller
     public function create(Request $request)
     {
         try {
+            $engine = new StringTemplateEngine;
+
             $pending_status = constants('status.pending');
             $data = $request->except('journey');
             $journey = $request->get('journey', []);
@@ -59,6 +57,10 @@ class TaskController extends Controller
                 $ret['msg'] = 'Same docket number already exist';
                 return response()->json($ret, 200);
             }
+
+            $mail_type = '';
+            $driver_email = '';
+
             DB::beginTransaction();
             $task = new Task;
             $task->create($data);
@@ -106,21 +108,8 @@ class TaskController extends Controller
                 );
                 // send mail_1
                 $task = Task::with(['driver', 'customer'])->find($task->id);
-                $driver_email = $task->driver ? $task->driver['email'] : '';
-                if (!empty($driver_email)) {
-                    $data = [
-                        'docket' => $task->docket,
-                        'company_name' => $task->customer['company_name'],
-                        'price' => $task->d_price,
-                        'net' => $task->d_net,
-                        'vat' => $task->d_vat,
-                        'extra' => $task->d_extra,
-                        'tprice' => $task->d_tprice,
-                        'job_date' => $task->job_date,
-                        'target_payment_date' => $task->target_payment_date
-                    ];
-                    Mail::to($driver_email)->send(new DriverProcess1Mail($data));
-                }
+                $mail_type = constants('mailType.pending_payment');
+
             }
 
             // pending_payment to cp_payment
@@ -168,21 +157,8 @@ class TaskController extends Controller
                 );
                 // send mail_2
                 $task = Task::with(['driver', 'customer'])->find($task->id);
-                $driver_email = $task->driver ? $task->driver['email'] : '';
-                if (!empty($driver_email)) {
-                    $data = [
-                        'docket' => $task->docket,
-                        'company_name' => $task->customer['company_name'],
-                        'price' => $task->d_price,
-                        'net' => $task->d_net,
-                        'vat' => $task->d_vat,
-                        'extra' => $task->d_extra,
-                        'tprice' => $task->d_tprice,
-                        'job_date' => $task->job_date,
-                        'target_payment_date' => $task->target_payment_date
-                    ];
-                    Mail::to($driver_email)->send(new DriverProcess2Mail($data));
-                }
+                $mail_type = constants('mailType.cp_payment');
+
             }
 
             // cp_payment to completed
@@ -206,29 +182,8 @@ class TaskController extends Controller
                     ]
                 );
                 // send mail_3
-                $driver = Driver::find($driver_id);
-                $driver_email = $driver->email;
-                $task = Task::with(['customer'])->where('id', $task->id)->first();
-                $task_data = array();
-                $item = [
-                    'docket' => $task->docket,
-                    'company_name' => $task->customer['company_name'],
-                    'price' => $task->d_price,
-                    'net' => $task->d_net,
-                    'vat' => $task->d_vat,
-                    'extra' => $task->d_extra,
-                    'tprice' => $task->d_tprice,
-                    'job_date' => $task->job_date,
-                ];
-                array_push($task_data, $item);
-                if (!empty($driver_email)) {
-                    $data = [
-                        'payment_reference' => $payment_reference,
-                        'payment_date' => $payment_date,
-                        'task_data' => $task_data,
-                    ];
-                    Mail::to($driver_email)->send(new DriverPaidMail($data));
-                }
+                $mail_type = constants('mailType.completed');
+
             }
             /////////////////////////////////////////////////////////////////////////////////////
             $task->update([
@@ -243,6 +198,27 @@ class TaskController extends Controller
                 ]);
             }
             $task = Task::with(['customer', 'driver', '_status'])->where('id', $task->id)->first();
+
+            $driver_email = $task->driver ? $task->driver['email'] : '';
+            if (!empty($driver_email)) {
+                $mailTemplate = MailTemplate::where('type_slug', $mail_type)->where('active', 1)->first();
+                if (!empty($mailTemplate)) {
+                    $customer = $task->customer;
+                    $driver = $task->driver;
+                    $job = $task;
+
+                    $val = getValueForMailTemplate($customer, $driver, $job);
+                    $content = $mailTemplate->content;
+                    $mail_content = $engine->render($content, $val);
+                    $mail_subject = $mailTemplate->subject;
+                    $data = [
+                        'subject' => $mail_subject,
+                        'content' => $mail_content,
+                    ];
+                    Mail::to($driver_email)->send(new SendMail($data));
+                }
+            }
+
             DB::commit();
             $ret['code'] = 200;
             $ret['data'] = $task;
@@ -550,7 +526,7 @@ class TaskController extends Controller
     {
         $taskid = $request->get('taskid', '');
         $task = Task::with(['customer', 'driver', '_status', 'distances', 'queryHistory'])->find($taskid);
-        
+
         $disputeTemplates = getDisputeTempletes();
         $suggestItems = getVariableForMailTemplate();
 
@@ -598,9 +574,15 @@ class TaskController extends Controller
             ]);
 
             // send mail to driver for payment complete
+            //  --------------------------------------------------------------------
+            // multi job should be checked in future more deeply 
+            //  --------------------------------------------------------------------
+            $engine = new StringTemplateEngine;
+            $mail_type = constants('mailType.completed');
+
             $driver = Driver::find($driver_id);
             $driver_email = $driver->email;
-            $tasks = Task::with(['customer'])->whereIn('id', $taskids)->get();
+            $tasks = Task::with(['customer','driver'])->whereIn('id', $taskids)->get();
             $task_data = array();
             foreach ($tasks as $key => $task) {
                 $item = [
@@ -615,15 +597,27 @@ class TaskController extends Controller
                 ];
                 array_push($task_data, $item);
             };
+
+            $driver_email = $task->driver ? $task->driver['email'] : '';
             if (!empty($driver_email)) {
-                $data = [
-                    'payment_reference' => $payment_reference,
-                    'payment_date' => $payment_date,
-                    'total_payment' => $total_payment,
-                    'task_data' => $task_data,
-                ];
-                Mail::to($driver_email)->send(new DriverPaidMail($data));
+                $mailTemplate = MailTemplate::where('type_slug', $mail_type)->where('active', 1)->first();
+                if (!empty($mailTemplate)) {
+                    $customer = $task->customer;
+                    $driver = $task->driver;
+                    $job = $task;
+
+                    $val = getValueForMailTemplate($customer, $driver, $job);
+                    $content = $mailTemplate->content;
+                    $mail_content = $engine->render($content, $val);
+                    $mail_subject = $mailTemplate->subject;
+                    $data = [
+                        'subject' => $mail_subject,
+                        'content' => $mail_content,
+                    ];
+                    Mail::to($driver_email)->send(new SendMail($data));
+                }
             }
+
             // add to status history
             $completed = constants('status.completed');
             foreach ($taskids as $key => $taskid) {
@@ -660,7 +654,7 @@ class TaskController extends Controller
 
         // send mail to driver for receive invoice
         $driver_email = $task->driver ? $task->driver['email'] : '';
-        $mail_content ='';
+        $mail_content = '';
         if (!empty($driver_email)) {
             $mailTemplate = MailTemplate::where('type_slug', $type_slug)->where('active', 1)->first();
             if (!empty($mailTemplate)) {
@@ -725,7 +719,7 @@ class TaskController extends Controller
 
             $val = getValueForMailTemplate($customer, $driver, $job);
             $mail_content = $engine->render($content, $val);
-            $mail_subject = isset($mailTemplate->subject) ? $mailTemplate->subject: constants('mailTemplate.resolveTitle');
+            $mail_subject = isset($mailTemplate->subject) ? $mailTemplate->subject : constants('mailTemplate.resolveTitle');
             $data = [
                 'subject' => $mail_subject,
                 'content' => $mail_content,
@@ -794,7 +788,7 @@ class TaskController extends Controller
         $taskid = $request->get('taskid');
         $content = $request->get('content');
         $task = Task::with(['driver', 'customer'])->find($taskid);
-        
+
         $mail_content = '';
         if (!empty($to)) {
             $type_slug = constants('mailType.pod_mail');
@@ -805,7 +799,7 @@ class TaskController extends Controller
 
             $val = getValueForMailTemplate($customer, $driver, $job);
             $mail_content = $engine->render($content, $val);
-            $mail_subject = isset($mailTemplate->subject) ? $mailTemplate->subject: constants('mailTemplate.podTitle');
+            $mail_subject = isset($mailTemplate->subject) ? $mailTemplate->subject : constants('mailTemplate.podTitle');
             $data = [
                 'subject' => $mail_subject,
                 'content' => $mail_content,
@@ -813,10 +807,9 @@ class TaskController extends Controller
             ];
             Mail::to($to)->send(new SendMail($data));
         }
-        
+
         $ret['code'] = 200;
         $ret['task'] = $task;
         return response()->json($ret, 200);
     }
-
 }
