@@ -296,6 +296,10 @@ class TaskController extends Controller
                 $has_pod = false;
             }
 
+            if (!$has_pod && !empty($pod_file)) {
+                $has_pod = true;
+            }
+
             if (
                 $status == constants('status.pending_payment') &&
                 !empty($invoice_number) &&
