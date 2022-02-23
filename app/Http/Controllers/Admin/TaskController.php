@@ -368,7 +368,7 @@ class TaskController extends Controller
 
             $task->update($data);
 
-            $task = Task::with(['driver', 'customer'])->find($task->id);
+            $task = Task::with(['driver', 'customer', '_status'])->find($task->id);
             TaskDistance::where('task_id', $id)->delete();
             foreach ($journey as $key => $item) {
                 $taskDistance = new TaskDistance;

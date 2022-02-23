@@ -29,7 +29,7 @@ class AddCustomerReferenceTaskTable extends Migration
     {
         //
         Schema::table('task', function (Blueprint $table) {
-            $table->dropColumn('c_ref_2');
+            $table->dropColumn('c_ref_1');
             $table->dropColumn('c_ref_2');
         });
     }
