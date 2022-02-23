@@ -1,15 +1,17 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ConstOption;
+use App\Models\EmailLog;
 use Illuminate\Http\Request;
 use App\Models\MailTemplate;
 use App\Models\TaskStatus;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
-class MailTemplateController extends Controller
+class MailManagementController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -22,10 +24,11 @@ class MailTemplateController extends Controller
     }
 
     /**
-     * 2022-01-25 blue
+     * 2022-02-25 blue
      * get status and select2 of calendar
      */
-    public function getTemplate(Request $request) {
+    public function getTemplate(Request $request)
+    {
         $template_id = $request->get('id');
         $templates = MailTemplate::select('type_slug')->get();
         $usedType = array();
@@ -34,7 +37,7 @@ class MailTemplateController extends Controller
             array_push($usedType, $type);
         }
         $type = ConstOption::where('type', constants('constType.mailtype'));
-        if(empty($template_id)) {
+        if (empty($template_id)) {
             $type = $type->whereNotIn('key', $usedType);
         }
         $type = $type->get();
@@ -48,22 +51,23 @@ class MailTemplateController extends Controller
         return $ret;
     }
 
-    public function checkMailTeamplte(Request $request) {
+    public function checkMailTeamplte(Request $request)
+    {
         $type = $request->get('type');
         $template = MailTemplate::where('type_slug', $type);
         $template = $template->first();
 
         $ret['code'] = 200;
-        if(empty($template)) {
+        if (empty($template)) {
             $ret['available'] = true;
-        }else{
+        } else {
             $ret['available'] = false;
             $ret['message'] = 'Mail Template already exist!';
         }
         return $ret;
     }
     /**
-     * Store a newly created event status.
+     * Store a newly created template
      *
      * @param \Illuminate\Http\Request $request
      *
@@ -99,7 +103,7 @@ class MailTemplateController extends Controller
     }
 
     /**
-     * Update the specified event status
+     * Update the specified template
      *
      * @param \Illuminate\Http\Request $request
      * @param id                     $id
@@ -133,7 +137,7 @@ class MailTemplateController extends Controller
     }
 
     /**
-     * Remove the specified event status.
+     * Remove the specified template.
      *
      * @param Request $request
      *
@@ -156,7 +160,7 @@ class MailTemplateController extends Controller
     }
 
     /**
-     * Method to search the users.
+     * Method to search template data.
      *
      * @param Request $request
      *
@@ -175,5 +179,38 @@ class MailTemplateController extends Controller
         $ret['data'] = $results;
         $ret['total'] = $count;
         return $ret;
+    }
+
+    /**
+     * Method to search Email log data.
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getLogs(Request $request)
+    {
+        $ret = array();
+        $pageSize = $request->get('pagesize', 10);
+        $page = $request->get('page', 1);
+        $skip = ($page - 1) * $pageSize;
+        $search = $request->get('search', '');
+
+        $all = EmailLog::leftjoin('task', function($join){
+            $join->on('email_log.task_id', '=', 'task.id');
+        });
+        if ($search != '') {
+            $all = $all
+                ->whereRaw('LOWER(`email_log`.`subject`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+                ->orWhereRaw(' LOWER(`email_log`.`to`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+                ->orWhereRaw(' LOWER(`task`.`docket`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+                ;
+        }
+        $count = $all->count();
+        $all = $all->select(['email_log.*', 'task.docket'])->skip($skip)->take($pageSize)->get();
+        $ret['code'] = 200;
+        $ret['total'] = $count;
+        $ret['data'] = $all;
+        return response()->json($ret, 200);
     }
 }

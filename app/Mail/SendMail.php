@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class SendMail extends Mailable
 {
@@ -34,7 +35,6 @@ class SendMail extends Mailable
         if(isset($this->data['pod_file'])) {
             $path = storage_path() . "/app/public/job/attachments/" . $this->data['pod_file'];
         }
-
         $mail = $this->from(env('MAIL_FROM_ADDRESS', 'operations@gjsservices.com'), 'GJS Operations Team')
         ->view('email.send_mail_bucket')
         ->subject($this->data['subject'])

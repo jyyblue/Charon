@@ -1,4 +1,6 @@
 <?php
+
+use App\Models\EmailLog;
 use App\Models\MailTemplate;
 
 if (!function_exists('clean_filename')) {
@@ -116,5 +118,16 @@ if( ! function_exists('getDisputeTempletes')) {
         );
         $mail_type = MailTemplate::with(['type'])->whereIn('type_slug', $slug)->where('active', 1)->get();
         return $mail_type;
+    }
+}
+
+if(!function_exists('addTaskIdToEmailLog')) {
+    function addTaskIdToEmailLog($task_id) {
+        $lastLog = EmailLog::where('task_id', 0)->orderBy('id', 'DESC')->first();
+        if(!empty($lastLog)) {
+            $lastLog->task_id = $task_id;
+            $lastLog->save();
+        }
+        return $lastLog;
     }
 }

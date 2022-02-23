@@ -149,6 +149,9 @@ export class ApiService extends ServiceBase {
     return this.postData<any>(`${environment.apiUrl}/admin/v1/mail/template/update`, params, null, false);
   }
   
+  public getMailLogs(params: any): Promise<any> {
+    return this.postData<any>(`${environment.apiUrl}/admin/v1/mail/logs/list`, params, null, false);
+  }
   /**
    * call with Rxjs
    */

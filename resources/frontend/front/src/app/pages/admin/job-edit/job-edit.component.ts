@@ -233,6 +233,7 @@ export class JobEditComponent implements OnInit {
     this.apiService.getTaskDetail(params).then(res => {
       this.appService.hideLoading();
       let code = res.code;
+      console.log(res);
       if(code == 200) {
         this.typeList = res.disputeTemplates;
         this.suggestItems = res.suggestItems;

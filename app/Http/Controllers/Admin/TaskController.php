@@ -216,6 +216,7 @@ class TaskController extends Controller
                         'content' => $mail_content,
                     ];
                     Mail::to($driver_email)->send(new SendMail($data));
+                    addTaskIdToEmailLog($task->id);
                 }
             }
 
@@ -394,6 +395,7 @@ class TaskController extends Controller
                         'content' => $mail_content,
                     ];
                     Mail::to($driver_email)->send(new SendMail($data));
+                    addTaskIdToEmailLog($task->id);
                 }
             }
 
@@ -615,6 +617,7 @@ class TaskController extends Controller
                         'content' => $mail_content,
                     ];
                     Mail::to($driver_email)->send(new SendMail($data));
+                    addTaskIdToEmailLog($task->id);
                 }
             }
 
@@ -671,6 +674,7 @@ class TaskController extends Controller
                     'content' => $mail_content,
                 ];
                 Mail::to($driver_email)->send(new SendMail($data));
+                addTaskIdToEmailLog($task->id);
             }
         }
         TaskStatusHistory::create(
@@ -725,6 +729,7 @@ class TaskController extends Controller
                 'content' => $mail_content,
             ];
             Mail::to($driver_email)->send(new SendMail($data));
+            addTaskIdToEmailLog($task->id);
         }
         TaskStatusHistory::create(
             [
@@ -806,6 +811,7 @@ class TaskController extends Controller
                 'pod_file' => $task->pod_file,
             ];
             Mail::to($to)->send(new SendMail($data));
+            addTaskIdToEmailLog($task->id);
         }
 
         $ret['code'] = 200;

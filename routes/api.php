@@ -66,12 +66,14 @@ Route::prefix('admin')->group(function () {
                 
                 // mail template
                 
-                Route::post('/mail/template/getTemplate', 'MailTemplateController@getTemplate')->name('admin.mailtemplate.getStatus');
-                Route::post('/mail/template/checkMailTeamplte', 'MailTemplateController@checkMailTeamplte')->name('admin.mailtemplate.checkMailTeamplte');
-                Route::post('/mail/template/store', 'MailTemplateController@store')->name('admin.mailtemplate.store');
-                Route::post('/mail/template/list', 'MailTemplateController@getList')->name('admin.mailtemplate.list');
-                Route::post('/mail/template/update', 'MailTemplateController@update')->name('admin.mailtemplate.update');
-                Route::post('/mail/template/delete', 'MailTemplateController@destroy')->name('admin.mailtemplate.delete');
+                Route::post('/mail/template/getTemplate', 'MailManagementController@getTemplate')->name('admin.mailtemplate.getStatus');
+                Route::post('/mail/template/checkMailTeamplte', 'MailManagementController@checkMailTeamplte')->name('admin.mailtemplate.checkMailTeamplte');
+                Route::post('/mail/template/store', 'MailManagementController@store')->name('admin.mailtemplate.store');
+                Route::post('/mail/template/list', 'MailManagementController@getList')->name('admin.mailtemplate.list');
+                Route::post('/mail/template/update', 'MailManagementController@update')->name('admin.mailtemplate.update');
+                Route::post('/mail/template/delete', 'MailManagementController@destroy')->name('admin.mailtemplate.delete');
+                Route::post('/mail/logs/list', 'MailManagementController@getLogs')->name('admin.maillogs.list');
+                
             });
         });
     });
