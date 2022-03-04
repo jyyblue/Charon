@@ -49,7 +49,6 @@ export class DriverAddComponent implements OnInit {
   ngOnInit(): void {
     this.dataForm = this.formBuilder.group({
       subcontractor: [null, Validators.required],
-      name: [null, Validators.required],
       first_name: [null, Validators.required],
       last_name: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]],
@@ -91,13 +90,13 @@ export class DriverAddComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.dataForm.invalid) {
+      console.log(this.dataForm);
       this.toastrService.error('Enter valid values');
       return;
     }
 
     let params = {
       'subcontractor':this.f.subcontractor.value,
-      'name': this.f.name.value,
       'first_name':this.f.first_name.value,
       'last_name': this.f.last_name.value,
       'email': this.f.email.value,
