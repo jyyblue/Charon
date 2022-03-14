@@ -19,7 +19,7 @@ export class CustomerAddComponent implements OnInit {
   submitted = false;
 
   phoneMaskOptions = {
-    mask: ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]
+    mask: [/[1-9]/, /\d/, /\d/,  /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]
   };
   disabled = false;
 

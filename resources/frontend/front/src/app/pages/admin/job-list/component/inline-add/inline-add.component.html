@@ -256,6 +256,19 @@
 <!-- Driver Info -->
 <td class="align-middle">
     <form [formGroup]="dataForm">
+        <label class="switcher switcher-danger switcher-lg">
+            <input type="checkbox" class="switcher-input" id="exclude_job"
+            (change)="onCheckChange($event)" name="exclude_job"
+            [checked]="f.exclude_job.value">
+            <span class="switcher-indicator">
+              <span class="switcher-yes"><span class="ion ion-md-checkmark"></span></span>
+              <span class="switcher-no"><span class="ion ion-md-close"></span></span>
+            </span>
+          </label>
+    </form>
+</td>
+<td class="align-middle">
+    <form [formGroup]="dataForm">
 
         <ng-select [items]="driverOptions" bindLabel="dispName" bindValue="id" [loading]="driverLoading"
             formControlName="driver_id" name="driver_id" class="job-list"
@@ -283,6 +296,7 @@
     <form [formGroup]="dataForm">
         <ng-select [items]="typeOptions" bindLabel="label" bindValue="value" formControlName="driver_type"
             placeholder="Select Type" class="job-list"
+            (change)="changeDriverType($event)"
             [ngClass]="{'is-invalid' : f.driver_type.value == undefined, 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 1}">
             <ng-template ng-label-tmp let-item="item">
                 <span class="ng-value-label">{{item['label']}}</span>

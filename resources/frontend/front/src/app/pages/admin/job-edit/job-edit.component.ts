@@ -202,7 +202,8 @@ export class JobEditComponent implements OnInit {
       payment_reference: [this.data.payment_reference, []],
       total_payment: [this.data.total_payment.toFixed(2), []],
       profit: [this.data.profit.toFixed(2), []],
-      profitpercent: [this.data.profitpercent.toFixed(2), []]
+      profitpercent: [this.data.profitpercent.toFixed(2), []],
+      exclude_job: [this.data.exclude_job, []],
     });
 
     this.disputeForm = this.formBuilder.group({
@@ -357,7 +358,8 @@ export class JobEditComponent implements OnInit {
           payment_reference: [this.data.payment_reference, []],
           total_payment: [this.data.total_payment.toFixed(2), []],
           profit: [this.data.profit.toFixed(2), []],
-          profitpercent: [profitpercent, []]
+          profitpercent: [profitpercent, []],
+          exclude_job: [this.data.exclude_job, []],
         });
 
         let customer = this.data.customer;
@@ -398,7 +400,6 @@ export class JobEditComponent implements OnInit {
   
   saveTask() {
     this.submitted = true;
-    console.log(this.f.has_pod.value, '-pod value');
     // if(this.validateJourney()) {
     //   console.log('validate journey fail');
     //   return;
@@ -491,6 +492,7 @@ export class JobEditComponent implements OnInit {
       'payment_date': paymentDate,
       'payment_reference': this.f.payment_reference.value,
       'total_payment': this.f.total_payment.value,
+      'exclude_job': this.f.exclude_job.value,
     }
 
     this.appService.showLoading();
@@ -623,6 +625,9 @@ export class JobEditComponent implements OnInit {
       case 'check_bank':
         this.dataForm.patchValue({'check_bank': checked});
         break;
+      case 'exclude_job':
+        this.dataForm.patchValue({'exclude_job': checked});
+        break;        
       default:
         break;
     }
@@ -712,10 +717,21 @@ export class JobEditComponent implements OnInit {
         // cx driver
         this.f.cx_number.setValue(item.cx_number);
       }
+      if(item.type == 2) {
+        this.f.exclude_job.setValue(true);
+      }else{
+        this.f.exclude_job.setValue(false);
+      }
       this.showBankDetail(item);
     }
   }
-
+  changeDriverType(item) {
+    if(item.value == 2) {
+      this.f.exclude_job.setValue(true);
+    }else{
+      this.f.exclude_job.setValue(false);
+    }
+  }
   showBankDetail(item) {
     this.driver = item;
   }
@@ -1099,5 +1115,26 @@ export class JobEditComponent implements OnInit {
 
   onPodClose() {
     $('#podModal').modal('hide');
+  }
+
+  logData = [];
+  delete_id: string;
+  logBody = '';
+  logTo = '';
+  logDate = '';
+  logSubject = '';
+
+  showMailLog(id) {
+    this.delete_id = id;
+    this.logData = this.data.mail_history;
+    let log = this.logData.find(ele => {return ele.id == id});
+    this.logBody = log.body;
+    this.logTo = log.to;
+    this.logDate = log.date;
+    this.logSubject = log.subject;
+    $('#logModal').modal('show');
+  }
+  closeMailLog() {
+    $('#logModal').modal('hide');
   }
 }

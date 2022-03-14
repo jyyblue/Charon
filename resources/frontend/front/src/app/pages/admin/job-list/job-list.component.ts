@@ -104,7 +104,7 @@ export class JobListComponent implements OnInit {
 
   resolve_content;
   resolve_editor;
-
+  exclude_job = false;
   constructor(
     private http: HttpClient,
     private appService: AppService,
@@ -148,7 +148,8 @@ export class JobListComponent implements OnInit {
       'status': this.filterStatus,
       'sortBy': this.sortBy,
       'sortDesc': this.sortDesc,
-      'filterVal': this.filterVal
+      'filterVal': this.filterVal,
+      'exclude_job': this.exclude_job
     };
     this.apiService.getTaskList(params).then((res) => {
       this.appService.hideLoading();
@@ -189,15 +190,12 @@ export class JobListComponent implements OnInit {
     this.update();
   }
 
-  editTask(taskid) {
-  }
-
   onSelectAll(checked) {
     if (checked == true) {
       this.taskData.forEach(element => {
         element['checked'] = true;
 
-        this.selectedTask.push(element['id']);
+        this.selectedTask.push(element);
       });
     } else {
       this.taskData.forEach(element => {
@@ -212,15 +210,15 @@ export class JobListComponent implements OnInit {
     if (check) {
       // insert into array
       this.taskData[index]['checked'] = true;
-      if (!this.selectedTask.includes(taskid)) {
-        this.selectedTask.push(taskid);
+      if (!this.selectedTask.includes(this.taskData[index])) {
+        this.selectedTask.push(this.taskData[index]);
       }
     } else {
       // remove from array
       this.taskData[index]['checked'] = false;
       let driver_id = this.taskData[index]['driver_id'];
-      if (this.selectedTask.includes(taskid)) {          //checking weather array contain the id
-        this.selectedTask.splice(this.selectedTask.indexOf(taskid), 1);
+      if (this.selectedTask.includes(this.taskData[index])) {          //checking weather array contain the id
+        this.selectedTask.splice(this.selectedTask.indexOf(this.taskData[index]), 1);
       }
     }
     this.checkAllStatus();
@@ -256,16 +254,16 @@ export class JobListComponent implements OnInit {
     let payment_date = this.f.payment_date.value;
     let pd = payment_date.year + "-" + payment_date.month + "-" + payment_date.day;
     let selectedDriver = [];
-    this.selectedTask.forEach(taskid => {
-      let index = this.taskData.findIndex(item => { return item['id'] == taskid; });
-      let task = this.taskData[index];
-      let driver_id = task['driver_id'];
+    let taskIds = [];
+    this.selectedTask.forEach(taskItem => {
+      taskIds.push(taskItem.id)
+      let driver_id = taskItem['driver_id'];
       if (!selectedDriver.includes(driver_id)) {
         selectedDriver.push(driver_id);
       }
     });
     let param = {
-      'taskids': this.selectedTask,
+      'taskids': taskIds,
       'driver_ids': selectedDriver,
       'payment_date': pd,
       'payment_reference': this.f.payment_reference.value,
@@ -277,14 +275,15 @@ export class JobListComponent implements OnInit {
       let code = res.code;
       if (code == 200) {
         this.toastrService.success("Confirmed Payment", "Success");
+        this.loadData();
       } else if (code == 201) {
         let msg = res.message;
-        let tasks = res.tasks;
-        tasks.forEach(element => {
-          let taskid = element.id;
-          let taskIdx = this.taskData.findIndex(item => { return item['id'] == taskid; });
-          this.taskData[taskIdx] = element;
-        });
+        // let tasks = res.tasks;
+        // tasks.forEach(element => {
+        //   let taskid = element.id;
+        //   let taskIdx = this.taskData.findIndex(item => { return item['id'] == taskid; });
+        //   this.taskData[taskIdx] = element;
+        // });
         this.toastrService.warning(msg, "Warning");
       }
     });
@@ -571,5 +570,18 @@ export class JobListComponent implements OnInit {
     this.resolve_editor.summernote('autoComplete.on', 'insertSuggestion', function (suggestion) {
       console.log("The uesr has get the suggestion:" + suggestion);
     })
+  }
+
+  onCheckChange(event) {
+    let checked = event.target.checked;
+    let id = event.target.id;
+    switch (id) {
+      case 'exclude_job':
+        this.exclude_job = checked;
+        break;        
+      default:
+        break;
+    }
+    this.update();
   }
 }

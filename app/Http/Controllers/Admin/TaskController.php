@@ -239,6 +239,7 @@ class TaskController extends Controller
             $data = $request->except(['journey', 'id']);
             $journey = $request->get('journey', []);
             $id = $request->get('id', '');
+            $exclude_job = $request->get('exclude_job', false);
 
             $c_net = $request->get('c_net', 0);
             $d_net = $request->get('d_net', 0);
@@ -383,7 +384,7 @@ class TaskController extends Controller
                 ]);
             }
             $driver_email = $task->driver ? $task->driver['email'] : '';
-            if (!empty($driver_email)) {
+            if (!empty($driver_email) && $exclude_job == false) {
                 $mailTemplate = MailTemplate::where('type_slug', $mail_type)->where('active', 1)->first();
                 if (!empty($mailTemplate)) {
                     $customer = $task->customer;
@@ -427,6 +428,7 @@ class TaskController extends Controller
         $sortDesc = $request->get('sortDesc', true);
         $sortBy = $request->get('sortBy', 'key');
         $filterVal = $request->get('filterVal', '');
+        $exclude_job = $request->get('exclude_job', false);
         $skip = ($page - 1) * $pageSize;
 
         // $tasks = Task::with(['customer', 'driver', '_status']);
@@ -441,6 +443,7 @@ class TaskController extends Controller
                 $join->on('task.status', '=', 'task_status.id');
             })->select(['task.*']);
 
+        $tasks = $tasks->where('exclude_job', $exclude_job);
         if ($status != 0) {
             $tasks = $tasks->where('status', $status);
         }
@@ -531,7 +534,7 @@ class TaskController extends Controller
     public function getTaskDetail(Request $request)
     {
         $taskid = $request->get('taskid', '');
-        $task = Task::with(['customer', 'driver', '_status', 'distances', 'queryHistory'])->find($taskid);
+        $task = Task::with(['customer', 'driver', '_status', 'distances', 'queryHistory','mailHistory'])->find($taskid);
 
         $disputeTemplates = getDisputeTempletes();
         $suggestItems = getVariableForMailTemplate();
@@ -589,22 +592,15 @@ class TaskController extends Controller
             $driver = Driver::find($driver_id);
             $driver_email = $driver->email;
             $tasks = Task::with(['customer','driver'])->whereIn('id', $taskids)->get();
+            $customers = array();
             $task_data = array();
             foreach ($tasks as $key => $task) {
-                $item = [
-                    'docket' => $task->docket,
-                    'company_name' => $task->customer['company_name'],
-                    'price' => $task->d_price,
-                    'net' => $task->d_net,
-                    'vat' => $task->d_vat,
-                    'extra' => $task->d_extra,
-                    'tprice' => $task->d_tprice,
-                    'job_date' => $task->job_date,
-                ];
-                array_push($task_data, $item);
+                array_push($task_data, $task);
+                array_push($customers, $task->customer);
             };
 
             $driver_email = $task->driver ? $task->driver['email'] : '';
+            $val = null;
             if (!empty($driver_email)) {
                 $mailTemplate = MailTemplate::where('type_slug', $mail_type)->where('active', 1)->first();
                 if (!empty($mailTemplate)) {
@@ -612,7 +608,7 @@ class TaskController extends Controller
                     $driver = $task->driver;
                     $job = $task;
 
-                    $val = getValueForMailTemplate($customer, $driver, $job);
+                    $val = getValueForMailTemplate($customers, $driver, $task_data);
                     $content = $mailTemplate->content;
                     $mail_content = $engine->render($content, $val);
                     $mail_subject = $mailTemplate->subject;
@@ -639,6 +635,7 @@ class TaskController extends Controller
             $tasks = Task::with(['customer', 'driver', '_status', 'queryHistory'])->whereIn('id', $taskids)->get();
             $ret['code'] = 200;
             $ret['tasks'] = $tasks;
+            $ret['val'] = $val;
             return response()->json($ret, 200);
         } catch (\Exception $e) {
             throw ($e);

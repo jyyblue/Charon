@@ -11,7 +11,7 @@
             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
     </th>
     <th colspan="24">Customer Info</th>
-    <th colspan="29">Driver Info</th>
+    <th colspan="30">Driver Info</th>
     <th colspan="3">Processing</th>
     <th colspan="5">Summary</th>
 </tr>
@@ -115,7 +115,9 @@
     </th>
     <!-- Customer Info -->
     <!-- Driver Info -->
-
+    <th class="text-nowrap cursor-pointer">
+        Exclude Job
+    </th>
     <th class="text-nowrap cursor-pointer" (click)="setSort('driver_id')">
         Driver<i class="ion text-muted ml-2" *ngIf="sortBy=='driver_id'"
             [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>

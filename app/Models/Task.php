@@ -68,6 +68,7 @@ class Task extends Model
         'check_docket_off',
         'check_bank',
         'total_payment',
+        'exclude_job'
     ];
 
      /**
@@ -98,5 +99,9 @@ class Task extends Model
 
     public function queryHistory() {
         return $this->hasMany(TaskStatusHistory::class, 'task_id', 'id')->with('_status')->where('query', 1);
+    }
+
+    public function mailHistory() {
+        return $this->hasMany( EmailLog::class, 'task_id', 'id');
     }
 }

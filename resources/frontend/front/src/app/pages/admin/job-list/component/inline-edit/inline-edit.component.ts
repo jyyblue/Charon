@@ -206,7 +206,8 @@ export class InlineEditComponent implements OnInit {
       payment_reference: [this.data.payment_reference, []],
       total_payment: [this.data.total_payment.toFixed(2), []],
       profit: [this.data.profit.toFixed(2), []],
-      profitpercent: [profitpercent, []]
+      profitpercent: [profitpercent, []],
+      exclude_job: [this.data.exclude_job, []],
     });
 
     let customer = this.data.customer;
@@ -362,6 +363,7 @@ export class InlineEditComponent implements OnInit {
       'payment_date': paymentDate,
       'payment_reference': this.f.payment_reference.value,
       'total_payment': this.f.total_payment.value,
+      'exclude_job': this.f.exclude_job.value,
     }
 
     this.appService.showLoading();
@@ -423,6 +425,9 @@ export class InlineEditComponent implements OnInit {
       case 'check_bank':
         this.dataForm.patchValue({'check_bank': checked});
         break;
+      case 'exclude_job':
+        this.dataForm.patchValue({'exclude_job': checked});
+        break;        
       default:
         break;
     }
@@ -513,11 +518,24 @@ export class InlineEditComponent implements OnInit {
         // cx driver
         this.f.cx_number.setValue(item.cx_number);
       }
+      if(item.type == 2) {
+        this.f.exclude_job.setValue(true);
+      }else{
+        this.f.exclude_job.setValue(false);
+      }
       this.showBankDetail(item);
       this.saveTask();
     }
   }
 
+  changeDriverType(item) {
+    if(item.value == 2) {
+      this.f.exclude_job.setValue(true);
+    }else{
+      this.f.exclude_job.setValue(false);
+    }
+    this.saveTask();
+  }
   showBankDetail(item) {
     this.driver = item;
   }

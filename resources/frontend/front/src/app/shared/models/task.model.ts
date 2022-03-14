@@ -63,6 +63,9 @@ export class Task {
     public customer: any;
     public distances : any[];
     public query_history: any[];
+    public mail_history: any[];
+    public exclude_job: boolean;
+
     private model = {
         year: now.getFullYear(),
         month: now.getMonth() + 1,
@@ -137,5 +140,7 @@ export class Task {
         this.distances = [];
         this.query_history = [];
         this.created_at = '';
+        this.mail_history = [];
+        this.exclude_job = false;
     }
 }

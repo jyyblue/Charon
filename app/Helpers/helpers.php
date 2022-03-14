@@ -46,11 +46,20 @@ if( ! function_exists('getJobParams')){
             'payment_date',
             'payment_reference',
         );
-        
+        $customer_list_param = array();
+        foreach ($customer_param as $key => $value) {
+            array_push($customer_list_param, 'list_'.$value);
+        }
+        $job_list_param = array();
+        foreach ($job_param as $key => $value) {
+            array_push($job_list_param, 'list_'.$value);
+        }
         $param = [
             'driver' => $driver_param,
             'customer' => $customer_param,
-            'job' => $job_param
+            'job' => $job_param,
+            'customer_list' => $customer_list_param,
+            'job_list' => $job_list_param,
         ];
         return $param;
     }
@@ -63,6 +72,8 @@ if (!function_exists('getVariableForMailTemplate')) {
         $driver_param = $param['driver'];
         $customer_param = $param['customer'];
         $job_param = $param['job'];
+        $customer_list_param = $param['customer_list'];
+        $job_list_param = $param['job_list'];
         foreach ($driver_param as $key => $value) {
             $item = '{driver.'.$value.'}';
             array_push($params, $item);
@@ -71,7 +82,15 @@ if (!function_exists('getVariableForMailTemplate')) {
             $item = '{customer.'.$value.'}';
             array_push($params, $item);
         }
+        foreach ($customer_list_param as $key => $value) {
+            $item = '{customer.'.$value.'}';
+            array_push($params, $item);
+        }
         foreach ($job_param as $key => $value) {
+            $item = '{job.'.$value.'}';
+            array_push($params, $item);
+        }
+        foreach ($job_list_param as $key => $value) {
             $item = '{job.'.$value.'}';
             array_push($params, $item);
         }
@@ -89,6 +108,9 @@ if( !function_exists('getValueForMailTemplate')) {
         $customer_param = $param['customer'];
         $job_param = $param['job'];
 
+        $customer_list_param = $param['customer_list'];
+        $job_list_param = $param['job_list'];
+
         $_driver = [];
         $_customer = [];
         $_job = [];
@@ -97,18 +119,54 @@ if( !function_exists('getValueForMailTemplate')) {
             $_driver[$value] = $driver->$value;
         }
         foreach ($customer_param as $key => $value) {
-            $_customer[$value] = $customer->$value;
+            if(is_array($customer)) {
+                $_customer[$value] = $customer[0]->$value;
+            }else{
+                $_customer[$value] = $customer->$value;
+            }
+        }
+        foreach ($customer_list_param as $key => $value) {
+            if(is_array($customer)) {
+                $_customer[$value] = getTableDataForTemplate($customer, $value);
+            }else{
+                $_customer[$value] = '';
+            }
         }
         foreach ($job_param as $key => $value) {
-            $_job[$value] = $job->$value;
+            if(is_array($job)) {
+                $_job[$value] = $job[0]->$value;
+            }else{
+                $_job[$value] = $job->$value;
+            }
         }
+
+        foreach ($job_list_param as $key => $value) {
+            if(is_array($job)) {
+                $_job[$value] = getTableDataForTemplate($job, $value);
+            }else{
+                $_job[$value] = '';
+            }
+        }
+
         $val['driver'] = $_driver;
         $val['customer'] = $_customer;
         $val['job'] = $_job;
         return $val;
     }
 }
-
+if( ! function_exists('getTableDataForTemplate')) {
+    function getTableDataForTemplate($arr, $list_key) {
+        $key = substr($list_key, strlen('list_'));
+        $table = '<table class="table table-bordered"><tbody>';
+        foreach ($arr as $key2 => $item) {
+            $val = isset($item[$key]) ? $item[$key] : '';
+            $row = '<tr><td>'.$val.'</td></tr>';
+            $table.=$row;
+        }
+        $table .= '</tbody></table>';
+        return $table;
+    }
+}
 if( ! function_exists('getDisputeTempletes')) {
     function getDisputeTempletes() {
         $slug = array(
