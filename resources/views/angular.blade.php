@@ -84,7 +84,7 @@
 
     <!-- Custom elements polyfill -->
     <!-- <script>this.customElements||document.write('<script src="//unpkg.com/document-register-element"><\x2fscript>');</script> -->
-  <link rel="stylesheet" href="/assets/angular/styles.d9854c4cb3810be6f19a.css"></head>
+  <link rel="stylesheet" href="/assets/angular/styles.e493ddee00f88110b339.css"></head>
   <body>
 
     <!-- Splash screen -->
@@ -116,5 +116,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.7/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> -->
 
-  <script src="/assets/angular/runtime.8223a0db1ec8465b339c.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.88ff0a0b28e1ace2e5f2.js" defer></script><script src="/assets/angular/main.d44bc363e73dc2ccdb71.js" defer></script></body>
+  <script src="/assets/angular/runtime.b0d427bace9245c303ed.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.88ff0a0b28e1ace2e5f2.js" defer></script><script src="/assets/angular/main.d44bc363e73dc2ccdb71.js" defer></script></body>
 </html>

@@ -6,7 +6,8 @@ return [
         'query' => 2,
         'pending_payment' => 3,
         'cp_payment' => 4,
-        'completed' => 5
+        'completed' => 5,
+        'excluded' => 6
     ],
     'constType' => [
         'mailtype' => 'mail_type',

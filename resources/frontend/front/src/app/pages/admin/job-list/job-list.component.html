@@ -17,20 +17,10 @@
                 <input type="text" [(ngModel)]="filterVal" (input)="currentPage = 1; updateFilter()"
                     class="form-control form-control-sm d-inline-block w-auto " placeholder="Search...">
                 <select [(ngModel)]="filterStatus" (change)="update()"
-                    class="form-control form-control-sm d-inline-block w-auto" *ngIf="exclude_job==false">
+                    class="form-control form-control-sm d-inline-block w-auto" >
                     <option value="0">All</option>
                     <option *ngFor="let item of taskStatus" value="{{ item.id }}">{{ item.name }}</option>
                 </select>
-                <label class="switcher switcher-danger switcher-lg">
-                    <input type="checkbox" class="switcher-input" id="exclude_job"
-                    (change)="onCheckChange($event)" name="exclude_job"
-                    [checked]="exclude_job">
-                    <span class="switcher-indicator">
-                      <span class="switcher-yes"><span class="ion ion-md-checkmark"></span></span>
-                      <span class="switcher-no"><span class="ion ion-md-close"></span></span>
-                    </span>
-                    <span class="switcher-label">Exclude Job</span>
-                </label>
             </div>
             <div class="col">
                 <div class="btn-group btn-group-sm float-right">

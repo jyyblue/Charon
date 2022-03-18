@@ -17,7 +17,26 @@
     <button type="button" class="btn btn-primary rounded-pill d-block " *ngIf="data.pod_file" data-toggle="modal" data-target="#podModal"><span
             class="ion ion-md-add"></span>&nbsp; Email POD to customer</button>
 </div>
-
+<div class="row">
+    <div class="col">
+        <form [formGroup]="dataForm">
+            <div class="form-row">
+                <div class="form-group col-md">
+                    <label class="switcher switcher-danger switcher-lg">
+                      <input type="checkbox" class="switcher-input" id="exclude_job"
+                      (change)="onCheckChange($event)" name="exclude_job"
+                      [checked]="f.exclude_job.value">
+                      <span class="switcher-indicator">
+                        <span class="switcher-yes"><span class="ion ion-md-checkmark"></span></span>
+                        <span class="switcher-no"><span class="ion ion-md-close"></span></span>
+                      </span>
+                      <span class="switcher-label">Exclude Job</span>
+                    </label>
+                  </div>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="row">
     <div class="col">
         <div class="card mb-4">
@@ -477,20 +496,6 @@
                     Driver Info
                 </h6>
                 <div class="card-body">
-                    <div class="form-row">
-                        <div class="form-group col-md">
-                            <label class="switcher switcher-danger switcher-lg">
-                              <input type="checkbox" class="switcher-input" id="exclude_job"
-                              (change)="onCheckChange($event)" name="exclude_job"
-                              [checked]="f.exclude_job.value">
-                              <span class="switcher-indicator">
-                                <span class="switcher-yes"><span class="ion ion-md-checkmark"></span></span>
-                                <span class="switcher-no"><span class="ion ion-md-close"></span></span>
-                              </span>
-                              <span class="switcher-label">Exclude Job</span>
-                            </label>
-                          </div>
-                    </div>
                     <div class="form-row">
                         <div class="form-group col-md">
                             <label class="form-label">Driver<span

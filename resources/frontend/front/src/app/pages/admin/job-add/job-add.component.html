@@ -10,7 +10,26 @@
     <button type="button" (click)="saveTask()" class="btn btn-primary rounded-pill d-block ">
         <span class="ion ion-md-add"></span>&nbsp; Create Job</button>
 </div>
-
+<div class="row">
+    <div class="col">
+        <form [formGroup]="dataForm">
+            <div class="form-row">
+                <div class="form-group col-md">
+                    <label class="switcher switcher-danger switcher-lg">
+                      <input type="checkbox" class="switcher-input" id="exclude_job"
+                      (change)="onCheckChange($event)" name="exclude_job"
+                      [checked]="f.exclude_job.value">
+                      <span class="switcher-indicator">
+                        <span class="switcher-yes"><span class="ion ion-md-checkmark"></span></span>
+                        <span class="switcher-no"><span class="ion ion-md-close"></span></span>
+                      </span>
+                      <span class="switcher-label">Exclude Job</span>
+                    </label>
+                  </div>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="row">
     <div class="col">
         <div class="card mb-4">
@@ -506,6 +525,7 @@
                             <label class="form-label">Type</label>
                             <ng-select [items]="typeOptions" bindLabel="label" bindValue="value"
                                 formControlName="driver_type" placeholder="Select Type"
+                                (change)="changeDriverType($event)"
                                 [ngClass]="{'is-invalid' : submitted && f.driver_type.errors, 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 1}">
                                 <ng-template ng-label-tmp let-item="item">
                                     <span class="ng-value-label">{{item['label']}}</span>

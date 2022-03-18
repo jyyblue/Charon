@@ -104,7 +104,6 @@ export class JobListComponent implements OnInit {
 
   resolve_content;
   resolve_editor;
-  exclude_job = false;
   constructor(
     private http: HttpClient,
     private appService: AppService,
@@ -149,7 +148,6 @@ export class JobListComponent implements OnInit {
       'sortBy': this.sortBy,
       'sortDesc': this.sortDesc,
       'filterVal': this.filterVal,
-      'exclude_job': this.exclude_job
     };
     this.apiService.getTaskList(params).then((res) => {
       this.appService.hideLoading();
@@ -570,18 +568,5 @@ export class JobListComponent implements OnInit {
     this.resolve_editor.summernote('autoComplete.on', 'insertSuggestion', function (suggestion) {
       console.log("The uesr has get the suggestion:" + suggestion);
     })
-  }
-
-  onCheckChange(event) {
-    let checked = event.target.checked;
-    let id = event.target.id;
-    switch (id) {
-      case 'exclude_job':
-        this.exclude_job = checked;
-        break;        
-      default:
-        break;
-    }
-    this.update();
   }
 }

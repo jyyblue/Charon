@@ -46,5 +46,11 @@ class TaskStatusSeeder extends Seeder
             'description' => 'when the invoice is finally paid and funds are paid out of our bank to the driver',
             'order_id' => 4
         ]);
+        DB::table('task_status')->insert([
+            'name' => 'Exclude',
+            'color' => '#c7c7c7',
+            'description' => 'Excluded Job',
+            'order_id' => 6
+        ]);
     }
 }

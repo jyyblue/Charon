@@ -175,7 +175,8 @@ export class JobAddComponent implements OnInit {
       payment_reference: [this.data.payment_reference, []],
       total_payment: [this.data.total_payment.toFixed(2), []],
       profit: [this.data.profit.toFixed(2), []],
-      profitpercent: [this.data.profitpercent.toFixed(2), []]
+      profitpercent: [this.data.profitpercent.toFixed(2), []],
+      exclude_job: [this.data.exclude_job, []],
     });
 
   }
@@ -275,6 +276,7 @@ export class JobAddComponent implements OnInit {
       'payment_date': paymentDate,
       'payment_reference': this.f.payment_reference.value,
       'total_payment': this.f.total_payment.value,
+      'exclude_job': this.f.exclude_job.value,
     }
     this.appService.showLoading();
     this.apiService.saveTask(params).then(res => {
@@ -359,7 +361,8 @@ export class JobAddComponent implements OnInit {
       payment_reference: [this.data.payment_reference, []],
       total_payment: [this.data.total_payment.toFixed(2), []],
       profit: [this.data.profit.toFixed(2), []],
-      profitpercent: [this.data.profitpercent.toFixed(2), []]
+      profitpercent: [this.data.profitpercent.toFixed(2), []],
+      exclude_job: [this.data.exclude_job, []],
     });
 
     $('#confirmModal').modal('hide');
@@ -409,6 +412,9 @@ export class JobAddComponent implements OnInit {
       case 'check_bank':
         this.dataForm.patchValue({ 'check_bank': checked });
         break;
+      case 'exclude_job':
+        this.dataForm.patchValue({'exclude_job': checked});
+        break;           
       default:
         break;
     }
@@ -498,10 +504,22 @@ export class JobAddComponent implements OnInit {
         // cx driver
         this.f.cx_number.setValue(item.cx_number);
       }
+      if(item.type == 2) {
+        this.f.exclude_job.setValue(true);
+      }else{
+        this.f.exclude_job.setValue(false);
+      }
       this.showBankDetail(item);
     }
-  }
 
+  }
+  changeDriverType(item) {
+    if(item.value == 2) {
+      this.f.exclude_job.setValue(true);
+    }else{
+      this.f.exclude_job.setValue(false);
+    }
+  }
   showBankDetail(item) {
     this.driver = item;
   }
