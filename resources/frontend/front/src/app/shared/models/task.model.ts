@@ -97,7 +97,7 @@ export class Task {
         this.cx_number = '';
         this.driver_vehicle = '';
         this.d_price = 0;
-        this.d_vat = 0;
+        this.d_vat = 1;
         this.d_price_total = 0;
         this.d_extra = 0;
         this.d_extra_vat = 0;

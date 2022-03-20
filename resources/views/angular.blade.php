@@ -116,5 +116,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.7/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> -->
 
-  <script src="/assets/angular/runtime.b0d427bace9245c303ed.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.88ff0a0b28e1ace2e5f2.js" defer></script><script src="/assets/angular/main.d44bc363e73dc2ccdb71.js" defer></script></body>
+  <script src="/assets/angular/runtime.35c56ead8d2729f0f3d4.js" defer></script><script src="/assets/angular/polyfills-es5.01bd0cb07da97b63620c.js" nomodule defer></script><script src="/assets/angular/polyfills.8c3ac4f78fee9269a739.js" defer></script><script src="/assets/angular/scripts.88ff0a0b28e1ace2e5f2.js" defer></script><script src="/assets/angular/main.d44bc363e73dc2ccdb71.js" defer></script></body>
 </html>

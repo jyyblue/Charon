@@ -582,7 +582,7 @@
                                     class="text-danger ml-2 text-big text-weight-bolder">*</span></label>
                             <div class="input-group">
                                 <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
-                                    formControlName="invoice_date" name="invoice_date"
+                                    formControlName="invoice_date" name="invoice_date" readonly
                                     (ngModelChange)="onDateChange($event)" #d1="ngbDatepicker"
                                     [ngClass]="{'is-invalid' : submitted && f.invoice_date.errors , 'DRIVER_PROCESS_1_COMPLETE' : data._status != null && data._status.id == 3}">
                                 <div class="input-group-append">
@@ -611,7 +611,7 @@
                             <div class="input-group">
                                 <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
                                     formControlName="invoice_received_date" name="invoice_received_date"
-                                    #d3="ngbDatepicker"
+                                    #d3="ngbDatepicker" readonly
                                     [ngClass]="{'is-invalid' : submitted && f.invoice_received_date.errors, 'bg-warning' : data._status != null && data._status.id == 3 }">
                                 <div class="input-group-append">
                                     <button class="input-group-text" (click)="d3.toggle()" type="button">

@@ -582,8 +582,8 @@ export class JobAddComponent implements OnInit {
    * @param event 
    */
   onDateChange(date: NgbDateStruct) {
-    let invoice_date: NgbDate = new NgbDate(date.year, date.month, date.day);
-    let target_payment_date = this.calendar.getNext(invoice_date, 'd', 30);
+    let invoice_date: NgbDate = new NgbDate(date.year, date.month + 2, 1);
+    let target_payment_date = this.calendar.getPrev(invoice_date, 'd', 1);
     let pd = target_payment_date.year + "-" + target_payment_date.month + "-" + target_payment_date.day;
     let str = moment(pd).format('YYYY-MM-DD')
     this.dataForm.patchValue({ 'target_payment_date': str });
