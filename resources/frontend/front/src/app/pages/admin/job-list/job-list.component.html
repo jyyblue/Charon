@@ -25,7 +25,7 @@
             <div class="col">
                 <div class="btn-group btn-group-sm float-right">
                     <button type="button" class="btn btn-primary" (click)="addJob(1)">Add Job</button>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal"
+                    <button type="button" class="btn btn-primary" (click)="showPaymentModal()"
                         *ngIf="selectedTask.length > 0">Confirm Payment</button>
                 </div>
             </div>
@@ -93,26 +93,24 @@
                                     Driver
                                 </th>
                                 <th class="text-nowrap cursor-pointer">
-                                    Docket
-                                </th>
-                                <th class="text-nowrap cursor-pointer">
-                                    Job Date
-                                </th>
-                                <th class="text-nowrap cursor-pointer">
                                     Driver Price
+                                </th>
+                                <th class="text-nowrap cursor-pointer">
+                                    Payment Reference
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let item of selectedTask">
+                            <tr *ngFor="let item of paymentData">
                                 <td class="align-middle">{{item.driver.email}}</td>
-                                <td class="align-middle">{{item.docket}}</td>
-                                <td class="align-middle" >
-                                    <a>
-                                        {{item.job_date | date}}
-                                    </a>
+                                <td class="align-middle">&pound;{{item.total_payment}}</td>
+                                <td class="align-middle form-group">
+                                    <input class="form-control" [(ngModel)]="item.payment_reference"
+                                    [ngClass]="{'is-invalid': submitted && item.error && item.error.payment_reference }"/>
+                                    <div *ngIf="submitted && item.error && item.error.payment_reference" class="invalid-feedback">
+                                        <div>This field is Required</div>
+                                    </div>
                                 </td>
-                                <td class="align-middle">&pound;{{item.d_price}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -135,24 +133,14 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Payment Reference</label>
-                        <input type="text" class="form-control" formControlName="payment_reference"
-                            name="payment_reference"
-                            [ngClass]="{'is-invalid': submitted && f.payment_reference.errors }">
-                        <div *ngIf="submitted && f.payment_reference.errors" class="invalid-feedback">
-                            <div *ngIf="f.payment_reference.errors.required">This field is Required</div>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label class="form-label">Total Payment</label>
                         <input type="number" step="0.01" class="form-control" formControlName="total_payment"
                             name="total_payment" (change)="changeTotalPayment()"
                             [ngClass]="{'is-invalid': submitted && f.total_payment.errors }">
-                        <div *ngIf="submitted && f.total_payment.errors" class="invalid-feedback">
-                            <div *ngIf="f.total_payment.errors.required">This field is Required</div>
-                        </div>
+                            <div *ngIf="submitted && f.total_payment.errors" class="invalid-feedback">
+                                <div *ngIf="f.total_payment.errors.required">This field is Required</div>
+                            </div>
                     </div>
-
                 </form>
             </div>
             <div class="modal-footer">

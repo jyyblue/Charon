@@ -180,10 +180,11 @@ if( ! function_exists('getDisputeTempletes')) {
 }
 
 if(!function_exists('addTaskIdToEmailLog')) {
-    function addTaskIdToEmailLog($task_id) {
+    function addTaskIdToEmailLog($task_id, $mail_type) {
         $lastLog = EmailLog::where('task_id', 0)->orderBy('id', 'DESC')->first();
         if(!empty($lastLog)) {
             $lastLog->task_id = $task_id;
+            $lastLog->mail_type = $mail_type;
             $lastLog->save();
         }
         return $lastLog;

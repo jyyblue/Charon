@@ -29,6 +29,7 @@ export class JobListComponent implements OnInit {
   intermediate = false;
   checkAll = false;
   selectedTask = [];
+  paymentData = [];
   model: NgbDateStruct = {
     year: now.getFullYear(),
     month: now.getMonth() + 1,
@@ -124,7 +125,6 @@ export class JobListComponent implements OnInit {
   ngOnInit(): void {
     this.dataForm = this.formBuilder.group({
       payment_date: [this.model, [Validators.required]],
-      payment_reference: [null, [Validators.required]],
       total_payment: [null, [Validators.required]],
     });
     this.disputeForm = this.formBuilder.group({
@@ -194,12 +194,14 @@ export class JobListComponent implements OnInit {
         element['checked'] = true;
 
         this.selectedTask.push(element);
+        this.generatePaymentData();
       });
     } else {
       this.taskData.forEach(element => {
         element['checked'] = false;
       });
       this.selectedTask = [];
+      this.generatePaymentData();
     }
     this.checkAllStatus();
   }
@@ -210,6 +212,7 @@ export class JobListComponent implements OnInit {
       this.taskData[index]['checked'] = true;
       if (!this.selectedTask.includes(this.taskData[index])) {
         this.selectedTask.push(this.taskData[index]);
+        this.generatePaymentData();
       }
     } else {
       // remove from array
@@ -217,6 +220,7 @@ export class JobListComponent implements OnInit {
       let driver_id = this.taskData[index]['driver_id'];
       if (this.selectedTask.includes(this.taskData[index])) {          //checking weather array contain the id
         this.selectedTask.splice(this.selectedTask.indexOf(this.taskData[index]), 1);
+        this.generatePaymentData();
       }
     }
     this.checkAllStatus();
@@ -241,31 +245,63 @@ export class JobListComponent implements OnInit {
     let total_payment = this.f.total_payment.value;
     this.f.total_payment.setValue(total_payment.toFixed(2));
   }
-
+  generatePaymentData() {
+    this.paymentData = [];
+    let paymentTotalPayment = 0;
+    console.log('generatePaymentData');
+    this.selectedTask.forEach(task => {
+      let item = {
+        'taskids': [task.id],
+        'driver_id': task.driver_id,
+        'payment_reference': null,
+        'total_payment': task.d_price,
+        'driver': task.driver,
+      };
+      let existIndex = this.paymentData.findIndex(pdata => {return pdata.driver_id == task.driver_id});
+      if(existIndex == -1) {
+        this.paymentData.push(item);
+      }else{
+        this.paymentData[existIndex]['taskids'].push(task.id);
+        this.paymentData[existIndex]['total_payment'] += task.d_price;
+      }
+      paymentTotalPayment += task.d_price;
+    });
+    this.f.total_payment.setValue(paymentTotalPayment.toFixed(2));
+  };
+  showPaymentModal() {
+    // preprocessing
+    console.log('payment modal');
+    $('#paymentModal').modal('show');
+  }
   onPaymentSubmit() {
     this.submitted = true;
     // stop here if form is invalid
     if (this.dataForm.invalid) {
       return;
     }
+    let isRefValid = true;
+    this.paymentData.forEach(pData => {
+      let reference = pData.payment_reference;
+      if(!reference) {
+        pData['error'] = {
+          'payment_reference': 'This fiedl is required',
+        }
+        isRefValid = false;
+      }else{
+        pData['error'] = {}
+      }
+    });
+    if(!isRefValid){
+      return ;
+    }
     //True if all the fields are filled
     let payment_date = this.f.payment_date.value;
     let pd = payment_date.year + "-" + payment_date.month + "-" + payment_date.day;
-    let selectedDriver = [];
-    let taskIds = [];
-    this.selectedTask.forEach(taskItem => {
-      taskIds.push(taskItem.id)
-      let driver_id = taskItem['driver_id'];
-      if (!selectedDriver.includes(driver_id)) {
-        selectedDriver.push(driver_id);
-      }
-    });
+
     let param = {
-      'taskids': taskIds,
-      'driver_ids': selectedDriver,
       'payment_date': pd,
-      'payment_reference': this.f.payment_reference.value,
       'total_payment': this.f.total_payment.value,
+      'data': this.paymentData
     };
     this.appService.showLoading();
     this.apiService.updatePendingPaymentTasks(param).then(res => {
@@ -293,7 +329,6 @@ export class JobListComponent implements OnInit {
   onPaymentClose(e) {
     e.preventDefault();
     this.f.payment_date.setValue(this.model);
-    this.f.payment_reference.setValue('');
     this.f.total_payment.setValue(0);
     $("#paymentModal").modal("hide");
   }
@@ -314,7 +349,8 @@ export class JobListComponent implements OnInit {
     } else if (action == 'add') {
       // add new task at top of job list or refresh
       let task = event.entity;
-      this.taskData.unshift(task);
+      // this.taskData.unshift(task);
+      this.loadData();
       this.newJob = false;
     } else if (action == 'cancel_new_task') {
       this.newJob = false;

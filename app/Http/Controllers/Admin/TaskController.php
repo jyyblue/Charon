@@ -401,13 +401,14 @@ class TaskController extends Controller
                     'content' => $mail_content,
                 ];
                 Mail::to($driver_email)->send(new SendMail($data));
-                addTaskIdToEmailLog($task->id);
+                addTaskIdToEmailLog($task->id, $mail_type);
             }
         }
         return;
     }
     public function getTaskList(Request $request)
-    {
+    {        $excluded_status = constants('status.excluded');
+
         $ret = array();
         $pageSize = $request->get('pagesize', 10);
         $page = $request->get('page', 1);
@@ -436,11 +437,11 @@ class TaskController extends Controller
         }
 
         if ($driverid != 0) {
-            $tasks = $tasks->where('driver_id', $driverid);
+            $tasks = $tasks->where('driver_id', $driverid)->where('status', '<>', $excluded_status);
         }
 
         if ($customer_id != 0) {
-            $tasks = $tasks->where('customer_id', $customer_id);
+            $tasks = $tasks->where('customer_id', $customer_id)->where('status', '<>', $excluded_status);
         }
 
         // filter
@@ -550,76 +551,80 @@ class TaskController extends Controller
     public function updatePendingPaymentTasks(Request $request)
     {
         try {
-            $taskids = $request->get('taskids', []);
-            $driver_ids = $request->get('driver_ids', []);
-            if (count($driver_ids) > 1) {
-                $ret['code'] = 201;
-                $ret['message'] = 'You select more than one user!';
-                return response()->json($ret, 200);
-            }
-            $driver_id = $driver_ids[0];
+            $data = $request->get('data');
             $payment_date = $request->get('payment_date', '');
-            $payment_reference = $request->get('payment_reference', '');
+            $total_payment = $request->get('total_payment', 0);
+            $payment_date = $request->get('payment_date', '');
             $total_payment = $request->get('total_payment', 0);
 
-            Task::whereIn('id', $taskids)->update([
-                'payment_date' => $payment_date,
-                'payment_reference' => $payment_reference,
-                'total_payment' => $total_payment,
-                'status' => constants('status.completed') // payment complete status
-            ]);
-
-            // send mail to driver for payment complete
-            //  --------------------------------------------------------------------
-            // multi job should be checked in future more deeply 
-            //  --------------------------------------------------------------------
+            $task_ids = array();
             $engine = new StringTemplateEngine;
-            $mail_type = constants('mailType.completed');
 
-            $driver = Driver::find($driver_id);
-            $driver_email = $driver->email;
-            $tasks = Task::with(['customer','driver'])->whereIn('id', $taskids)->get();
-            $customers = array();
-            $task_data = array();
-            foreach ($tasks as $key => $task) {
-                array_push($task_data, $task);
-                array_push($customers, $task->customer);
-            };
+            foreach ($data as $key => $dData) {
+                $taskids = $dData['taskids'];
+                $driver_id = $dData['driver_id'];
+                $payment_reference = $dData['payment_reference'];
+                $total_payment = $dData['total_payment'];
 
-            $driver_email = $task->driver ? $task->driver['email'] : '';
-            $val = null;
-            if (!empty($driver_email)) {
-                $mailTemplate = MailTemplate::where('type_slug', $mail_type)->where('active', 1)->first();
-                if (!empty($mailTemplate)) {
-                    $customer = $task->customer;
-                    $driver = $task->driver;
-                    $job = $task;
+                $task_ids = array_merge($task_ids, $taskids);
+                Task::whereIn('id', $taskids)->update([
+                    'payment_date' => $payment_date,
+                    'payment_reference' => $payment_reference,
+                    'total_payment' => $total_payment,
+                    'status' => constants('status.completed') // payment complete status
+                ]);
 
-                    $val = getValueForMailTemplate($customers, $driver, $task_data);
-                    $content = $mailTemplate->content;
-                    $mail_content = $engine->render($content, $val);
-                    $mail_subject = $mailTemplate->subject;
-                    $data = [
-                        'subject' => $mail_subject,
-                        'content' => $mail_content,
-                    ];
-                    Mail::to($driver_email)->send(new SendMail($data));
-                    addTaskIdToEmailLog($task->id);
+                // send mail to driver for payment complete
+                //  --------------------------------------------------------------------
+                // multi job should be checked in future more deeply 
+                //  --------------------------------------------------------------------
+                $mail_type = constants('mailType.completed');
+
+                $driver = Driver::find($driver_id);
+                $driver_email = $driver->email;
+                $tasks = Task::with(['customer','driver'])->whereIn('id', $taskids)->get();
+                $customers = array();
+                $task_data = array();
+                foreach ($tasks as $key => $task) {
+                    array_push($task_data, $task);
+                    array_push($customers, $task->customer);
+                };
+
+                $driver_email = $task->driver ? $task->driver['email'] : '';
+                $val = null;
+                if (!empty($driver_email)) {
+                    $mailTemplate = MailTemplate::where('type_slug', $mail_type)->where('active', 1)->first();
+                    if (!empty($mailTemplate)) {
+                        $customer = $task->customer;
+                        $driver = $task->driver;
+                        $job = $task;
+
+                        $val = getValueForMailTemplate($customers, $driver, $task_data);
+                        $content = $mailTemplate->content;
+                        $mail_content = $engine->render($content, $val);
+                        $mail_subject = $mailTemplate->subject;
+                        $data = [
+                            'subject' => $mail_subject,
+                            'content' => $mail_content,
+                        ];
+                        Mail::to($driver_email)->send(new SendMail($data));
+                        addTaskIdToEmailLog($task->id, $mail_type);
+                    }
                 }
-            }
 
-            // add to status history
-            $completed = constants('status.completed');
-            foreach ($taskids as $key => $taskid) {
-                TaskStatusHistory::create(
-                    [
-                        'task_id' => $taskid,
-                        'status' => $completed,
-                        'worker' => 'system'
-                    ]
-                );
-            }
-            $tasks = Task::with(['customer', 'driver', '_status', 'queryHistory'])->whereIn('id', $taskids)->get();
+                // add to status history
+                $completed = constants('status.completed');
+                foreach ($taskids as $key => $taskid) {
+                    TaskStatusHistory::create(
+                        [
+                            'task_id' => $taskid,
+                            'status' => $completed,
+                            'worker' => 'system'
+                        ]
+                    );
+                }
+        }
+            $tasks = Task::with(['customer', 'driver', '_status', 'queryHistory'])->whereIn('id', $task_ids)->get();
             $ret['code'] = 200;
             $ret['tasks'] = $tasks;
             $ret['val'] = $val;
@@ -702,7 +707,7 @@ class TaskController extends Controller
                     'content' => $mail_content,
                 ];
                 Mail::to($driver_email)->send(new SendMail($data));
-                addTaskIdToEmailLog($task->id);
+                addTaskIdToEmailLog($task->id, $type_slug);
             }
         }
         TaskStatusHistory::create(
@@ -757,7 +762,7 @@ class TaskController extends Controller
                 'content' => $mail_content,
             ];
             Mail::to($driver_email)->send(new SendMail($data));
-            addTaskIdToEmailLog($task->id);
+            addTaskIdToEmailLog($task->id, $type_slug);
         }
         TaskStatusHistory::create(
             [
@@ -839,7 +844,7 @@ class TaskController extends Controller
                 'pod_file' => $task->pod_file,
             ];
             Mail::to($to)->send(new SendMail($data));
-            addTaskIdToEmailLog($task->id);
+            addTaskIdToEmailLog($task->id, $type_slug);
         }
 
         $ret['code'] = 200;

@@ -33,7 +33,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label class="form-label">Company Telephone Number </label>
-                            <input type="text" class="form-control" placeholder="(___) ___-____"
+                            <input type="text" class="form-control" placeholder="___ ___-____"
                                 formControlName="company_phone" name="company_phone" [textMask]="phoneMaskOptions"
                                 [ngClass]="{'is-invalid' : submitted && f.company_phone.errors }">
                             <div *ngIf="f.company_phone.errors && submitted" class="invalid-feedback">
