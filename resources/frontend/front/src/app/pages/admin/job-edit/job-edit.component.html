@@ -47,7 +47,7 @@
                 <form [formGroup]="dataForm">
                     <div class="row">
                         <div class="form-group col-md-3">
-                            <label class="form-label">Customer</label>
+                            <label class="form-label">Customer <span class="text-danger">*</span></label>
                             <ng-select [items]="customerOptions" bindLabel="dispName" bindValue="id"
                                 formControlName="customer_id" name="customer_id" [loading]="customerLoading"
                                 class="CUSTOMER_UPLOAD_COMPLETE_2"
