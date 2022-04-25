@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-     /**
+    /**
      * Create a new controller instance.
      *
      * @return void
@@ -28,53 +29,75 @@ class DashboardController extends Controller
         return view('admin.home');
     }
 
-    public function getDashboardData(Request $request) {
+    public function getDashboardData(Request $request)
+    {
         $excluded_status = constants('status.excluded');
         $completed_status = constants('status.completed');
         $from = $request->get('from');
         $to = $request->get('to');
+        if (empty($from)) {
+            $from = Carbon::parse('1900-01-01 00:00:00');
+        }
+        if (empty($to)) {
+            $to = Carbon::tomorrow();
+        }
+        $rangeSql = " WHERE created_at > '{$from}' AND created_at < '{$to}' ";
+
         $vehicle_type = $request->get('vehicle_type');
         $vehicle_sql = '';
-        if($vehicle_type != 0) {
+        if ($vehicle_type != 0) {
             $vehicle_sql = " AND vehicle_type={$vehicle_type}";
         }
         $exclude_condition = " AND status <> '{$excluded_status}' ";
         $status_condition = " AND status = '{$completed_status}' ";
         // get most valuable customers for jobs
-        $limit = 5;
-        $c_job_query = "SELECT jc.cc, customer.* FROM (SELECT COUNT(id) AS cc, customer_id FROM task  WHERE created_at > '{$from}' AND created_at < '{$to}' {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY customer_id  ORDER BY cc DESC LIMIT {$limit}) AS jc
+        $limit = 10;
+        $c_job_query = "SELECT jc.cc, customer.* FROM (SELECT COUNT(id) AS cc, customer_id FROM task  {$rangeSql} {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY customer_id  ORDER BY cc DESC LIMIT {$limit}) AS jc
         LEFT JOIN customer ON customer.id = jc.customer_id  ORDER BY jc.cc DESC";
         $c_job = DB::select($c_job_query);
 
-         // get most valuable customers for billing
-        $c_bill_query = "SELECT jc.cc, customer.* FROM (SELECT SUM(c_net) AS cc, customer_id FROM task  WHERE created_at > '{$from}' AND created_at < '{$to}' {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY customer_id ORDER BY cc DESC LIMIT {$limit}) AS jc
+        // get most valuable customers for billing
+        $c_bill_query = "SELECT jc.cc, customer.* FROM (SELECT SUM(c_net) AS cc, customer_id FROM task  {$rangeSql} {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY customer_id ORDER BY cc DESC LIMIT {$limit}) AS jc
          LEFT JOIN customer ON customer.id = jc.customer_id  ORDER BY jc.cc DESC";
         $c_bill = DB::select($c_bill_query);
- 
+
         // get most valuable customers for billing
-        $c_profit_query = "SELECT jc.cc, customer.* FROM (SELECT SUM(profit) AS cc, customer_id FROM task  WHERE created_at > '{$from}' AND created_at < '{$to}' {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY customer_id ORDER BY cc DESC LIMIT {$limit}) AS jc
+        $c_profit_query = "SELECT jc.cc, customer.* FROM (SELECT SUM(profit) AS cc, customer_id FROM task  {$rangeSql} {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY customer_id ORDER BY cc DESC LIMIT {$limit}) AS jc
          LEFT JOIN customer ON customer.id = jc.customer_id  ORDER BY jc.cc DESC";
         $c_profit = DB::select($c_profit_query);
 
         // get most valuable driver for jobs
-        $d_job_query = "SELECT jc.cc, driver.* FROM (SELECT COUNT(id) AS cc, driver_id FROM task  WHERE created_at > '{$from}' AND created_at < '{$to}' {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY driver_id ORDER BY cc DESC LIMIT {$limit}) AS jc
+        $d_job_query = "SELECT jc.cc, driver.* FROM (SELECT COUNT(id) AS cc, driver_id FROM task  {$rangeSql} {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY driver_id ORDER BY cc DESC LIMIT {$limit}) AS jc
         LEFT JOIN driver ON driver.id = jc.driver_id  ORDER BY jc.cc DESC";
         $d_job = DB::select($d_job_query);
 
-         // get most valuable driver for billing
-        $d_bill_query = "SELECT jc.cc, driver.* FROM (SELECT SUM(c_net) AS cc, driver_id FROM task  WHERE created_at > '{$from}' AND created_at < '{$to}' {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY driver_id ORDER BY cc DESC LIMIT {$limit}) AS jc
+        // get most valuable driver for billing
+        $d_bill_query = "SELECT jc.cc, driver.* FROM (SELECT SUM(c_net) AS cc, driver_id FROM task  {$rangeSql} {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY driver_id ORDER BY cc DESC LIMIT {$limit}) AS jc
          LEFT JOIN driver ON driver.id = jc.driver_id  ORDER BY jc.cc DESC";
         $d_bill = DB::select($d_bill_query);
- 
+
         // get most valuable driver for billing
-        $d_profit_query = "SELECT jc.cc, driver.* FROM (SELECT SUM(profit) AS cc, driver_id FROM task WHERE created_at > '{$from}' AND created_at < '{$to}' {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY driver_id ORDER BY cc DESC LIMIT {$limit}) AS jc
+        $d_profit_query = "SELECT jc.cc, driver.* FROM (SELECT SUM(profit) AS cc, driver_id FROM task {$rangeSql} {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY driver_id ORDER BY cc DESC LIMIT {$limit}) AS jc
          LEFT JOIN driver ON driver.id = jc.driver_id  ORDER BY jc.cc DESC";
         $d_profit = DB::select($d_profit_query);
 
+        // get most profitable vehicle type for billing
+
+        // get average price per job
+
+        // get average price per mile
+
+        // get average price per stop
+
+        // get average cost per job
+
+        // get average cost per mile
+
+        // get average cost per stop
 
         // get count per status
-        $job_count_query = "SELECT *, IFNULL(sc.cc, 0) AS cps FROM task_status 
-        LEFT JOIN  (SELECT COUNT(id) AS cc, `status` FROM task  WHERE created_at > '{$from}' AND created_at < '{$to}' {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY `status`) AS sc ON sc.status = task_status.id ORDER BY order_id";
+        $job_count_query = "SELECT task_status.*, IFNULL(sc.cc, 0) AS cps, IFNULL(sc.pp, 0) AS profit FROM task_status 
+        LEFT JOIN  (SELECT sum(profit) as pp, COUNT(id) AS cc, `status` FROM task  {$rangeSql} {$status_condition} {$exclude_condition} {$vehicle_sql} GROUP BY `status`) AS sc ON sc.status = task_status.id ORDER BY order_id";
         $job_count = DB::select($job_count_query);
 
         // The average charge to the customer per mile
@@ -84,7 +107,7 @@ class DashboardController extends Controller
         SUM(d_net) AS d_net_sum, 
         SUM(profit) AS profit_sum, 
         count(id) AS total_job, 
-        SUM(mileage) AS miles FROM task WHERE created_at > '{$from}' AND created_at < '{$to}' {$status_condition} {$exclude_condition} {$vehicle_sql}";
+        SUM(mileage) AS miles FROM task {$rangeSql} {$status_condition} {$exclude_condition} {$vehicle_sql}";
         $profit_per_mile = DB::select($profit_per_mile_query);
         $miles  = $profit_per_mile[0]->miles;
         $c_net_sum  = $profit_per_mile[0]->c_net_sum;
@@ -93,16 +116,16 @@ class DashboardController extends Controller
         $total_job  = number_format($profit_per_mile[0]->total_job);
         $customer_ppm = 0;
         $driver_ppm = 0;
-        if($miles != 0) {
+        if ($miles != 0) {
             $customer_ppm = ($c_net_sum / $miles);
             $customer_ppm = number_format($customer_ppm, 2);
             $driver_ppm = ($d_net_sum / $miles);
             $driver_ppm = number_format($driver_ppm, 2);
         }
-        
+
         // profit, jobs count per day
         $sql = "SELECT COUNT(id) AS jobs, SUM(profit) AS profits, YEAR(created_at) AS year, MONTH(created_at) AS mon, DAY(created_at) AS day FROM task 
-        WHERE created_at > '{$from}' AND created_at < '{$to}' {$status_condition} {$exclude_condition} {$vehicle_sql}
+        {$rangeSql} {$status_condition} {$exclude_condition} {$vehicle_sql}
         GROUP BY YEAR(created_at), MONTH(created_at), DAY(created_at)";
         $chart1Data = DB::select($sql);
         $start = $from;
@@ -117,12 +140,11 @@ class DashboardController extends Controller
         // $stop_date = date('Y-m-d H:i:s', strtotime($stop_date . ' +1 day'));
         // echo 'date after adding 1 day: ' . $stop_date;
 
-        while( strtotime($temp) < strtotime($end)) {
+        while (strtotime($temp) < strtotime($end)) {
             $label = date('m/d', strtotime($temp));
             $profit = 0;
             $job = 0;
-            for($i=0; $i < count($chart1Data); $i++)
-            {
+            for ($i = 0; $i < count($chart1Data); $i++) {
                 $dbItem = $chart1Data[$i];
                 $year = $dbItem->year;
                 $mon = $dbItem->mon;
@@ -131,11 +153,11 @@ class DashboardController extends Controller
                 $_job = $dbItem->jobs;
                 $_tempDate = strtotime($temp);
                 $_dbDate = strtotime("{$year}-{$mon}-{$day}");
-                if($_tempDate == $_dbDate) {
+                if ($_tempDate == $_dbDate) {
                     $profit = $_profit;
                     $job = $_job;
                     break;
-                }else if($_tempDate < $_dbDate) {
+                } else if ($_tempDate < $_dbDate) {
                     break;
                 }
             }
@@ -151,18 +173,18 @@ class DashboardController extends Controller
             'job' => $jobData
         ];
         $ret['code'] = 200;
-         $ret['c_job'] = $c_job;
-         $ret['c_bill'] = $c_bill;
-         $ret['c_profit'] = $c_profit;
-         $ret['d_job'] = $d_job;
-         $ret['d_bill'] = $d_bill;
-         $ret['d_profit'] = $d_profit;
-         $ret['job_count'] = $job_count;
-         $ret['driver_ppm'] = $driver_ppm;
-         $ret['customer_ppm'] = $customer_ppm;
-         $ret['profit_sum'] = $profit_sum;
-         $ret['total_job'] = $total_job;
-         $ret['chart1Data'] = $chart1_data;
-         return response()->json($ret, 200);
+        $ret['c_job'] = $c_job;
+        $ret['c_bill'] = $c_bill;
+        $ret['c_profit'] = $c_profit;
+        $ret['d_job'] = $d_job;
+        $ret['d_bill'] = $d_bill;
+        $ret['d_profit'] = $d_profit;
+        $ret['job_count'] = $job_count;
+        $ret['driver_ppm'] = $driver_ppm;
+        $ret['customer_ppm'] = $customer_ppm;
+        $ret['profit_sum'] = $profit_sum;
+        $ret['total_job'] = $total_job;
+        $ret['chart1Data'] = $chart1_data;
+        return response()->json($ret, 200);
     }
 }

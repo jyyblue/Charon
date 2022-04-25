@@ -77,8 +77,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     let today = calendar.getToday();
     let year = today.year;
     let month = today.month;
-    this.fromDate = new NgbDate(year, month, 1);
-    this.toDate = calendar.getToday(); //calendar.getNext(calendar.getToday(), 'd', 10);
+    this.fromDate = null; // new NgbDate(year, month, 1);
+    this.toDate = null; // calendar.getToday(); //calendar.getNext(calendar.getToday(), 'd', 10);
     this.today = moment(formatter.format(calendar.getToday())).format('dddd, MMMM Do YYYY');
   }
   // Chart 1
