@@ -31,7 +31,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label class="form-label">Company Telephone Number </label>
-                            <input type="text" class="form-control" placeholder="___ ___-____" formControlName="company_phone" name="company_phone" [textMask]="phoneMaskOptions" [ngClass]="{'is-invalid' : submitted && f.company_phone.errors }">
+                            <input type="text" class="form-control" placeholder="" formControlName="company_phone" name="company_phone" [ngClass]="{'is-invalid' : submitted && f.company_phone.errors }">
                             <div *ngIf="f.company_phone.errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f.company_phone.errors.required">Company Phone Required</div>
                             </div>
@@ -109,7 +109,7 @@
 
                         <div class="form-group col-md-4">
                             <label class="form-label">Contact Telephone</label>
-                            <input type="text" class="form-control" placeholder="___ ___-____" formControlName="contact_phone" name="contact_phone" [textMask]="phoneMaskOptions" [ngClass]="{'is-invalid' : submitted && f.contact_phone.errors }">
+                            <input type="text" class="form-control" placeholder="" formControlName="contact_phone" name="contact_phone" [ngClass]="{'is-invalid' : submitted && f.contact_phone.errors }">
                             <div *ngIf="f.contact_phone.errors && submitted" class="invalid-feedback">
                                 <div *ngIf="f.contact_phone.errors.required">Phone Required</div>
                             </div>
