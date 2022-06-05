@@ -1,0 +1,56 @@
+<form [formGroup]="dataForm">
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label class="form-label">Subcontractor Name</label>
+            <input type="text" class="form-control" formControlName="subcontractor" name="subcontractor" [ngClass]="{
+                'is-invalid': submitted &&
+                f.subcontractor.errors
+                }" />
+            <div *ngIf="submitted && f.subcontractor.errors" class="invalid-feedback">
+                <div *ngIf="f.subcontractor.errors.required">
+                    This field is Required
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label class="form-label">Type</label>
+            <ng-select [items]="typeOptions" bindLabel="label" bindValue="value" formControlName="type" placeholder="Select Type" [ngClass]="{
+                'is-invalid': submitted &&
+                f.type.errors }" (change)="onChangeType($event)">
+                <ng-template ng-label-tmp let-item="item">
+                    <span class="ng-value-label">{{
+                        item["label"] }}</span>
+                </ng-template>
+
+                <ng-template ng-option-tmp let-item="item">
+                    <span class="ng-value-label">{{
+                        item["label"] }}</span>
+                </ng-template>
+            </ng-select>
+            <div *ngIf="f.type.errors && submitted" class="invalid-feedback">
+                <div *ngIf="f.type.errors.required">This field is Required</div>
+            </div>
+        </div>
+
+        <div class="form-group col-md-3">
+            <label class="form-label">Call Sign</label>
+            <input type="text" class="form-control" formControlName="call_sign" name="call_sign" [ngClass]="{ 'is-invalid': submitted &&
+                f.call_sign.errors }" />
+            <div *ngIf="f.call_sign.errors && submitted" class="invalid-feedback">
+                <div *ngIf="f.call_sign.errors.required">
+                    This field is Required
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-3" *ngIf="f.type.value ==
+            1">
+            <label class="form-label">CX Number</label>
+            <input type="text" class="form-control" formControlName="cx_number" name="cx_number" />
+        </div>
+    </div>
+</form>
+
+<button type="button" (click)="onSubmit()" class="btn btn-primary
+    rounded-pill d-block">
+    <span class="ion ion-md-add"></span>&nbsp; Update
+</button>

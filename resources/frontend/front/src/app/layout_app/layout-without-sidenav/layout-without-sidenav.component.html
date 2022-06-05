@@ -1,15 +1,13 @@
 <div class="layout-wrapper layout-1 layout-without-sidenav" [ngClass]="{'layout-loading': !initialized}">
-  <div class="layout-inner">
-    <app-layout-navbar [sidenavToggle]="false"></app-layout-navbar>
+    <div class="layout-inner">
+        <app-layout-navbar [sidenavToggle]="false" [isAppPage]="true"></app-layout-navbar>
 
-    <div class="layout-container">
-      <div class="layout-content">
-        <div class="container-fluid router-transitions flex-grow-1 container-p-y">
-          <router-outlet></router-outlet>
+        <div class="layout-container">
+            <div class="layout-content">
+                <div class="container-fluid router-transitions flex-grow-1 container-p-y">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
         </div>
-
-        <app-layout-footer></app-layout-footer>
-      </div>
     </div>
-  </div>
 </div>

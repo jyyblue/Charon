@@ -1,0 +1,83 @@
+<form [formGroup]="dataForm">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label class="form-label">Bank Name</label>
+            <input type="text" class="form-control" formControlName="bank_name" name="bank_name" [ngClass]="{ 'is-invalid': submitted &&
+                f.bank_name.errors }" />
+            <div *ngIf="f.bank_name.errors && submitted" class="invalid-feedback">
+                <div *ngIf="f.bank_name.errors.required">
+                    This field is Required
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Bank Sort Code</label>
+            <input type="text" class="form-control" formControlName="bank_sort_code" name="bank_sort_code" [ngClass]="{
+                'is-invalid': submitted &&
+                f.bank_sort_code.errors
+                }" />
+            <div *ngIf="f.bank_sort_code.errors && submitted" class="invalid-feedback">
+                <div *ngIf="f.bank_sort_code.errors.required">
+                    This field is Required
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label class="form-label">Bank Account Number</label>
+            <input type="text" class="form-control" formControlName="bank_account_number" name="bank_account_number" [ngClass]="{
+                'is-invalid': submitted &&
+                f.bank_account_number.errors
+                }" />
+            <div *ngIf="f.bank_account_number.errors &&
+                submitted" class="invalid-feedback">
+                <div *ngIf="f.bank_account_number.errors.required">
+                    This field is Required
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="form-label">Payee Name</label>
+            <input type="text" class="form-control" formControlName="payee_name" name="payee_name" [ngClass]="{ 'is-invalid': submitted &&
+                f.payee_name.errors }" />
+            <div *ngIf="f.payee_name.errors && submitted" class="invalid-feedback">
+                <div *ngIf="f.payee_name.errors.required">
+                    This field is Required
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label class="form-label">VAT</label>
+            <ng-select [items]="vatOptions" bindLabel="label" bindValue="value" formControlName="vat" name="vat" [disabled]="disabled" [ngClass]="{
+                'is-invalid': submitted && f.vat.errors
+                }">
+                <ng-template ng-label-tmp let-item="item">
+                    <span class="ng-value-label">{{
+                        item["label"] }}</span>
+                </ng-template>
+
+                <ng-template ng-option-tmp let-item="item">
+                    <span class="ng-value-label">{{
+                        item["label"] }}</span>
+                </ng-template>
+            </ng-select>
+            <div *ngIf="f.vat.errors && submitted" class="invalid-feedback">
+                <div *ngIf="f.vat.errors.required">This field is Required
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6" *ngIf="f.vat.value ==
+            2">
+            <label class="form-label">VAT number</label>
+            <input type="text" class="form-control" formControlName="vat_number" name="vat_number" />
+        </div>
+    </div>
+</form>
+<button type="button" (click)="onSubmit()" class="btn btn-primary
+    rounded-pill d-block">
+    <span class="ion ion-md-add"></span>&nbsp; Update
+</button>

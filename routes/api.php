@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::prefix('admin')->group(function () {
     Route::get('/v1/task/downloadpod', 'App\Http\Controllers\Admin\TaskController@downloadPodFile')->name('admin.task.download');
 
@@ -24,7 +25,7 @@ Route::prefix('admin')->group(function () {
     });
     Route::namespace('App\Http\Controllers\Admin')->group(function () {
         Route::group(['middleware' => ['auth:api', 'super.admin']], function () {
-                Route::get('/home', 'DashboardController@index')->name('admin.home');
+            Route::get('/home', 'DashboardController@index')->name('admin.home');
 
             Route::prefix('v1')->group(function () {
                 Route::post('/customer/list', 'CustomerController@getCustomerList')->name('admin.customer.list');
@@ -32,19 +33,19 @@ Route::prefix('admin')->group(function () {
                 Route::post('/user/import', 'ImportController@importJob')->name('admin.url.import');
                 Route::post('/user/importCustomer', 'ImportController@importCustomer')->name('admin.url.import.customer');
                 Route::post('/user/importDriver', 'ImportController@importDriver')->name('admin.url.import.driver');
-                
+
                 Route::post('/customer/detail', 'CustomerController@getCustomerDetail')->name('admin.url.get');
                 Route::post('/customer/update', 'CustomerController@updateCustomerAccount')->name('admin.customer.update');
                 Route::post('/customer/store', 'CustomerController@storeCustomerAccount')->name('admin.customer.store');
-                
-                
+
+
                 Route::post('/task/create', 'TaskController@create')->name('admin.task.saveTask');
                 // Route::post('/task/update', 'TaskController@update')->name('admin.task.update');
                 Route::post('/task/updateAuto', 'TaskController@updateAuto')->name('admin.task.updateAuto');
-                
+
                 Route::post('/task/list', 'TaskController@getTaskList')->name('admin.task.list');
                 Route::post('/task/detail', 'TaskController@getTaskDetail')->name('admin.task.detail');
-                
+
                 // Route::post('/task/updatePendingTask', 'TaskController@updatePendingTask')->name('admin.task.updatePendingTask');
                 Route::post('/task/updatePendingPaymentTasks', 'TaskController@updatePendingPaymentTasks')->name('admin.task.updatePendingPaymentTasks');
                 Route::post('/task/disputeTask', 'TaskController@disputeTask')->name('admin.task.disputeTask');
@@ -63,9 +64,9 @@ Route::prefix('admin')->group(function () {
                 // getDashboard Data
                 Route::post('/getDashboardData', 'DashboardController@getDashboardData')->name('admin.get.dashboarddata');
                 // Route::post('/getPodEmailTemplate', 'DashboardController@getPodEmailTemplate')->name('admin.get.getPodEmailTemplate');
-                
+
                 // mail template
-                
+
                 Route::post('/mail/template/getTemplate', 'MailManagementController@getTemplate')->name('admin.mailtemplate.getStatus');
                 Route::post('/mail/template/checkMailTeamplte', 'MailManagementController@checkMailTeamplte')->name('admin.mailtemplate.checkMailTeamplte');
                 Route::post('/mail/template/store', 'MailManagementController@store')->name('admin.mailtemplate.store');
@@ -73,12 +74,37 @@ Route::prefix('admin')->group(function () {
                 Route::post('/mail/template/update', 'MailManagementController@update')->name('admin.mailtemplate.update');
                 Route::post('/mail/template/delete', 'MailManagementController@destroy')->name('admin.mailtemplate.delete');
                 Route::post('/mail/logs/list', 'MailManagementController@getLogs')->name('admin.maillogs.list');
-                
             });
         });
     });
 });
 
+Route::prefix('aers')->group(function () {
+    Route::namespace('App\Http\Controllers\Aers')->group(function () {
+        Route::prefix('event')->group(function () {
+            Route::get('/exportEvents', 'EventController@exportEvents')->name('aers.event.export');
+        });
+        Route::group(['middleware' => ['auth:api', 'super.admin']], function () {
+            Route::prefix('event')->group(function () {
+                Route::post('/getList', 'EventController@getList')->name('aers.index');
+                Route::post('/scrapeEvents', 'EventController@scrapeEvents')->name('aers.scrape.event');
+                Route::post('/getEventDetail', 'EventController@getEventDetail')->name('aers.event.detail');
+                Route::post('/deleteEvents', 'EventController@deleteEvents')->name('aers.event.delete');
+                Route::post('/getScrapeSetting', 'EventController@getScrapeSetting')->name('aers.event.export');
+            });
+        });
+
+        Route::prefix('event')->group(function () {
+            Route::get('/exportEvents', 'ExhibitorController@exportEvents')->name('aers.event.export');
+        });
+        Route::group(['middleware' => ['auth:api', 'super.admin']], function () {
+            Route::prefix('exhibitor')->group(function () {
+                Route::post('/getList', 'ExhibitorController@getList')->name('aers.index');
+                Route::post('/deleteEvents', 'ExhibitorController@deleteEvents')->name('aers.event.delete');
+            });
+        });
+    });
+});
 
 Route::prefix('customer')->group(function () {
     Route::namespace('App\Http\Controllers\Front')->group(function () {

@@ -1,136 +1,57 @@
 <div class="media align-items-center py-3 mb-3">
     <div class="media-body ml-4">
-        <h4 class="font-weight-bold mb-0">Driver Detail <span
-                class="text-muted font-weight-normal">@{{userData.subcontractor}}</span></h4>
+        <h4 class="font-weight-bold mb-0">Driver Detail <span class="text-muted
+                font-weight-normal">@{{userData.subcontractor}}</span></h4>
         <div class="text-muted mb-2">ID: {{userData.id}}</div>
         <a (click)="editDriver()" class="btn btn-primary btn-sm">Edit</a>&nbsp;
-        <a href="javascript:void(0)" class="btn btn-default btn-sm icon-btn"><i class="ion ion-md-mail"></i></a>
+        <a href="javascript:void(0)" class="btn btn-default btn-sm icon-btn"><i
+                class="ion ion-md-mail"></i></a>
     </div>
 </div>
-
+<div class="nav-tabs-top mb-4">
+    <ul ngbNav #driverTabs="ngbNav" class="nav-tabs">
+        <li ngbNavItem>
+            <a ngbNavLink>Profit</a>
+            <ng-template ngbNavContent>
+                <app-driver-detail-tab [driverId]="userid"></app-driver-detail-tab>
+            </ng-template>
+        </li>
+        <li ngbNavItem>
+            <a ngbNavLink>Billed</a>
+            <ng-template ngbNavContent>
+                <table class="table card-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Bill</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </ng-template>
+        </li>
+        <li ngbNavItem>
+            <a ngbNavLink>Job</a>
+            <ng-template ngbNavContent>
+                <table class="table card-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Jobs</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </ng-template>
+        </li>
+    </ul>
+    <div [ngbNavOutlet]="driverTabs"></div>
+</div>
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
-            <div class="row no-gutters row-bordered">
-                <div class="d-flex col-md align-items-center">
-                    <a href="javascript:void(0)" class="card-body d-block text-body">
-                        <div class="text-muted small line-height-1">Complete Job</div>
-                        <div class="text-xlarge">{{formatInt(userData.posts)}}</div>
-                    </a>
-                </div>
-                <div class="d-flex col-md align-items-center">
-                    <a href="javascript:void(0)" class="card-body d-block text-body">
-                        <div class="text-muted small line-height-1">Profit</div>
-                        <div class="text-xlarge">{{formatInt(userData.followers)}}</div>
-                    </a>
-                </div>
-                <div class="d-flex col-md align-items-center">
-                    <a href="javascript:void(0)" class="card-body d-block text-body">
-                        <div class="text-muted small line-height-1">Customer</div>
-                        <div class="text-xlarge">{{formatInt(userData.following)}}</div>
-                    </a>
-                </div>
-            </div>
-            <hr class="border-light m-0">
-            <div class="card-body">
-                <h6 class="mt-4 mb-3">Personal Information</h6>
 
-                <table class="table user-view-table m-0">
-                    <tbody>
-                        <tr>
-                            <td>First Name:</td>
-                            <td>{{userData.first_name }}</td>
-                        </tr>
-                        <tr>
-                            <td>Last Name:</td>
-                            <td>{{userData.last_name }}</td>
-                        </tr>
-                        <tr>
-                            <td>Subcontractor Name:</td>
-                            <td>{{userData.subcontractor}}</td>
-                        </tr>
-                        <tr>
-                            <td>Email:</td>
-                            <td>{{userData.email}}</td>
-                        </tr>
-                        <tr>
-                            <td>Phone Number:</td>
-                            <td>{{userData.phone_number}}</td>
-                        </tr>
-
-                        <tr>
-                            <td>Call Sign:</td>
-                            <td>{{userData.call_sign}}</td>
-                        </tr>
-                        <tr>
-                            <td>Type:</td>
-                            <td>{{userData.driver_type ? userData.driver_type.name : ''}}</td>
-                        </tr>
-                        <tr>
-                            <td>CX Number:</td>
-                            <td>{{userData.cx_number}}</td>
-                        </tr>
-                        <tr>
-                            <td>Address:</td>
-                            <td>{{userData.address }} {{ userData.address2 }}</td>
-                        </tr>
-                        <tr>
-                            <td>City:</td>
-                            <td>{{userData.city }}</td>
-                        </tr>
-                        <tr>
-                            <td>State:</td>
-                            <td>{{userData.state}}</td>
-                        </tr>
-                        <tr>
-                            <td>Post Code:</td>
-                            <td>{{userData.postcode}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h6 class="mt-4 mb-3">VAT Detail</h6>
-
-                <table class="table user-view-table m-0">
-                    <tbody>
-                        <tr>
-                            <td>VAT:</td>
-                            <td>{{ userData.vat_item? userData.vat_item.name : '' }}</td>
-                        </tr>
-                        <tr *ngIf="userData.vat==2">
-                            <td>VAT Number:</td>
-                            <td>{{userData.vat_number}}</td>
-                        </tr>
-
-                    </tbody>
-                </table>
-
-                <h6 class="mt-4 mb-3">Bank Detail</h6>
-
-                <table class="table user-view-table m-0">
-                    <tbody>
-                        <tr>
-                            <td>Bank Name:</td>
-                            <td>{{userData.bank_name}}</td>
-                        </tr>
-                        <tr>
-                            <td>Bank Sort Code:</td>
-                            <td>{{userData.bank_sort_code}}</td>
-                        </tr>
-                        <tr>
-                            <td>Bank Account Number:</td>
-                            <td>{{userData.bank_account_number}}</td>
-                        </tr>
-                        <tr>
-                            <td>Payee Name:</td>
-                            <td>{{userData.payee_name}}</td>
-                        </tr>
-
-                    </tbody>
-                </table>
-
-            </div>
-        </div>
     </div>
     <div class="col-md-6">
         <div class="card">
@@ -143,12 +64,12 @@
                 <div class="row">
                     <div class="col">
                         Per page: &nbsp;
-                        <select [(ngModel)]="perPage" (change)="update()"
-                            class="form-control custom-select-sm d-inline-block w-auto">
+                        <select [(ngModel)]="perPage" (change)="update()" class="form-control custom-select-sm d-inline-block
+                            w-auto">
                             <option *ngFor="let limit of [10, 20, 30, 40, 50]">{{limit}}</option>
                         </select>
-                        <input type="text" [(ngModel)]="filterVal" (input)="currentPage = 1; update()"
-                            class="form-control form-control-sm d-inline-block w-auto " placeholder="Search...">
+                        <input type="text" [(ngModel)]="filterVal" (input)="currentPage= 1; update()" class="form-control form-control-sm d-inline-block
+                            w-auto" placeholder="Search...">
                     </div>
                 </div>
             </div>
@@ -161,37 +82,37 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap cursor-pointer" (click)="setSort('id')">
-                                Docket Number<i class="ion text-muted ml-2" *ngIf="sortBy=='id'"
-                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                                Docket Number<i class="ion text-muted ml-2" *ngIf="sortBy=='id'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
+                                    'down' : 'up')"></i>
                             </th>
                             <th class="text-nowrap cursor-pointer" (click)="setSort('email')">
-                                Customer<i class="ion text-muted ml-2" *ngIf="sortBy=='email'"
-                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                                Customer<i class="ion text-muted ml-2" *ngIf="sortBy=='email'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
+                                    'down' : 'up')"></i>
                             </th>
                             <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
-                                Job Date<i class="ion text-muted ml-2" *ngIf="sortBy=='name'"
-                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                                Job Date<i class="ion text-muted ml-2" *ngIf="sortBy=='name'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
+                                    'down' : 'up')"></i>
                             </th>
 
                             <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                                Driver<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
-                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                                Driver<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
+                                    'down' : 'up')"></i>
                             </th>
                             <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                                Job Price<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
-                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                                Job Price<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
+                                    'down' : 'up')"></i>
                             </th>
                             <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                                Driver Price<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
-                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                                Driver Price<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
+                                    'down' : 'up')"></i>
                             </th>
                             <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                                Profit<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
-                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                                Profit<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
+                                    'down' : 'up')"></i>
                             </th>
                             <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                                Status<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'"
-                                    [ngClass]="'ion-md-arrow-' + (sortDesc ? 'down' : 'up')"></i>
+                                Status<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
+                                    'down' : 'up')"></i>
                             </th>
                         </tr>
                     </thead>
@@ -201,13 +122,13 @@
                             <td class="align-middle">{{ task.customer.account_code }} - {{task.customer.company_name}}
                             </td>
                             <td class="align-middle">{{task.job_date}}</td>
-                            <td class="align-middle">{{ task.driver? task.driver.call_sign: ''}} - {{task.driver ?
-                                task.driver.email: ''}}</td>
+                            <td class="align-middle">{{ task.driver? task.driver.call_sign: ''}} - {{task.driver ? task.driver.email: ''}}</td>
                             <td class="align-middle">{{task.c_tprice}}</td>
                             <td class="align-middle">{{task.d_tprice}}</td>
                             <td class="align-middle">{{task.profit}}</td>
-                            <td class="align-middle"
-                                [ngStyle]="{background: task._status ? task._status.color : '#fff'}">
+                            <td class="align-middle" [ngStyle]="{background:
+                                task._status ?
+                                task._status.color : '#fff'}">
                                 {{task._status.name}}</td>
                         </tr>
                     </tbody>
@@ -220,12 +141,13 @@
 
                 <div class="row">
                     <div class="col-sm text-sm-left text-center pt-3">
-                        <span class="text-muted" *ngIf="totalItems">Page {{ currentPage }} of {{ totalPages }}</span>
+                        <span class="text-muted" *ngIf="totalItems">Page {{
+                            currentPage }} of {{ totalPages }}</span>
                     </div>
                     <div class="col-sm pt-3">
-                        <ngb-pagination [collectionSize]="totalItems" [pageSize]="perPage" [(page)]="currentPage"
-                            [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="update()" size="sm"
-                            class="d-flex justify-content-center justify-content-sm-end m-0">
+                        <ngb-pagination [collectionSize]="totalItems" [pageSize]="perPage" [(page)]="currentPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="update()" size="sm" class="d-flex
+                            justify-content-center
+                            justify-content-sm-end m-0">
                         </ngb-pagination>
                     </div>
                 </div>

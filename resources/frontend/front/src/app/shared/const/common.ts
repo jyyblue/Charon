@@ -6,7 +6,9 @@ export const common = {
     IS_ADMIN: 'IS_ADMIN',
     TOKEN: 'TOKEN',
     ROLE_TYPE: {
-        ADMIN: 'ADMIN',
+        ADMIN: '1',
+        CUSTOMER: '2',
+        DRIVER: '3',
     },
     TIMEOUT: 5000,
     PREV_PAGE: {

@@ -39,11 +39,10 @@ class DriverController extends Controller
 
         $all = Driver::with(['driver_type']);
         if ($search != '') {
-            $all = $all->leftJoin('driver_type', 'driver_type.id', '=', 'driver.type')->
-            whereRaw('LOWER(`driver`.`subcontractor`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
-            ->orWhereRaw(' LOWER(`driver_type`.`name`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
-            ->orWhereRaw(' LOWER(`cx_number`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
-            ->orWhereRaw(' LOWER(`call_sign`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+            $all = $all->leftJoin('driver_type', 'driver_type.id', '=', 'driver.type')->whereRaw('LOWER(`driver`.`subcontractor`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+                ->orWhereRaw(' LOWER(`driver_type`.`name`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+                ->orWhereRaw(' LOWER(`cx_number`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+                ->orWhereRaw(' LOWER(`call_sign`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
                 ->orWhereRaw(' LOWER(`phone_number`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
                 ->orWhereRaw(' LOWER(`email`) LIKE ? ', ['%' . trim(strtolower($search)) . '%']);
         }
@@ -108,8 +107,8 @@ class DriverController extends Controller
         return response()->json($ret, 200);
     }
 
-    
-    public function update(DriverUpdateRequest $request)
+
+    public function update(Request $request)
     {
 
         $user_id = $request->get('user_id', 0);
@@ -153,29 +152,7 @@ class DriverController extends Controller
                 );
                 $user->save();
                 $user = User::where('email', $email)->first();
-                $driver->update([
-                    'user_id' => $user->id,
-                    'subcontractor' => $subcontractor,
-                    'name' => $name,
-                    'first_name' => $first_name,
-                    'last_name' => $last_name,
-                    'email' => $email,
-                    'phone_number' => $phone_number,
-                    'call_sign' => $call_sign,
-                    'type' => $type,
-                    'cx_number' => $cx_number,
-                    'address' => $address,
-                    'address2' => $address2,
-                    'city' => $city,
-                    'state' => $state,
-                    'postcode' => $postcode,
-                    'vat' => $vat,
-                    'vat_number' => $vat_number,
-                    'bank_name' => $bank_name,
-                    'bank_sort_code' => $bank_sort_code,
-                    'bank_account_number' => $bank_account_number,
-                    'payee_name' => $payee_name,
-                ]);
+                $driver->update($request->all());
 
                 $ret['code'] = 200;
                 $ret['pass'] = $user;
@@ -186,29 +163,8 @@ class DriverController extends Controller
 
                 $user->update(['name' => $name, 'email' => $email, 'password' => $hash_password]);
 
-                $driver->update([
-                    'user_id' => $user->id,
-                    'subcontractor' => $subcontractor,
-                    'name' => $name,
-                    'first_name' => $first_name,
-                    'last_name' => $last_name,
-                    'email' => $email,
-                    'phone_number' => $phone_number,
-                    'call_sign' => $call_sign,
-                    'type' => $type,
-                    'cx_number' => $cx_number,
-                    'address' => $address,
-                    'address2' => $address2,
-                    'city' => $city,
-                    'state' => $state,
-                    'postcode' => $postcode,
-                    'vat' => $vat,
-                    'vat_number' => $vat_number,
-                    'bank_name' => $bank_name,
-                    'bank_sort_code' => $bank_sort_code,
-                    'bank_account_number' => $bank_account_number,
-                    'payee_name' => $payee_name,
-                ]);
+                $driver->update($request->all());
+
                 $ret['code'] = 200;
                 $ret['pass'] = $user;
                 $ret['message'] = 'update success';

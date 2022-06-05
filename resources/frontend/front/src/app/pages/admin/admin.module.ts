@@ -34,7 +34,11 @@ import { TemplateListComponent } from './template-list/template-list.component';
 import { TemplateCreateComponent } from './template-create/template-create.component';
 import { TemplateEditComponent } from './template-edit/template-edit.component';
 import { OutboxComponent } from './outbox/outbox.component';
-
+import { DriverDetailTabComponent } from './driver-show/component/driver-detail-tab/driver-detail-tab.component';
+import { DcomponentBasicComponent } from './driver-edit/component/dcomponent-basic/dcomponent-basic.component';
+import { DcomponentDetailComponent } from './driver-edit/component/dcomponent-detail/dcomponent-detail.component';
+import { DcomponentFinancialDetailComponent } from './driver-edit/component/dcomponent-financial-detail/dcomponent-financial-detail.component';
+import { DcomponentBusinessComponent } from './driver-edit/component/dcomponent-business/dcomponent-business.component';
 @NgModule({
   declarations: [
     CustomDaterangePicker2Component,
@@ -58,6 +62,11 @@ import { OutboxComponent } from './outbox/outbox.component';
     TemplateCreateComponent,
     TemplateEditComponent,
     OutboxComponent,
+    DriverDetailTabComponent,
+    DcomponentBasicComponent,
+    DcomponentDetailComponent,
+    DcomponentFinancialDetailComponent,
+    DcomponentBusinessComponent,
   ],
   imports: [
     CommonModule,
@@ -72,7 +81,7 @@ import { OutboxComponent } from './outbox/outbox.component';
     TextMaskModule,
     NgSelectModule,
     FileUploadModule,
-    QuillModule,
+    QuillModule
   ]
 })
-export class AdminModule { }
+export class AdminModule {}

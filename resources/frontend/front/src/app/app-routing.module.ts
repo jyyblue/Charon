@@ -1,19 +1,19 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { NotFoundComponent } from './not-found/not-found.component';
+import { NgModule } from "@angular/core";
+import { Routes, RouterModule } from "@angular/router";
+import { NotFoundComponent } from "./not-found/not-found.component";
 
 // *******************************************************************************
 // Layouts
 
-import { Layout1Component } from './layout_app/layout-1/layout-1.component';
-import { LayoutWithoutSidenavComponent } from './layout_app/layout-without-sidenav/layout-without-sidenav.component';
-import { Layout2Component } from './layout_app/layout-2/layout-2.component';
-import { LayoutBlankComponent } from './layout_app/layout-blank/layout-blank.component';
-import { Layout1FlexComponent } from './layout_app/layout-1-flex/layout-1-flex.component';
-import { LayoutFrontComponent } from './layout_app/layout-front/layout-front.component';
-import { Layout1CustomerComponent } from './layout_app/layout-1-customer/layout-1-customer.component';
-import { AuthGuard } from './shared/helper/auth.guard';
-
+import { Layout1Component } from "./layout_app/layout-1/layout-1.component";
+import { LayoutWithoutSidenavComponent } from "./layout_app/layout-without-sidenav/layout-without-sidenav.component";
+import { Layout2Component } from "./layout_app/layout-2/layout-2.component";
+import { LayoutBlankComponent } from "./layout_app/layout-blank/layout-blank.component";
+import { Layout1FlexComponent } from "./layout_app/layout-1-flex/layout-1-flex.component";
+import { LayoutFrontComponent } from "./layout_app/layout-front/layout-front.component";
+import { Layout1CustomerComponent } from "./layout_app/layout-1-customer/layout-1-customer.component";
+import { AuthGuard } from "./shared/helper/auth.guard";
+import { AppPageComponent } from "./pages/app-page/app-page.component";
 
 // *******************************************************************************
 // Routes
@@ -21,27 +21,50 @@ import { AuthGuard } from './shared/helper/auth.guard';
 /* tslint:disable */
 const routes: Routes = [
   {
-    path: '',
+    path: "",
     component: LayoutBlankComponent,
-    loadChildren: () => import('./pages/landing/landing.module').then(m => m.LandingModule),
+    loadChildren: () =>
+      import("./pages/landing/landing.module").then(m => m.LandingModule)
   },
+  // {
+  //   path: "app",
+  //   component: LayoutWithoutSidenavComponent,
+  //   loadChildren: () =>
+  //     import("./pages/app-page/apppage.module").then(m => m.AppPageModule)
+  // },
+  // {
+  //   path: "aers",
+  //   component: LayoutWithoutSidenavComponent,
+  //   loadChildren: () =>
+  //     import("./pages/aers/aers.module").then(m => m.AersModule)
+  // },
   {
-    path: 'admin',
+    path: "admin",
     component: Layout1Component,
-    loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule),
-    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import("./pages/admin/admin.module").then(m => m.AdminModule),
+    canActivate: [AuthGuard]
   },
-  { path: 'pages', component: Layout2Component, loadChildren: () => import('./+pages/pages.module').then(m => m.PagesModule) },
-  { path: 'dashboards', component: Layout2Component, loadChildren: () => import('./+dashboards/dashboards.module').then(m => m.DashboardsModule) },
   {
-    path: 'customer',
+    path: "pages",
+    component: Layout2Component,
+    loadChildren: () => import("./+pages/pages.module").then(m => m.PagesModule)
+  },
+  {
+    path: "dashboards",
+    component: Layout2Component,
+    loadChildren: () =>
+      import("./+dashboards/dashboards.module").then(m => m.DashboardsModule)
+  },
+  {
+    path: "customer",
     component: Layout1CustomerComponent,
-    loadChildren: () => import('./pages/user/user.module').then(m => m.UserModule),
+    loadChildren: () =>
+      import("./pages/user/user.module").then(m => m.UserModule)
     // canActivate: [AuthGuard],
   },
   // 404 Not Found page
-  { path: '**', component: NotFoundComponent },
-
+  { path: "**", component: NotFoundComponent }
 
   // // Default
   // { path: '', redirectTo: 'dashboards/dashboard-1', pathMatch: 'full' },
@@ -78,4 +101,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
