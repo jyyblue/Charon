@@ -8,14 +8,21 @@
 </h4>
 <form [formGroup]="dataForm">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col">
             <div class="card mb-4">
-                <h6 class="card-header">
-                    Personal Information
-                </h6>
                 <div class="card-body">
                     <div class="form-row">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" formControlName="email" name="email" [ngClass]="{'is-invalid':
+                                submitted && f.email.errors }">
+                            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                                <div *ngIf="f.email.errors.required">This field is Required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
                             <label class="form-label">Subcontractor Name</label>
                             <input type="text" class="form-control" formControlName="subcontractor" name="subcontractor" [ngClass]="{'is-invalid':
                                 submitted && f.subcontractor.errors }">
@@ -23,7 +30,9 @@
                                 <div *ngIf="f.subcontractor.errors.required">This field is Required</div>
                             </div>
                         </div>
-                        <div class="form-group col-md-3">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
                             <label class="form-label">Type</label>
                             <ng-select [items]="typeOptions" bindLabel="label" bindValue="value" formControlName="type" placeholder="Select Type" [ngClass]="{'is-invalid' : submitted &&
                                 f.type.errors }">
@@ -39,7 +48,9 @@
                                 <div *ngIf="f.type.errors.required">This field is Required</div>
                             </div>
                         </div>
-                        <div class="form-group col-md-3">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
                             <label class="form-label">Call Sign</label>
                             <input type="text" class="form-control" formControlName="call_sign" name="call_sign" [ngClass]="{'is-invalid' : submitted &&
                                 f.call_sign.errors }">
@@ -47,164 +58,11 @@
                                 <div *ngIf="f.call_sign.errors.required">This field is Required</div>
                             </div>
                         </div>
-                        <div class="form-group col-md-3" *ngIf="f.type.value==1">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col" *ngIf="f.type.value==1">
                             <label class="form-label">CX Number</label>
                             <input type="text" class="form-control" formControlName="cx_number" name="cx_number">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" formControlName="email" name="email" [ngClass]="{'is-invalid' : submitted &&
-                                f.email.errors }">
-                            <div *ngIf="f.email.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.email.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" placeholder="" formControlName="phone_number" name="phone_number" [ngClass]="{'is-invalid' :
-                                submitted && f.phone_number.errors }">
-                            <div *ngIf="f.phone_number.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.phone_number.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" formControlName="email" name="email" [ngClass]="{'is-invalid' : submitted &&
-                                f.email.errors }">
-                            <div *ngIf="f.email.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.email.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" placeholder="" formControlName="phone_number" name="phone_number" [ngClass]="{'is-invalid' :
-                                submitted && f.phone_number.errors }">
-                            <div *ngIf="f.phone_number.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.phone_number.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label class="form-label">Address</label>
-                            <input type="text" class="form-control" placeholder="" formControlName="address" name="address" [ngClass]="{'is-invalid' :
-                                submitted && f.address.errors }">
-                            <div *ngIf="f.address.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.address.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label class="form-label">Address 2</label>
-                            <input type="text" class="form-control" placeholder="" formControlName="address2" name="address2">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label class="form-label">City</label>
-                            <input type="text" class="form-control" formControlName="city" name="city" [ngClass]="{'is-invalid' : submitted &&
-                                f.city.errors }">
-                            <div *ngIf="f.city.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.city.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label class="form-label">State</label>
-                            <input type="text" class="form-control" formControlName="state" name="state" [ngClass]="{'is-invalid' : submitted &&
-                                f.state.errors }">
-                            <div *ngIf="f.state.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.state.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label class="form-label">Postcode</label>
-                            <input type="text" class="form-control" formControlName="postcode" name="postcode" [ngClass]="{'is-invalid' : submitted &&
-                                f.postcode.errors }">
-                            <div *ngIf="f.postcode.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.postcode.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <h6 class="card-header">
-                    VAT Detail
-                </h6>
-                <div class="card-body">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label class="form-label">VAT</label>
-                            <ng-select [items]="vatOptions" bindLabel="label" bindValue="value" formControlName="vat" name="vat" [disabled]="disabled" [ngClass]="{'is-invalid' : submitted &&
-                                f.vat.errors }">
-                                <ng-template ng-label-tmp let-item="item">
-                                    <span class="ng-value-label">{{item['label']}}</span>
-                                </ng-template>
-
-                                <ng-template ng-option-tmp let-item="item">
-                                    <span class="ng-value-label">{{item['label']}}</span>
-                                </ng-template>
-                            </ng-select>
-                            <div *ngIf="f.vat.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.vat.errors.required">This field is Required
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="form-group col-md-6" *ngIf="f.vat.value==2">
-                            <label class="form-label">VAT number</label>
-                            <input type="text" class="form-control" formControlName="vat_number" name="vat_number">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card mb-4">
-                <h6 class="card-header">
-                    Bank Detail
-                </h6>
-                <div class="card-body">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label class="form-label">Bank Name</label>
-                            <input type="text" class="form-control" formControlName="bank_name" name="bank_name" [ngClass]="{'is-invalid' : submitted &&
-                                f.bank_name.errors }">
-                            <div *ngIf="f.bank_name.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.bank_name.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label class="form-label">Bank Sort Code</label>
-                            <input type="text" class="form-control" formControlName="bank_sort_code" name="bank_sort_code" [ngClass]="{'is-invalid' :
-                                submitted && f.bank_sort_code.errors }">
-                            <div *ngIf="f.bank_sort_code.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.bank_sort_code.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label class="form-label">Bank Account Number</label>
-                            <input type="text" class="form-control" formControlName="bank_account_number" name="bank_account_number" [ngClass]="{'is-invalid' : submitted &&
-                                f.bank_account_number.errors }">
-                            <div *ngIf="f.bank_account_number.errors &&
-                                submitted" class="invalid-feedback">
-                                <div *ngIf="f.bank_account_number.errors.required">This field is Required</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label class="form-label">Payee Name</label>
-                            <input type="text" class="form-control" formControlName="payee_name" name="payee_name" [ngClass]="{'is-invalid' : submitted &&
-                                f.payee_name.errors }">
-                            <div *ngIf="f.payee_name.errors && submitted" class="invalid-feedback">
-                                <div *ngIf="f.payee_name.errors.required">This field is Required</div>
-                            </div>
                         </div>
                     </div>
                 </div>

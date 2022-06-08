@@ -45,24 +45,23 @@ export class DriverAddComponent implements OnInit {
   ngOnInit(): void {
     this.dataForm = this.formBuilder.group({
       subcontractor: [null, Validators.required],
-      // first_name: [null, Validators.required],
-      // last_name: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]],
-      phone_number: [null, Validators.required],
       call_sign: [null, Validators.required],
       type: [null, Validators.required],
-      cx_number: [null, []],
-      address: [null, Validators.required],
-      address2: [null, []],
-      city: [null, Validators.required],
-      state: [null, Validators.required],
-      postcode: [null, Validators.required],
-      vat: [null, Validators.required],
-      vat_number: [null, []],
-      bank_name: [null, Validators.required],
-      bank_sort_code: [null, Validators.required],
-      bank_account_number: [null, Validators.required],
-      payee_name: [null, Validators.required]
+      cx_number: [null, []]
+
+      // phone_number: [null, Validators.required],
+      // address: [null, Validators.required],
+      // address2: [null, []],
+      // city: [null, Validators.required],
+      // state: [null, Validators.required],
+      // postcode: [null, Validators.required],
+      // vat: [null, Validators.required],
+      // vat_number: [null, []],
+      // bank_name: [null, Validators.required],
+      // bank_sort_code: [null, Validators.required],
+      // bank_account_number: [null, Validators.required],
+      // payee_name: [null, Validators.required]
     });
   }
   getData() {
@@ -94,27 +93,7 @@ export class DriverAddComponent implements OnInit {
       return;
     }
 
-    let params = {
-      subcontractor: this.f.subcontractor.value,
-      // 'first_name':this.f.first_name.value,
-      // 'last_name': this.f.last_name.value,
-      email: this.f.email.value,
-      phone_number: this.f.phone_number.value,
-      call_sign: this.f.call_sign.value,
-      type: this.f.type.value,
-      cx_number: this.f.cx_number.value,
-      address: this.f.address.value,
-      address2: this.f.address2.value,
-      city: this.f.city.value,
-      state: this.f.state.value,
-      postcode: this.f.postcode.value,
-      vat: this.f.vat.value,
-      vat_number: this.f.vat_number.value,
-      bank_name: this.f.bank_name.value,
-      bank_sort_code: this.f.bank_sort_code.value,
-      bank_account_number: this.f.bank_account_number.value,
-      payee_name: this.f.payee_name.value
-    };
+    let params = this.dataForm.value;
 
     this.apiService
       .storeDriver(params)

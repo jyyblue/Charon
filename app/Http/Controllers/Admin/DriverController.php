@@ -211,7 +211,7 @@ class DriverController extends Controller
             DB::beginTransaction();
             $user = new User(
                 [
-                    'name' => $name,
+                    'name' => $subcontractor,
                     'email' => $email,
                     'password' => $hash_password,
                     'role' => 3,
@@ -223,26 +223,25 @@ class DriverController extends Controller
             $user = User::where('email', $email)->first();
             $driver = Driver::create([
                 'user_id' => $user->id,
-                'subcontractor' => $subcontractor,
-                'name' => $name,
-                'first_name' => $first_name,
-                'last_name' => $last_name,
                 'email' => $email,
-                'phone_number' => $phone_number,
+                'subcontractor' => $subcontractor,
                 'call_sign' => $call_sign,
                 'type' => $type,
                 'cx_number' => $cx_number,
-                'address' => $address,
-                'address2' => $address2,
-                'city' => $city,
-                'state' => $state,
-                'postcode' => $postcode,
-                'vat' => $vat,
-                'vat_number' => $vat_number,
-                'bank_name' => $bank_name,
-                'bank_sort_code' => $bank_sort_code,
-                'bank_account_number' => $bank_account_number,
-                'payee_name' => $payee_name,
+                // 'name' => $name,
+                // 'phone_number' => $phone_number,
+
+                // 'address' => $address,
+                // 'address2' => $address2,
+                // 'city' => $city,
+                // 'state' => $state,
+                // 'postcode' => $postcode,
+                // 'vat' => $vat,
+                // 'vat_number' => $vat_number,
+                // 'bank_name' => $bank_name,
+                // 'bank_sort_code' => $bank_sort_code,
+                // 'bank_account_number' => $bank_account_number,
+                // 'payee_name' => $payee_name,
             ]);
             $driver->save();
             DB::commit();
