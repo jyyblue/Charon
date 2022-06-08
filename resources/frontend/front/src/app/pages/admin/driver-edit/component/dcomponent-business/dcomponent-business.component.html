@@ -28,7 +28,6 @@
                 <td class="align-middle">{{ doc.name }}</td>
                 <td class="align-middle">{{ doc.uploaded }}</td>
                 <td class="align-middle">{{ doc.expiry }}</td>
-                <td class="align-middle">{{ doc.expiry }}</td>
                 <td>
                     <div class="d-inline-flex">
                         <a class="btn btn-default icon-btn md-btn-flat" ngbtooltip="Upload" (click)="uploadDocument(doc.dt_id)">
@@ -37,7 +36,8 @@
 
                         <button ngbtooltip="Delete" class="btn
                             btn-default
-                            icon-btn md-btn-flat" [ngClass]="{'noClick' : doc.id == null }" [swal]="{title:'Are you
+                            icon-btn md-btn-flat" [ngClass]="{'noClick' : doc.id
+                            == null }" [swal]="{title:'Are you
                             sure?', text:'You won\'t
                             be able to revert this!', icon:'warning',
                             showCancelButton:true, confirmButtonText:'Yes,
