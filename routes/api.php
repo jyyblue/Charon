@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->group(function () {
     Route::get('/v1/task/downloadpod', 'App\Http\Controllers\Admin\TaskController@downloadPodFile')->name('admin.task.download');
+    Route::get('/v1/driver/downloadpdf', 'App\Http\Controllers\Admin\DriverController@downloadPdfFile')->name('admin.driver.downloadPdfFile');
 
     Route::prefix('auth')->group(function () {
         Route::post('/login', 'App\Http\Controllers\Auth\LoginController@login')->name('admin.dev.login');
@@ -60,6 +61,9 @@ Route::prefix('admin')->group(function () {
                 Route::post('/driver/update', 'DriverController@update')->name('admin.driver.update');
                 Route::post('/driver/store', 'DriverController@store')->name('admin.driver.store');
                 Route::post('/driver/options', 'DriverController@getOptions')->name('admin.driver.options');
+                Route::post('/driver/documentData', 'DriverController@getDocumentData')->name('admin.driver.documentData');
+                Route::post('/driver/uploadDriverBusinessDocument', 'DriverController@uploadDriverBusinessDocument')->name('admin.driver.uploadDriverBusinessDocument');
+                Route::post('/driver/deleteDriverBusinessDocument', 'DriverController@deleteDriverBusinessDocument')->name('admin.driver.deleteDriverBusinessDocument');
 
                 // getDashboard Data
                 Route::post('/getDashboardData', 'DashboardController@getDashboardData')->name('admin.get.dashboarddata');

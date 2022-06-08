@@ -9,11 +9,16 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 export class DcomponentDetailComponent implements OnInit {
   dataForm: FormGroup;
   submitted = false;
+  type = 0;
   @Input() typeOptions = [];
   @Input()
   set data(data) {
     console.log(data);
+    this.type = data.type;
     this.dataForm = this.formBuilder.group({
+      company_name: [data ? data.company_name : null, []],
+      name: [data ? data.name : null, []],
+      company_reg_no: [data ? data.company_reg_no : null, []],
       email: [
         data ? data.email : null,
         [Validators.required, Validators.email]

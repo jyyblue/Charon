@@ -37,7 +37,7 @@
         <li ngbNavItem *ngIf="data && data.type == 4">
             <a ngbNavLink>Business Document</a>
             <ng-template ngbNavContent>
-                <app-dcomponent-financial-detail [data]="data" [vatOptions]="vatOptions" (valueChange)="updateData($event)"></app-dcomponent-financial-detail>
+                <app-dcomponent-business [driver_id]="userid"></app-dcomponent-business>
             </ng-template>
         </li>
     </ul>

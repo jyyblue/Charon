@@ -15,6 +15,7 @@ use App\Models\DriverType;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Driver\DriverCreateRequest;
 use App\Http\Requests\Driver\DriverUpdateRequest;
+use App\Models\DriverBusinessDocument;
 use App\Models\Vat;
 
 class DriverController extends Controller
@@ -257,5 +258,77 @@ class DriverController extends Controller
             // $ret['message'] = $e;
             // return response()->json($ret, 200);
         }
+    }
+
+    public function getDocumentData(Request $request)
+    {
+        $driver_id = $request->get('driver_id');
+        $documentData = DB::table('driver_business_doc_type as dt')->leftJoin('driver_business_doc as d', function ($join) use ($driver_id) {
+            $join->on('d.type_id', '=', 'dt.id')
+                ->where('d.driver_id', $driver_id);
+        })
+            ->select(['dt.name', 'dt.id as dt_id', 'd.*'])
+            ->get();
+
+        $ret['code'] = 200;
+        $ret['documentList'] = $documentData;
+        return response()->json($ret, 200);
+    }
+
+    public function uploadDriverBusinessDocument(Request $request)
+    {
+        $directory = "public/driver/attachments/";
+        if (!Storage::exists($directory)) {
+            // path does not exist
+            Storage::makeDirectory($directory);
+        }
+
+        $driver_id = $request->get('driver_id');
+        $type = $request->get('type');
+        $rules = [];
+        $customMessages = [];
+        if ($request->hasFile('file')) {
+            $customMessages['file.required'] = 'File is required';
+            $this->validate($request, $rules, $customMessages);
+
+            $file = $request->file('file');
+            $cleanedfilename = uniqid() . '_' . clean_filename($file->getClientOriginalName());
+            $file->storeAs($directory, $cleanedfilename);
+
+            // store driver_business_doc table
+            DriverBusinessDocument::updateOrCreate(
+                ['driver_id' => $driver_id, 'type_id' => $type],
+                [
+                    'driver_id' => $driver_id,
+                    'type_id' => $type,
+                    'uploaded' => now(),
+                    'file' => $cleanedfilename,
+                    'updated_at' => now(),
+                    'valid' => 1,
+                ]
+            );
+            return response()->json(["code" => 200, "msg" => "", 'filename' => $cleanedfilename], 200);
+        }
+        return response()->json(["code" => 404, "msg" => "no file"], 400);
+    }
+
+    public function downloadPdfFile(Request $request)
+    {
+        $driver_id = $request->get('driver');
+        $type = $request->get('type');
+        $item = DriverBusinessDocument::where('driver_id', $driver_id)->where('type_id', $type)->first();
+        if ($item) {
+            $filename = $item->file;
+            $file = storage_path() . "/app/public/driver/attachments/" . $filename;
+            return response()->download($file);
+        }
+    }
+
+    public function deleteDriverBusinessDocument(Request $request)
+    {
+        $driver_id = $request->get('driver_id');
+        $type = $request->get('type');
+        DriverBusinessDocument::where('driver_id', $driver_id)->where('type_id', $type)->delete();
+        return response()->json(["code" => 200], 200);
     }
 }

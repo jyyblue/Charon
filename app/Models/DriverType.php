@@ -10,9 +10,9 @@ class DriverType extends Model
     use HasFactory;
     protected $table = 'driver_type';
     protected $fillable = [
-        'name', 
+        'name',
         'description',
-        'created_at', 
+        'created_at',
         'updated_at'
     ];
 }

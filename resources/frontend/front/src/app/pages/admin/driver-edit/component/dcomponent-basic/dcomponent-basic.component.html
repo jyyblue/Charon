@@ -1,6 +1,6 @@
 <form [formGroup]="dataForm">
     <div class="form-row">
-        <div class="form-group col-md-3">
+        <div class="form-group col">
             <label class="form-label">Subcontractor Name</label>
             <input type="text" class="form-control" formControlName="subcontractor" name="subcontractor" [ngClass]="{
                 'is-invalid': submitted &&
@@ -12,7 +12,9 @@
                 </div>
             </div>
         </div>
-        <div class="form-group col-md-3">
+    </div>
+    <div class="row">
+        <div class="form-group col">
             <label class="form-label">Type</label>
             <ng-select [items]="typeOptions" bindLabel="label" bindValue="value" formControlName="type" placeholder="Select Type" [ngClass]="{
                 'is-invalid': submitted &&
@@ -31,8 +33,10 @@
                 <div *ngIf="f.type.errors.required">This field is Required</div>
             </div>
         </div>
+    </div>
 
-        <div class="form-group col-md-3">
+    <div class="row">
+        <div class="form-group col">
             <label class="form-label">Call Sign</label>
             <input type="text" class="form-control" formControlName="call_sign" name="call_sign" [ngClass]="{ 'is-invalid': submitted &&
                 f.call_sign.errors }" />
@@ -42,8 +46,9 @@
                 </div>
             </div>
         </div>
-        <div class="form-group col-md-3" *ngIf="f.type.value ==
-            1">
+    </div>
+    <div class="row">
+        <div class="form-group col" *ngIf="f.type.value == 1">
             <label class="form-label">CX Number</label>
             <input type="text" class="form-control" formControlName="cx_number" name="cx_number" />
         </div>

@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             VehicelTypeSeeder::class,
             ConstOptionSeeder::class,
             AersSettingSeeder::class,
+            DriverBusinessDocumentTypeSeeder::class,
         ]);
     }
 }

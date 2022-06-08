@@ -1,4 +1,51 @@
 <form [formGroup]="dataForm">
+    <div class="row" *ngIf="type == 1">
+        <div class="form-group col-md-6">
+            <label class="form-label">Company Name</label>
+            <input type="text" class="form-control" formControlName="company_name" name="company_name" [ngClass]="{
+                'is-invalid': submitted &&
+                f.company_name.errors }" />
+            <div *ngIf="f.company_name.errors && submitted" class="invalid-feedback">
+                <div *ngIf="f.company_name.errors.required">
+                    This field is Required
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Contact Name</label>
+            <input type="text" class="form-control" placeholder="" formControlName="name" name="name" [ngClass]="{
+                'is-invalid':
+                submitted && f.name.errors }" />
+            <div *ngIf="f.name.errors && submitted" class="invalid-feedback">
+                <div *ngIf="f.name.errors.required">
+                    This field is Required
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="type == 4">
+        <div class="form-group col-md-6">
+            <label class="form-label">Company Name</label>
+            <input type="text" class="form-control" formControlName="company_name" name="company_name" [ngClass]="{
+                'is-invalid': submitted &&
+                f.company_name.errors }" />
+            <div *ngIf="f.company_name.errors && submitted" class="invalid-feedback">
+                <div *ngIf="f.company_name.errors.required">
+                    This field is Required
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Company Register No</label>
+            <input type="text" class="form-control" formControlName="company_reg_no" name="company_reg_no" [ngClass]="{ 'is-invalid': submitted &&
+                f.company_reg_no.errors }" />
+            <div *ngIf="f.company_reg_no.errors && submitted" class="invalid-feedback">
+                <div *ngIf="f.company_reg_no.errors.required">
+                    This field is Required
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="form-group col-md-6">
             <label class="form-label">Email</label>

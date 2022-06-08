@@ -13,8 +13,8 @@ class Driver extends Model
         'user_id',
         'subcontractor',
         'name',
-        'first_name',
-        'last_name',
+        'company_name',
+        'company_reg_no',
         'email',
         'phone_number',
         'call_sign',
@@ -32,27 +32,30 @@ class Driver extends Model
         'bank_sort_code',
         'bank_account_number',
         'payee_name',
-        'created_at', 
-        'updated_at'];
+        'created_at',
+        'updated_at'
+    ];
 
     /**
      * Get the type.
      */
     public function driver_type()
     {
-        return $this->hasOne( DriverType::class, 'id', 'type');
+        return $this->hasOne(DriverType::class, 'id', 'type');
     }
 
     public function vehicle_size()
     {
-        return $this->hasOne( VehicleType::class, 'id', 'vehicle');
+        return $this->hasOne(VehicleType::class, 'id', 'vehicle');
     }
 
-    public function user() {
-        return $this->hasOne(User::class,'id', 'user_id');
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public function vat_item() {
-        return $this->hasOne( Vat::class, 'id', 'vat');
+    public function vat_item()
+    {
+        return $this->hasOne(Vat::class, 'id', 'vat');
     }
 }

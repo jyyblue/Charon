@@ -9,6 +9,8 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 export class DcomponentFinancialDetailComponent implements OnInit {
   dataForm: FormGroup;
   submitted = false;
+  disabled = false;
+
   @Input() vatOptions = [];
   @Input()
   set data(data) {

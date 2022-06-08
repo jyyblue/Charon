@@ -1,1 +1,63 @@
-<p>dcomponent-business works!</p>
+<!-- Table -->
+<hr class="border-light m-0">
+<div class="table-responsive">
+    <table class="table table-striped table-bordered card-table">
+        <thead>
+            <tr>
+                <th class="text-nowrap cursor-pointer">
+                    Valid
+                </th>
+                <th class="text-nowrap cursor-pointer">
+                    Document Name
+                </th>
+                <th class="text-nowrap cursor-pointer">
+                    Uploaded
+                </th>
+                <th class="text-nowrap cursor-pointer">
+                    Expiry /Renewal Date
+                </th>
+                <th class="text-nowrap cursor-pointer">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <input hidden type="file" accept="application/pdf" id="uploader" (change)="uploadFile($event)" />
+        <tbody class="job-list-table">
+            <tr *ngFor="let doc of documentList">
+                <td class="align-middle">{{ doc.valid == 1 ? 'true': 'false' }}</td>
+                <td class="align-middle">{{ doc.name }}</td>
+                <td class="align-middle">{{ doc.uploaded }}</td>
+                <td class="align-middle">{{ doc.expiry }}</td>
+                <td class="align-middle">{{ doc.expiry }}</td>
+                <td>
+                    <div class="d-inline-flex">
+                        <a class="btn btn-default icon-btn md-btn-flat" ngbtooltip="Upload" (click)="uploadDocument(doc.dt_id)">
+                            <i class="ion ion-md-cloud-upload"></i>
+                        </a>
+
+                        <button ngbtooltip="Delete" class="btn
+                            btn-default
+                            icon-btn md-btn-flat" [ngClass]="{'noClick' : doc.id == null }" [swal]="{title:'Are you
+                            sure?', text:'You won\'t
+                            be able to revert this!', icon:'warning',
+                            showCancelButton:true, confirmButtonText:'Yes,
+                            delete it!', showCloseButton:true, customClass:
+                            {confirmButton:'btn btn-lg
+                            btn-warning',cancelButton: 'btn btn-lg
+                            btn-default'}}" (confirm)="deleteDocument(doc.dt_id)">
+                            <i class="ion ion-md-trash"></i>
+                        </button>
+                        <a [ngClass]="{'noClick' : doc.id == null }" class="btn
+                            btn-default
+                            icon-btn md-btn-flat" ngbtooltip="View" href="{{
+                            downloadurl }}?driver={{ doc.driver_id }}&type={{
+                            doc.type_id }}">
+                            <i class="ion ion-md-cloud-download"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!-- / Table -->

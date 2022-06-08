@@ -53,7 +53,7 @@ export class DcomponentBasicComponent implements OnInit {
     this.valueChange.emit(data);
   }
 
-  onChangeType() {
+  onChangeType(e) {
     console.log(this.f.type.value);
     const data = {
       type: this.f.type.value
