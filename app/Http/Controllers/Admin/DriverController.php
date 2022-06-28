@@ -183,28 +183,11 @@ class DriverController extends Controller
 
     public function store(DriverCreateRequest $request)
     {
-        $driver_id = $request->get('user_id', 0);
         $subcontractor = $request->get('subcontractor', '');
-        $name = $request->get('name', '');
-        $first_name = $request->get('first_name', '');
-        $last_name = $request->get('last_name', '');
         $email = $request->get('email', '');
-        $phone_number = $request->get('phone_number', '');
         $call_sign = $request->get('call_sign', '');
         $type = $request->get('type', '');
         $cx_number = $request->get('cx_number', '');
-        $address = $request->get('address', '');
-        $address2 = $request->get('address2', '');
-        $city = $request->get('city', '');
-        $state = $request->get('state', '');
-        $postcode = $request->get('postcode', '');
-        $vat = $request->get('vat', '');
-        $vat_number = $request->get('vat_number', '');
-        $bank_name = $request->get('bank_name', '');
-        $bank_sort_code = $request->get('bank_sort_code', '');
-        $bank_account_number = $request->get('bank_account_number', '');
-        $payee_name = $request->get('payee_name', '');
-
         $password = $request->get('password', '123456');
         $hash_password = bcrypt($password);
         try {
@@ -247,7 +230,8 @@ class DriverController extends Controller
             DB::commit();
             $ret['code'] = 200;
             $ret['pass'] = $user;
-
+            $ret['driver_id'] = $driver->id;
+            
             $ret['message'] = 'insert sucessfully';
             return response()->json($ret, 200);
         } catch (\Exception $e) {

@@ -40,6 +40,9 @@ import { DcomponentBasicComponent } from "./driver-edit/component/dcomponent-bas
 import { DcomponentDetailComponent } from "./driver-edit/component/dcomponent-detail/dcomponent-detail.component";
 import { DcomponentFinancialDetailComponent } from "./driver-edit/component/dcomponent-financial-detail/dcomponent-financial-detail.component";
 import { DcomponentBusinessComponent } from "./driver-edit/component/dcomponent-business/dcomponent-business.component";
+import { DcomponentHistoryJobComponent } from './driver-edit/component/history/dcomponent-history-job/dcomponent-history-job.component';
+import { DcomponentHistoryPaymentComponent } from './driver-edit/component/history/dcomponent-history-payment/dcomponent-history-payment.component';
+import { DcomponentHistoryMailComponent } from './driver-edit/component/history/dcomponent-history-mail/dcomponent-history-mail.component';
 @NgModule({
   declarations: [
     CustomDaterangePicker2Component,
@@ -67,7 +70,10 @@ import { DcomponentBusinessComponent } from "./driver-edit/component/dcomponent-
     DcomponentBasicComponent,
     DcomponentDetailComponent,
     DcomponentFinancialDetailComponent,
-    DcomponentBusinessComponent
+    DcomponentBusinessComponent,
+    DcomponentHistoryJobComponent,
+    DcomponentHistoryPaymentComponent,
+    DcomponentHistoryMailComponent
   ],
   imports: [
     CommonModule,

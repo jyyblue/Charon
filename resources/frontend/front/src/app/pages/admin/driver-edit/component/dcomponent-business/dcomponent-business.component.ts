@@ -13,6 +13,7 @@ import { environment } from "src/environments/environment";
 })
 export class DcomponentBusinessComponent implements OnInit {
   @Input() driver_id = 0;
+  @Input() type = 1;
   documentList = [];
   doc_type_id = 0;
   downloadurl = `${environment.apiUrl}/admin/v1/driver/downloadpdf`;

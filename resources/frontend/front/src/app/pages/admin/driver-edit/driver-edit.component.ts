@@ -19,12 +19,11 @@ export class DriverEditComponent implements OnInit {
   phoneMaskOptions = {
     mask: [/[1-9]/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]
   };
-  disabled = false;
 
   typeOptions = [];
 
   vatOptions = [];
-
+  active = 1;
   userid;
   constructor(
     private formBuilder: FormBuilder,

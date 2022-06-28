@@ -13,7 +13,6 @@ export class DcomponentDetailComponent implements OnInit {
   @Input() typeOptions = [];
   @Input()
   set data(data) {
-    console.log(data);
     this.type = data.type;
     this.dataForm = this.formBuilder.group({
       company_name: [data ? data.company_name : null, []],
