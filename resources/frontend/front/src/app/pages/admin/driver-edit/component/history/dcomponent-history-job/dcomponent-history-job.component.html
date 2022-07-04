@@ -25,34 +25,27 @@
         <table class="table table-striped table-bordered card-table">
             <thead>
                 <tr>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('id')">
-                        Docket Number<i class="ion text-muted ml-2" *ngIf="sortBy=='id'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
-                            'down' : 'up')"></i>
+                    <th class="text-nowrap cursor-pointer" >
+                        Docket Number
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('email')">
-                        Customer<i class="ion text-muted ml-2" *ngIf="sortBy=='email'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
-                            'down' : 'up')"></i>
+                    <th class="text-nowrap cursor-pointer">
+                        Customer
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('name')">
-                        Job Date<i class="ion text-muted ml-2" *ngIf="sortBy=='name'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
-                            'down' : 'up')"></i>
+                    <th class="text-nowrap cursor-pointer" >
+                        Job Date
                     </th>
 
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Job Price<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
-                            'down' : 'up')"></i>
+                    <th class="text-nowrap cursor-pointer" >
+                        Job Price
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Driver Price<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
-                            'down' : 'up')"></i>
+                    <th class="text-nowrap cursor-pointer" >
+                        Driver Price
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Profit<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
-                            'down' : 'up')"></i>
+                    <th class="text-nowrap cursor-pointer" >
+                        Profit
                     </th>
-                    <th class="text-nowrap cursor-pointer" (click)="setSort('latestActivity')">
-                        Status<i class="ion text-muted ml-2" *ngIf="sortBy=='latestActivity'" [ngClass]="'ion-md-arrow-' + (sortDesc ?
-                            'down' : 'up')"></i>
+                    <th class="text-nowrap cursor-pointer" >
+                        Status
                     </th>
                 </tr>
             </thead>

@@ -7,6 +7,7 @@ use App\Imports\TaskImport;
 use App\Jobs\ImportData;
 use App\Jobs\ImportCustomer;
 use App\Jobs\ImportDriver;
+use App\Jobs\ImportTest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -39,7 +40,9 @@ class ImportController extends Controller
             $file = $request->file('file');
             $cleanedfilename = round(microtime(true) * 1000).clean_filename($file->getClientOriginalName());
             $file->storeAs($directory, $cleanedfilename);
-            ImportData::dispatch('app/'.$directory.$cleanedfilename);
+            // ImportData::dispatch('app/'.$directory.$cleanedfilename);
+            ImportTest::dispatch('app/'.$directory.$cleanedfilename);
+            
             return response()->json(["code"=>200, "msg"=>"" ], 200);
         }
         return response()->json(["code" => 404, "msg" => "no file"], 400);

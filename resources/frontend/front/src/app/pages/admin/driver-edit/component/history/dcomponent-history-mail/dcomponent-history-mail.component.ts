@@ -61,4 +61,7 @@ export class DcomponentHistoryMailComponent implements OnInit {
     this.logSubject = log.subject;
     $('#logModal').modal('show');
   }
+  deleteTemplate(){
+    $('#logModal').modal('hide');
+  }
 }
