@@ -36,6 +36,25 @@
             </div>
         </div>
 
+        <div class="row" *ngIf="f.type.value == 2 || f.type.value == 3">
+            <div class="form-group col">
+                <label class="form-label">Birth Date</label>
+                <div class="input-group">
+                    <input class="form-control" placeholder="yyyy-mm-dd"
+                        ngbDatepicker formControlName="birthday" name="birthday" #d="ngbDatepicker"
+                        [ngClass]="{'is-invalid' : submitted && f.birthday.errors }" readonly (click)="d.toggle()">
+                    <div class="input-group-append">
+                        <button class="input-group-text" (click)="d.toggle()" type="button">
+                            <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="f.birthday.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.birthday.errors.required">This field is Required</div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="form-group col">
                 <label class="form-label">Call Sign</label>

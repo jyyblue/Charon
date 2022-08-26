@@ -28,6 +28,36 @@
                 <app-dcomponent-detail [data]="data" [typeOptions]="typeOptions" (valueChange)="updateData($event)"></app-dcomponent-detail>
             </ng-template>
         </li>
+        <li [ngbNavItem]="21" *ngIf="data.type=='3'">
+            <a ngbNavLink>Vehicle Details</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-vehicle [data]="data" (valueChange)="updateData($event)"></app-dcomponent-vehicle>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="22" *ngIf="data.type=='2' || data.type=='3'">
+            <a ngbNavLink>Licence Details</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-licence [data]="data" (valueChange)="updateData($event)"></app-dcomponent-licence>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="23" *ngIf="data.type=='2' || data.type=='3'">
+            <a ngbNavLink>HEALTH AND FITNESS</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-health [data]="data" (valueChange)="updateData($event)"></app-dcomponent-health>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="24" *ngIf="data.type=='2' || data.type=='3'">
+            <a ngbNavLink>Training</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-training [data]="data" (valueChange)="updateData($event)"></app-dcomponent-training>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="25" *ngIf="data.type=='2' || data.type=='3'">
+            <a ngbNavLink>ASSET MANAGEMENT AND UNIFORM</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-asset [data]="data" (valueChange)="updateData($event)"></app-dcomponent-asset>
+            </ng-template>
+        </li>
         <li [ngbNavItem]="3" >
             <a ngbNavLink >Financial</a>
             <ng-template ngbNavContent>
@@ -51,7 +81,7 @@
         <li [ngbNavItem]="5">
             <a ngbNavLink>Driver Performance</a>
             <ng-template ngbNavContent>
-                <app-dcomponent-business [driver_id]="userid" [type]="data.type"></app-dcomponent-business>
+                <app-dcomponent-business  [data]="data" (valueChange)="updateData($event)"></app-dcomponent-business>
             </ng-template>
         </li>
     </ul>

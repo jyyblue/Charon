@@ -2,20 +2,20 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
-  selector: "app-dcomponent-detail",
-  templateUrl: "./dcomponent-detail.component.html",
-  styles: []
+  selector: 'app-dc-detail-cx',
+  templateUrl: './dc-detail-cx.component.html',
+  styles: [
+  ]
 })
-export class DcomponentDetailComponent implements OnInit {
+export class DcDetailCxComponent implements OnInit {
+
   dataForm: FormGroup;
   submitted = false;
   type = 0;
-  _data = null;
-  
-  @Input() typeOptions = [];
   @Input()
   set data(data) {
-    this._data = data;
+    let driverData = data.data;
+    let isCompany = driverData.isCompany;
     this.type = data.type;
     this.dataForm = this.formBuilder.group({
       company_name: [data ? data.company_name : null, []],
@@ -42,14 +42,6 @@ export class DcomponentDetailComponent implements OnInit {
     return this.dataForm.controls;
   }
 
-  updateData(e) {
-    let fData = e.form;
-    const data = {
-      form: fData
-    };
-    this.valueChange.emit(data);
-  }
-
   onSubmit() {
     console.log("hre");
     this.submitted = true;
@@ -66,4 +58,5 @@ export class DcomponentDetailComponent implements OnInit {
     };
     this.valueChange.emit(data);
   }
+
 }

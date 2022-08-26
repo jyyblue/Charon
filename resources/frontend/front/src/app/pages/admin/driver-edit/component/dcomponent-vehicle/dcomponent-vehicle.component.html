@@ -1,0 +1,87 @@
+<form [formGroup]="dataForm" class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="form-label">Make</label>
+                <input type="text" class="form-control" formControlName="vehicle_make" name="vehicle_make" [ngClass]="{ 'is-invalid': submitted &&
+                    f.vehicle_make.errors }" />
+                <div *ngIf="f.vehicle_make.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.vehicle_make.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="form-label">Model</label>
+                <input type="text" class="form-control" formControlName="vehicle_model" name="vehicle_model" [ngClass]="{
+                    'is-invalid': submitted &&
+                    f.vehicle_model.errors
+                    }" />
+                <div *ngIf="f.vehicle_model.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.vehicle_model.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="form-label">vehicle_registration</label>
+                <input type="text" class="form-control" formControlName="vehicle_registration" name="vehicle_registration" [ngClass]="{
+                    'is-invalid': submitted &&
+                    f.vehicle_registration.errors
+                    }" />
+                <div *ngIf="f.vehicle_registration.errors &&
+                    submitted" class="invalid-feedback">
+                    <div *ngIf="f.vehicle_registration.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="form-label">vehicle_type</label>
+                <input type="text" class="form-control" formControlName="vehicle_type" name="vehicle_type" [ngClass]="{ 'is-invalid': submitted &&
+                    f.vehicle_type.errors }" />
+                <div *ngIf="f.vehicle_type.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.vehicle_type.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="form-label">tax_expiry</label>
+                <input type="text" class="form-control" formControlName="tax_expiry" name="tax_expiry" [ngClass]="{ 'is-invalid': submitted &&
+                    f.tax_expiry.errors }" />
+                <div *ngIf="f.tax_expiry.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.tax_expiry.errors.required">This field is Required
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="form-label">mot_expiry</label>
+                <input type="text" class="form-control" formControlName="mot_expiry" name="mot_expiry" [ngClass]="{ 'is-invalid': submitted &&
+                    f.mot_expiry.errors }" />
+                <div *ngIf="f.mot_expiry.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.mot_expiry.errors.required">This field is Required
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="form-label">vehicle_insurance</label>
+                <input type="text" class="form-control" formControlName="vehicle_insurance" name="vehicle_insurance" [ngClass]="{ 'is-invalid': submitted &&
+                    f.vehicle_insurance.errors }" />
+                <div *ngIf="f.vehicle_insurance.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.vehicle_insurance.errors.required">This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" (click)="onSubmit()" class="btn btn-primary
+            rounded-pill d-block">
+            <span class="ion ion-md-add"></span>&nbsp; Update
+        </button>
+    </div>
+</form>

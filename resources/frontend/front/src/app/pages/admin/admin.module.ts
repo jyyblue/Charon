@@ -43,6 +43,15 @@ import { DcomponentBusinessComponent } from "./driver-edit/component/dcomponent-
 import { DcomponentHistoryJobComponent } from './driver-edit/component/history/dcomponent-history-job/dcomponent-history-job.component';
 import { DcomponentHistoryPaymentComponent } from './driver-edit/component/history/dcomponent-history-payment/dcomponent-history-payment.component';
 import { DcomponentHistoryMailComponent } from './driver-edit/component/history/dcomponent-history-mail/dcomponent-history-mail.component';
+import { DcDetailSeComponent } from './driver-edit/component/dcomponent-detail/dc-detail-se/dc-detail-se.component';
+import { DcDetailCxComponent } from './driver-edit/component/dcomponent-detail/dc-detail-cx/dc-detail-cx.component';
+import { DcDetailCompanyComponent } from './driver-edit/component/dcomponent-detail/dc-detail-company/dc-detail-company.component';
+import { DcDetailPayeComponent } from './driver-edit/component/dcomponent-detail/dc-detail-paye/dc-detail-paye.component';
+import { DcomponentVehicleComponent } from './driver-edit/component/dcomponent-vehicle/dcomponent-vehicle.component';
+import { DcomponentLicenceComponent } from './driver-edit/component/dcomponent-licence/dcomponent-licence.component';
+import { DcomponentHealthComponent } from './driver-edit/component/dcomponent-health/dcomponent-health.component';
+import { DcomponentTrainingComponent } from './driver-edit/component/dcomponent-training/dcomponent-training.component';
+import { DcomponentAssetComponent } from './driver-edit/component/dcomponent-asset/dcomponent-asset.component';
 @NgModule({
   declarations: [
     CustomDaterangePicker2Component,
@@ -73,7 +82,16 @@ import { DcomponentHistoryMailComponent } from './driver-edit/component/history/
     DcomponentBusinessComponent,
     DcomponentHistoryJobComponent,
     DcomponentHistoryPaymentComponent,
-    DcomponentHistoryMailComponent
+    DcomponentHistoryMailComponent,
+    DcDetailSeComponent,
+    DcDetailCxComponent,
+    DcDetailCompanyComponent,
+    DcDetailPayeComponent,
+    DcomponentVehicleComponent,
+    DcomponentLicenceComponent,
+    DcomponentHealthComponent,
+    DcomponentTrainingComponent,
+    DcomponentAssetComponent
   ],
   imports: [
     CommonModule,

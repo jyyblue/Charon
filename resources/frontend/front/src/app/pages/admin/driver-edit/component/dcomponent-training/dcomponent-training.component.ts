@@ -5,55 +5,89 @@ import * as moment from 'moment';
 import { ApiService } from "../../../../../../app/shared/services/api.service";
 declare var $: any;
 import { environment } from "../../../../../../environments/environment";
-import { v4 as uuidv4 } from 'uuid';
+
 
 @Component({
-  selector: "app-dcomponent-business",
-  templateUrl: "./dcomponent-business.component.html",
-  styles: [".noClick {pointer-events: none;color: #ad9e9e; }"],
+  selector: 'app-dcomponent-training',
+  templateUrl: './dcomponent-training.component.html',
+  styles: [".noClick {pointer-events: none;color: #ad9e9e; } .intro {background-color: #e3cfb5 !important;} .refresher {background-color: #bee3b5 !important;}"]
 })
-export class DcomponentBusinessComponent implements OnInit {
+export class DcomponentTrainingComponent implements OnInit {
   downloadurl = `${environment.apiUrl}/admin/v1/driver/downloadpdf`;
 
   dataForm: FormGroup;
   submitted = false;
   disabled = false;
   driver_id= 0;
-  documentList = [];
-  document_idx: String;
-  new_document_name= '';
-  initialDocuments = [
+  trainingList = [];
+  train_idx: String;
+  train = [
     {
-      'idx': 'operators_licence',
-      'name': 'Operators Licence',
+      'idx': 'intro',
+      'name': 'Introduction',
+      'class': 'intro',
     },
     {
-      'idx': 'fleet_vehicle_insurance',
-      'name': 'Fleet / Vehicle Insurance',
+      'idx': 'intro_gjs',
+      'name': 'Introduction to GJS',
+      'class': 'intro',
     },
     {
-      'idx': 'vat_certificate',
-      'name': 'VAT Certificate',
+      'idx': 'intro_health',
+      'name': 'Health and Safety',
+      'class': 'intro',
     },
     {
-      'idx': 'work_permit',
-      'name': 'Work Permit',
+      'idx': 'intro_fors',
+      'name': 'FORs',
+      'class': 'intro',
     },
     {
-      'idx': 'driving_licence',
-      'name': 'Driving Licence',
+      'idx': 'intro_technical',
+      'name': 'Technical and Practical',
+      'class': 'intro',
     },
     {
-      'idx': 'driver_cpc',
-      'name': 'Driver CPC',
+      'idx': 'intro_clandestine',
+      'name': 'Clandestine Prevntion',
+      'class': 'intro',
     },
     {
-      'idx': 'eye_sight_test',
-      'name': 'Eye Sight Test',
+      'idx': 'intro_other',
+      'name': 'Other',
+      'class': 'intro',
+    },
+
+
+    {
+      'idx': 're',
+      'name': 'Refresher',
+      'class': 'refresher',
     },
     {
-      'idx': 'uniform_issue_form',
-      'name': 'Uniform Issue Form',
+      'idx': 're_health',
+      'name': 'Health and Safety',
+      'class': 'refresher',
+    },
+    {
+      'idx': 're_fors',
+      'name': 'FORs',
+      'class': 'refresher',
+    },
+    {
+      'idx': 're_technical',
+      'name': 'Technical and Practical',
+      'class': 'refresher',
+    },
+    {
+      'idx': 're_clandestine',
+      'name': 'Clandestine Prevntion',
+      'class': 'refresher',
+    },
+    {
+      'idx': 're_other',
+      'name': 'Other',
+      'class': 'refresher',
     }
   ];
   @Input() vatOptions = [];
@@ -70,10 +104,10 @@ export class DcomponentBusinessComponent implements OnInit {
       this.driver_id = this.data['id'];
       console.log('this.driver_id', this.driver_id);
       let _data = this.data['data'];
-      let documentData = _data.document ? JSON.parse(_data.document) : [];
+      let trainingData = _data.train ? JSON.parse(_data.train) : [];
       
-      if ( documentData.length > 0) {
-        this.parseData(documentData);
+      if ( trainingData.length > 0) {
+        this.parseData(trainingData);
       } else {
         this.initData();
       }
@@ -102,32 +136,34 @@ export class DcomponentBusinessComponent implements OnInit {
 
   }
   initData() {
-    this.documentList = [];
-    this.initialDocuments.forEach(element => {
-      this.documentList.push({
+    this.trainingList = [];
+    this.train.forEach(element => {
+      this.trainingList.push({
         'idx': element['idx'],
         'name': element['name'],
         'pass': false,
         'tdate': this.convertStrToDate(),
         'expire': '',
         'file': '',
+        'class': element['class']
       });
     });
   };
-  parseData(documentData) {
-    this.documentList = [];
+  parseData(trainingData) {
+    this.trainingList = [];
 
-    documentData.forEach(element => {
-      this.documentList.push({
+    trainingData.forEach(element => {
+      this.trainingList.push({
         'idx': element['idx'],
         'name': element['name'],
         'pass': element['pass'],
         'tdate': this.convertStrToDate(element['tdate']),
         'expire': element['expire'],
         'file': element['file'],
+        'class': element['class'],
       })
     });
-    console.log(this.documentList)
+    console.log(this.trainingList)
   }
 
   /**
@@ -135,7 +171,7 @@ export class DcomponentBusinessComponent implements OnInit {
    * @param event 
    */
   onDateChange(date: NgbDateStruct, idx: String) {
-    let index = this.documentList.findIndex(ele => {
+    let index = this.trainingList.findIndex(ele => {
       return ele['idx'] === idx;
     })
     let passDate = date.year + "-" + date.month + "-" + date.day;
@@ -143,11 +179,11 @@ export class DcomponentBusinessComponent implements OnInit {
     let _expire = _passDate.add(6, 'month');
     passDate = moment(_expire).format('YYYY-MM-DD');
 
-    this.documentList[index]['expire'] = passDate;
+    this.trainingList[index]['expire'] = passDate;
   }
   
   uploadDocument(type_id) {
-    this.document_idx = type_id;
+    this.train_idx = type_id;
     console.log(type_id);
     $("#uploader").click();
   }
@@ -166,10 +202,10 @@ export class DcomponentBusinessComponent implements OnInit {
           let code = res.code;
           if (code == 200) {
             $("#uploader").val("");
-            let index = this.documentList.findIndex(ele => {
-              return ele['idx'] === this.document_idx;
+            let index = this.trainingList.findIndex(ele => {
+              return ele['idx'] === this.train_idx;
             });
-            this.documentList[index]['file'] = res.filename;
+            this.trainingList[index]['file'] = res.filename;
           }
         })
         .catch(err => {
@@ -178,11 +214,11 @@ export class DcomponentBusinessComponent implements OnInit {
     }
   }
 
-  deleteDocument(idx, deleteItem = false) {
-    let index = this.documentList.findIndex(ele => {
+  deleteDocument(idx) {
+    let index = this.trainingList.findIndex(ele => {
       return ele['idx'] === idx;
     });
-    let filename = this.documentList[index]['file'];
+    let filename = this.trainingList[index]['file'];
     let params = {
       driver_id: this.driver_id,
       filename: filename,
@@ -194,15 +230,7 @@ export class DcomponentBusinessComponent implements OnInit {
         let code = res.code;
         if (code == 200) {
           $("#uploader").val("");
-          this.documentList[index]['file'] = '';
-          if( deleteItem === true ) {
-            const itemIdx = this.documentList.findIndex(item => {
-              return item.idx === idx;
-            })
-            if(itemIdx > -1) {
-              this.documentList.splice(itemIdx, 1);
-            }
-          }
+          this.trainingList[index]['file'] = '';
         }
       })
       .catch(err => {
@@ -210,31 +238,12 @@ export class DcomponentBusinessComponent implements OnInit {
       });
   }
 
-  addNewDocument() {
-    const uuid = uuidv4();
-    const name = this.new_document_name;
-    let newDoc = {
-      'idx': uuid,
-      'name': name,
-      'pass': false,
-      'tdate': this.convertStrToDate(),
-      'expire': '',
-      'file': '',
-    };
-    this.documentList.push(newDoc);
-    this.new_document_name = '';
-  }
-
-  onModalClose() {
-    this.new_document_name = '';
-    $('#newDocumentModal').modal('hide');
-  }
-
   onSubmit() {
+    console.log("hre");
     this.submitted = true;
 
     const params = {
-      'document': JSON.stringify(this.documentList)
+      'train': JSON.stringify(this.trainingList)
     };
 
     const data = {

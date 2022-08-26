@@ -268,6 +268,7 @@ class DriverController extends Controller
 
         $driver_id = $request->get('driver_id');
         $type = $request->get('type');
+        $onlyfile = $request->get('onlyfile');
         $rules = [];
         $customMessages = [];
         if ($request->hasFile('file')) {
@@ -278,18 +279,20 @@ class DriverController extends Controller
             $cleanedfilename = uniqid() . '_' . clean_filename($file->getClientOriginalName());
             $file->storeAs($directory, $cleanedfilename);
 
-            // store driver_business_doc table
-            DriverBusinessDocument::updateOrCreate(
-                ['driver_id' => $driver_id, 'type_id' => $type],
-                [
-                    'driver_id' => $driver_id,
-                    'type_id' => $type,
-                    'uploaded' => now(),
-                    'file' => $cleanedfilename,
-                    'updated_at' => now(),
-                    'valid' => 1,
-                ]
-            );
+            if(empty($onlyfile)) {
+                // store driver_business_doc table
+                DriverBusinessDocument::updateOrCreate(
+                    ['driver_id' => $driver_id, 'type_id' => $type],
+                    [
+                        'driver_id' => $driver_id,
+                        'type_id' => $type,
+                        'uploaded' => now(),
+                        'file' => $cleanedfilename,
+                        'updated_at' => now(),
+                        'valid' => 1,
+                    ]
+                );
+            }
             return response()->json(["code" => 200, "msg" => "", 'filename' => $cleanedfilename], 200);
         }
         return response()->json(["code" => 404, "msg" => "no file"], 400);
@@ -299,9 +302,15 @@ class DriverController extends Controller
     {
         $driver_id = $request->get('driver');
         $type = $request->get('type');
-        $item = DriverBusinessDocument::where('driver_id', $driver_id)->where('type_id', $type)->first();
-        if ($item) {
-            $filename = $item->file;
+        $filename= $request->get('filename');
+        if(empty($filename)) {
+            $item = DriverBusinessDocument::where('driver_id', $driver_id)->where('type_id', $type)->first();
+            if ($item) {
+                $filename = $item->file;
+                $file = storage_path() . "/app/public/driver/attachments/" . $filename;
+                return response()->download($file);
+            }
+        }else{
             $file = storage_path() . "/app/public/driver/attachments/" . $filename;
             return response()->download($file);
         }
@@ -309,9 +318,21 @@ class DriverController extends Controller
 
     public function deleteDriverBusinessDocument(Request $request)
     {
+        $directory = "public/driver/attachments/";
         $driver_id = $request->get('driver_id');
         $type = $request->get('type');
-        DriverBusinessDocument::where('driver_id', $driver_id)->where('type_id', $type)->delete();
-        return response()->json(["code" => 200], 200);
+        $onlyfile = $request->get('onlyfile');
+        if(!empty($onlyfile)) {
+            $filename = $request->get('filename');
+            Storage::delete($directory.$filename);
+            return response()->json(["code" => 200], 200);
+        }
+        $rec = DriverBusinessDocument::where('driver_id', $driver_id)->where('type_id', $type)->first();
+        if (!empty($rec)) {
+            Storage::delete($directory.$rec->file);
+            $rec->delete();
+            return response()->json(["code" => 200], 200);
+        }
+        return response()->json(["code" => 205], 200);
     }
 }
