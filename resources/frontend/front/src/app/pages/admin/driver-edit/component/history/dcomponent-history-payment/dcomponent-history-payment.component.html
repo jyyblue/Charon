@@ -32,23 +32,25 @@
                         Customer
                     </th>
                     <th class="text-nowrap cursor-pointer">
-                        Job Date
+                        Invoice Date
                     </th>
 
                     <th class="text-nowrap cursor-pointer" >
-                        Driver
+                        Invoice Number
+                    </th>
+
+                    <th class="text-nowrap cursor-pointer" >
+                        Invoice Rec Date
+                    </th>
+
+                    <th class="text-nowrap cursor-pointer" >
+                        Payment Date
                     </th>
                     <th class="text-nowrap cursor-pointer" >
-                        Job Price
+                        Payment Reference
                     </th>
                     <th class="text-nowrap cursor-pointer" >
-                        Driver Price
-                    </th>
-                    <th class="text-nowrap cursor-pointer" >
-                        Profit
-                    </th>
-                    <th class="text-nowrap cursor-pointer" >
-                        Status
+                        Amount
                     </th>
                 </tr>
             </thead>
@@ -57,15 +59,12 @@
                     <td class="align-middle">{{task.docket}}</td>
                     <td class="align-middle">{{ task.customer.account_code }} - {{task.customer.company_name}}
                     </td>
-                    <td class="align-middle">{{task.job_date}}</td>
-                    <td class="align-middle">{{ task.driver? task.driver.call_sign: ''}} - {{task.driver ? task.driver.email: ''}}</td>
-                    <td class="align-middle">{{task.c_tprice}}</td>
-                    <td class="align-middle">{{task.d_tprice}}</td>
-                    <td class="align-middle">{{task.profit}}</td>
-                    <td class="align-middle" [ngStyle]="{background:
-                        task._status ?
-                        task._status.color : '#fff'}">
-                        {{task._status.name}}</td>
+                    <td class="align-middle">{{task.invoice_date}}</td>
+                    <td class="align-middle">{{ task.invoice_number }}</td>
+                    <td class="align-middle">{{ task.invoice_received_date }}</td>
+                    <td class="align-middle">{{task.payment_date}}</td>
+                    <td class="align-middle">{{task.payment_reference}}</td>
+                    <td class="align-middle">&pound; {{task.d_tprice}}</td>
                 </tr>
             </tbody>
         </table>

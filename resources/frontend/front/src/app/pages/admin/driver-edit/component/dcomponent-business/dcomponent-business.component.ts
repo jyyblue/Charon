@@ -223,6 +223,7 @@ export class DcomponentBusinessComponent implements OnInit {
     };
     this.documentList.push(newDoc);
     this.new_document_name = '';
+    $('#newDocumentModal').modal('hide');
   }
 
   onModalClose() {

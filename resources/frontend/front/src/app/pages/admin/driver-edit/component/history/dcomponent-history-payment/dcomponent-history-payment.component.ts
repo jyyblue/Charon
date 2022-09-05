@@ -28,7 +28,8 @@ export class DcomponentHistoryPaymentComponent implements OnInit {
     let params = {
       page: this.currentPage,
       pagesize: this.perPage,
-      driverid: this.userid
+      driverid: this.userid,
+      status: 5,
     };
     this.apiService
       .getTaskList(params)
