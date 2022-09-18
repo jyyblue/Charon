@@ -40,6 +40,19 @@ import { DcomponentBasicComponent } from "./driver-edit/component/dcomponent-bas
 import { DcomponentDetailComponent } from "./driver-edit/component/dcomponent-detail/dcomponent-detail.component";
 import { DcomponentFinancialDetailComponent } from "./driver-edit/component/dcomponent-financial-detail/dcomponent-financial-detail.component";
 import { DcomponentBusinessComponent } from "./driver-edit/component/dcomponent-business/dcomponent-business.component";
+import { DcomponentHistoryJobComponent } from './driver-edit/component/history/dcomponent-history-job/dcomponent-history-job.component';
+import { DcomponentHistoryPaymentComponent } from './driver-edit/component/history/dcomponent-history-payment/dcomponent-history-payment.component';
+import { DcomponentHistoryMailComponent } from './driver-edit/component/history/dcomponent-history-mail/dcomponent-history-mail.component';
+import { DcDetailSeComponent } from './driver-edit/component/dcomponent-detail/dc-detail-se/dc-detail-se.component';
+import { DcDetailCxComponent } from './driver-edit/component/dcomponent-detail/dc-detail-cx/dc-detail-cx.component';
+import { DcDetailCompanyComponent } from './driver-edit/component/dcomponent-detail/dc-detail-company/dc-detail-company.component';
+import { DcDetailPayeComponent } from './driver-edit/component/dcomponent-detail/dc-detail-paye/dc-detail-paye.component';
+import { DcomponentVehicleComponent } from './driver-edit/component/dcomponent-vehicle/dcomponent-vehicle.component';
+import { DcomponentLicenceComponent } from './driver-edit/component/dcomponent-licence/dcomponent-licence.component';
+import { DcomponentHealthComponent } from './driver-edit/component/dcomponent-health/dcomponent-health.component';
+import { DcomponentTrainingComponent } from './driver-edit/component/dcomponent-training/dcomponent-training.component';
+import { DcomponentAssetComponent } from './driver-edit/component/dcomponent-asset/dcomponent-asset.component';
+import { DcomponentDocumentComponent } from './driver-edit/component/dcomponent-document/dcomponent-document.component';
 @NgModule({
   declarations: [
     CustomDaterangePicker2Component,
@@ -67,7 +80,20 @@ import { DcomponentBusinessComponent } from "./driver-edit/component/dcomponent-
     DcomponentBasicComponent,
     DcomponentDetailComponent,
     DcomponentFinancialDetailComponent,
-    DcomponentBusinessComponent
+    DcomponentBusinessComponent,
+    DcomponentHistoryJobComponent,
+    DcomponentHistoryPaymentComponent,
+    DcomponentHistoryMailComponent,
+    DcDetailSeComponent,
+    DcDetailCxComponent,
+    DcDetailCompanyComponent,
+    DcDetailPayeComponent,
+    DcomponentVehicleComponent,
+    DcomponentLicenceComponent,
+    DcomponentHealthComponent,
+    DcomponentTrainingComponent,
+    DcomponentAssetComponent,
+    DcomponentDocumentComponent
   ],
   imports: [
     CommonModule,

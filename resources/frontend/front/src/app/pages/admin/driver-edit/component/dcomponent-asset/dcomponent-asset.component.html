@@ -1,0 +1,66 @@
+<!-- Table -->
+<hr class="border-light m-0">
+<div class="table-responsive">
+    <table class="table table-striped table-bordered card-table">
+        <thead>
+            <tr>
+                <th class="text-nowrap cursor-pointer">
+                    Name
+                </th>
+                <th class="text-nowrap cursor-pointer">
+                    Checkbox
+                </th>
+                <th class="text-nowrap cursor-pointer">
+                    Date
+                </th>
+                <th class="text-nowrap cursor-pointer">
+                    Note
+                </th>
+            </tr>
+        </thead>
+        <tbody class="job-list-table">
+            <tr *ngFor="let doc of trainingList" [ngClass]="doc.class">
+                <td class="align-middle">{{ doc.name }}</td>
+                <td class="align-middle">
+                    <input 
+                        id="has_eye_insight_test" 
+                        type="checkbox"
+                        [(ngModel)]="doc.pass"
+                    />
+                </td>
+                <td class="align-middle">
+                    <div class="input-group">
+                        <input 
+                            class="form-control"
+                            placeholder="yyyy-mm-dd"
+                            ngbDatepicker 
+                            name="birthday" 
+                            #d="ngbDatepicker" 
+                            [(ngModel)]="doc.tdate"
+                            (ngModelChange)="onDateChange($event, doc.idx)"
+                            [ngClass]="{'is-invalid' : submitted && doc.errors }" 
+                            readonly (click)="d.toggle()"
+                        />
+                        <div class="input-group-append">
+                            <button class="input-group-text" (click)="d.toggle()" type="button">
+                                <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                            </button>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <textarea class="form-control" [(ngModel)]="doc.note"></textarea>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<button 
+    type="button"
+    (click)="onSubmit()"
+    class="btn btn-primary
+    rounded-pill d-block"
+>
+    <span class="ion ion-md-add"></span>&nbsp; Update
+</button>
+<!-- / Table -->

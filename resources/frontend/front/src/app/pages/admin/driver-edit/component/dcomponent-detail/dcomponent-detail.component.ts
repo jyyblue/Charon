@@ -10,10 +10,12 @@ export class DcomponentDetailComponent implements OnInit {
   dataForm: FormGroup;
   submitted = false;
   type = 0;
+  _data = null;
+  
   @Input() typeOptions = [];
   @Input()
   set data(data) {
-    console.log(data);
+    this._data = data;
     this.type = data.type;
     this.dataForm = this.formBuilder.group({
       company_name: [data ? data.company_name : null, []],
@@ -28,7 +30,7 @@ export class DcomponentDetailComponent implements OnInit {
       address2: [data ? data.address2 : null, []],
       city: [data ? data.city : null, Validators.required],
       state: [data ? data.state : null, Validators.required],
-      postcode: [data ? data.postcode : null, Validators.required]
+      postcode: [data ? data.postcode : null, Validators.required],
     });
   }
 
@@ -38,6 +40,14 @@ export class DcomponentDetailComponent implements OnInit {
   ngOnInit(): void {}
   get f(): any {
     return this.dataForm.controls;
+  }
+
+  updateData(e) {
+    let fData = e.form;
+    const data = {
+      form: fData
+    };
+    this.valueChange.emit(data);
   }
 
   onSubmit() {

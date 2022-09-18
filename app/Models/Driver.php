@@ -32,6 +32,7 @@ class Driver extends Model
         'bank_sort_code',
         'bank_account_number',
         'payee_name',
+        'data',
         'created_at',
         'updated_at'
     ];

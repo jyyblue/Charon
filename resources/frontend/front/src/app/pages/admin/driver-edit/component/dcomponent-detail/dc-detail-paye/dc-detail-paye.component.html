@@ -1,0 +1,205 @@
+<form [formGroup]="dataForm" class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="form-label">Is this driver PAYE or LOSC?</label>
+                <select formControlName="isCompany" name="isCompany" class="form-control">
+                    <option value="paye">PAYE</option>
+                    <option value="losc">LOSC</option>
+                </select>                    
+                <div *ngIf="f.isCompany.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.isCompany.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="f.isCompany.value == 'losc'">
+            <div class="form-group col-md-6">
+                <label class="form-label">LOSC Agency or Company Name</label>
+                <input type="text" class="form-control" placeholder="" formControlName="company_name" name="company_name" [ngClass]="{
+                    'is-invalid':
+                    submitted && f.company_name.errors }" />
+                <div *ngIf="f.company_name.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.company_name.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="form-label">Company Register No</label>
+                <input type="text" class="form-control" formControlName="company_reg_no" name="company_reg_no" [ngClass]="{ 'is-invalid': submitted &&
+                    f.company_reg_no.errors }" />
+                <div *ngIf="f.company_reg_no.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.company_reg_no.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="form-group col-md-6">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" formControlName="email" name="email" [ngClass]="{ 'is-invalid': submitted &&
+                    f.email.errors }" />
+                <div *ngIf="f.email.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.email.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="form-label">Phone Number</label>
+                <input type="text" class="form-control" placeholder="" formControlName="phone_number" name="phone_number" [ngClass]="{
+                    'is-invalid':
+                    submitted && f.phone_number.errors }" />
+                <div *ngIf="f.phone_number.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.phone_number.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="form-group col-md-6">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-control" placeholder="" formControlName="address" name="address" [ngClass]="{
+                    'is-invalid':
+                    submitted && f.address.errors }" />
+                <div *ngIf="f.address.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.address.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="form-label">Address 2</label>
+                <input type="text" class="form-control" placeholder="" formControlName="address2" name="address2" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="form-label">City</label>
+                <input type="text" class="form-control" formControlName="city" name="city" [ngClass]="{
+                    'is-invalid': submitted && f.city.errors
+                    }" />
+                <div *ngIf="f.city.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.city.errors.required">This field is Required</div>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="form-label">State</label>
+                <input type="text" class="form-control" formControlName="state" name="state" [ngClass]="{ 'is-invalid': submitted &&
+                    f.state.errors }" />
+                <div *ngIf="f.state.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.state.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <label class="form-label">Postcode</label>
+                <input type="text" class="form-control" formControlName="postcode" name="postcode" [ngClass]="{ 'is-invalid': submitted &&
+                    f.postcode.errors }" />
+                <div *ngIf="f.postcode.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.postcode.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="f.isCompany.value == 'paye'">
+            <div class="form-group col-md-6">
+                <label class="form-label">Nationality</label>
+                <input type="text" class="form-control" placeholder="" formControlName="nationality" name="nationality" [ngClass]="{
+                    'is-invalid':
+                    submitted && f.nationality.errors }" />
+                <div *ngIf="f.nationality.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.nationality.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="form-label">Nationality Insurance Number</label>
+                <input type="text" class="form-control" formControlName="nationality_insurance_number" name="nationality_insurance_number" [ngClass]="{ 'is-invalid': submitted &&
+                    f.nationality_insurance_number.errors }" />
+                <div *ngIf="f.nationality_insurance_number.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.nationality_insurance_number.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="f.isCompany.value == 'paye'">
+            <div class="form-group col-md-6">
+                <label class="form-label">Do they require work permit?</label>
+                <input formControlName="require_work_premit" name="require_work_premit"
+                    type="checkbox">
+            </div>
+            <div class="form-group col-md-6" *ngIf="f.require_work_premit.value">
+                <label class="form-label">When does work permit expire?</label>
+                <div class="input-group">
+                    <input class="form-control" placeholder="yyyy-mm-dd"
+                        ngbDatepicker formControlName="work_premit_expire_date" name="work_premit_expire_date" #d="ngbDatepicker"
+                        [ngClass]="{'is-invalid' : submitted && f.work_premit_expire_date.errors }" readonly (click)="d.toggle()">
+                    <div class="input-group-append">
+                        <button class="input-group-text" (click)="d.toggle()" type="button">
+                            <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                        </button>
+                    </div>
+                </div>                    
+                <div *ngIf="f.work_premit_expire_date.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.work_premit_expire_date.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="form-label">Emergency Contact Name</label>
+                <input type="text" class="form-control" formControlName="emergency_contact_name" name="emergency_contact_name" [ngClass]="{ 'is-invalid': submitted &&
+                    f.emergency_contact_name.errors }" />
+                <div *ngIf="f.emergency_contact_name.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.emergency_contact_name.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label class="form-label">Emergency Contact Number</label>
+                <input type="text" class="form-control" formControlName="emergency_contact_number" name="emergency_contact_number" [ngClass]="{ 'is-invalid': submitted &&
+                    f.emergency_contact_number.errors }" />
+                <div *ngIf="f.emergency_contact_number.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.emergency_contact_number.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label class="form-label">Emergency Contact Relationship</label>
+                <input type="text" class="form-control" formControlName="emergency_contact_realtion" name="emergency_contact_realtion" [ngClass]="{ 'is-invalid': submitted &&
+                    f.emergency_contact_realtion.errors }" />
+                <div *ngIf="f.emergency_contact_realtion.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.emergency_contact_realtion.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" (click)="onSubmit()" class="btn btn-primary
+            rounded-pill d-block">
+            <span class="ion ion-md-add"></span>&nbsp; Update
+        </button>
+    </div>
+</form>

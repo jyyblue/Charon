@@ -15,31 +15,83 @@
     </div>
 </div>
 <div class="nav-tabs-top mb-4">
-    <ul ngbNav #driverTabs="ngbNav" class="nav-tabs">
-        <li ngbNavItem>
-            <a ngbNavLink>Basic</a>
+    <ul ngbNav #driverTabs="ngbNav" class="nav-tabs" [(activeId)]="active">
+        <li [ngbNavItem]="1">
+            <a ngbNavLink class="uppercase">Basic</a>
             <ng-template ngbNavContent>
                 <app-dcomponent-basic [data]="data" [typeOptions]="typeOptions" (valueChange)="updateData($event)" (typeChange)="changeType($event)"></app-dcomponent-basic>
             </ng-template>
         </li>
-        <li ngbNavItem>
-            <a ngbNavLink>Detail</a>
+        <li [ngbNavItem]="2">
+            <a ngbNavLink class="uppercase">Driver Information</a>
             <ng-template ngbNavContent>
                 <app-dcomponent-detail [data]="data" [typeOptions]="typeOptions" (valueChange)="updateData($event)"></app-dcomponent-detail>
             </ng-template>
         </li>
-        <li ngbNavItem>
-            <a ngbNavLink>Financial</a>
+        <li [ngbNavItem]="21" *ngIf="data.type=='3'">
+            <a ngbNavLink class="uppercase">Vehicle Details</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-vehicle [data]="data" (valueChange)="updateData($event)"></app-dcomponent-vehicle>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="22" *ngIf="data.type=='2' || data.type=='3'">
+            <a ngbNavLink class="uppercase">Licence Details</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-licence [data]="data" (valueChange)="updateData($event)"></app-dcomponent-licence>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="23" *ngIf="data.type=='2' || data.type=='3'">
+            <a ngbNavLink class="uppercase">HEALTH AND FITNESS</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-health [data]="data" (valueChange)="updateData($event)"></app-dcomponent-health>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="24" *ngIf="data.type=='2' || data.type=='3'">
+            <a ngbNavLink class="uppercase">Training</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-training [data]="data" (valueChange)="updateData($event)"></app-dcomponent-training>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="25" *ngIf="data.type=='2' || data.type=='3'">
+            <a ngbNavLink class="uppercase">ASSET MANAGEMENT AND UNIFORM</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-asset [data]="data" (valueChange)="updateData($event)"></app-dcomponent-asset>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="3" >
+            <a ngbNavLink class="uppercase">Financial</a>
             <ng-template ngbNavContent>
                 <app-dcomponent-financial-detail [data]="data" [vatOptions]="vatOptions" (valueChange)="updateData($event)"></app-dcomponent-financial-detail>
             </ng-template>
         </li>
-        <li ngbNavItem *ngIf="data && data.type == 4">
-            <a ngbNavLink>Business Document</a>
+        <li [ngbNavItem]="4">
+            <a ngbNavLink class="uppercase">History</a>
             <ng-template ngbNavContent>
-                <app-dcomponent-business [driver_id]="userid"></app-dcomponent-business>
+                <app-dcomponent-history-job [userid]="userid"></app-dcomponent-history-job>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <app-dcomponent-history-mail [email]="data.email"></app-dcomponent-history-mail>
+                    </div>
+                    <div class="col-md-6">
+                        <app-dcomponent-history-payment [userid]="userid"></app-dcomponent-history-payment>
+                    </div>
+                </div>
             </ng-template>
         </li>
+        <li [ngbNavItem]="5">
+            <a ngbNavLink class="uppercase">Driver Performance</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-business  [data]="data" [userid]="userid"></app-dcomponent-business>
+            </ng-template>
+        </li>
+
+        <li [ngbNavItem]="6" *ngIf="data.type !=='1'">
+            <a ngbNavLink class="uppercase">Document Library</a>
+            <ng-template ngbNavContent>
+                <app-dcomponent-document  [data]="data" (valueChange)="updateData($event)"></app-dcomponent-document>
+            </ng-template>
+        </li>
+        
     </ul>
     <div [ngbNavOutlet]="driverTabs"></div>
 </div>

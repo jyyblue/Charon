@@ -1,97 +1,145 @@
-import { Component, Input, OnInit, ViewEncapsulation } from "@angular/core";
-import { ApiService } from "src/app/shared/services/api.service";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { NgbDateStruct, NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import * as moment from 'moment';
 declare var $: any;
-import { environment } from "src/environments/environment";
+import { environment } from "../../../../../../environments/environment";
+import { v4 as uuidv4 } from 'uuid';
+import { ApiService } from "src/app/shared/services/api.service";
+
 @Component({
   selector: "app-dcomponent-business",
   templateUrl: "./dcomponent-business.component.html",
-  styles: [".noClick {pointer-events: none;color: #ad9e9e; }"],
+  styles: [
+    `
+  .form-group.hidden {
+    width: 0;
+    margin: 0;
+    border: none;
+    padding: 0;
+  }
+  .custom-day {
+    text-align: center;
+    padding: 0.185rem 0.25rem;
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+  }
+  .custom-day.focused {
+    background-color: #e6e6e6;
+  }
+  .custom-day.range, .custom-day:hover {
+    background-color: rgb(2, 117, 216);
+    color: white;
+  }
+  .custom-day.faded {
+    background-color: rgba(2, 117, 216, 0.5);
+  }
+`],
   styleUrls: [
-    "../../../../../../vendor/libs/ngx-sweetalert2/ngx-sweetalert2.scss"
-  ],
-  encapsulation: ViewEncapsulation.None
+    '../../../../../../vendor/libs/ngb-datepicker/ngb-datepicker.scss',
+    '../../../../../../vendor/libs/ng-select/ng-select.scss',
+  ]
 })
 export class DcomponentBusinessComponent implements OnInit {
-  @Input() driver_id = 0;
-  documentList = [];
-  doc_type_id = 0;
-  downloadurl = `${environment.apiUrl}/admin/v1/driver/downloadpdf`;
+  @Input() userid = 0;
+  @Input()
+  set data(data) {
+    console.log(data);
+  }
 
-  constructor(private apiService: ApiService) {}
+  perPage = 10;
+
+  filterVal = "";
+  currentPage = 1;
+  totalItems = 0;
+  taskData: object[] = [];
+
+  hoveredDate: NgbDate | null = null;
+  fromDate: NgbDate | null;
+  toDate: NgbDate | null;
+  today = '';
+
+  constructor(    
+    private apiService: ApiService,
+    public formatter: NgbDateParserFormatter,
+    private calendar: NgbCalendar, 
+    ) {
+      let today = calendar.getToday();
+      let year = today.year;
+      let month = today.month;
+      this.fromDate = new NgbDate(year, month, 1);
+      this.toDate = calendar.getNext(this.fromDate, 'm', 1);
+      this.today = moment(formatter.format(calendar.getToday())).format('dddd, MMMM Do YYYY');
+     }
 
   ngOnInit(): void {
-    this.getDocumentDate();
+    this.loadData();
   }
 
-  getDocumentDate() {
-    let params = {
-      driver_id: this.driver_id
-    };
-    this.apiService
-      .getDriverDocumentData(params)
-      .then(res => {
-        let code = res.code;
-        if (code == 200) {
-          this.documentList = res.documentList;
-        }
-      })
-      .catch(err => {
-        let status = err.status;
-      });
-  }
-  uploadDocument(type_id) {
-    this.doc_type_id = type_id;
-    console.log(type_id);
-    $("#uploader").click();
-  }
-  uploadFile(event) {
-    const file: File = event.target.files[0];
-    console.log(file);
-    if (file) {
-      // this.fileName = file.name;
-      const params = new FormData();
-      params.append("file", file);
-      params.append("driver_id", this.driver_id.toString());
-      params.append("type", this.doc_type_id.toString());
-      this.apiService
-        .uploadDriverBusinessDocument(params)
-        .then(res => {
-          let code = res.code;
-          if (code == 200) {
-            $("#uploader").val("");
-            this.getDocumentDate();
-          }
-        })
-        .catch(err => {
-          let status = err.status;
-        });
+  loadData() {
+    let from = '';
+    if(this.fromDate != undefined) {
+      from = this.fromDate.year + '-' + this.fromDate.month + '-' + this.fromDate.day;
+      from = moment(from).format('YYYY-MM-DD 00:00:00');
     }
-  }
-  deleteDocument(type_id) {
+    let to = '';
+    if(this.toDate != undefined) {
+      to = this.toDate.year + '-' + this.toDate.month + '-' + this.toDate.day;
+      to = moment(to).format('YYYY-MM-DD 23:59:59');
+    }
+
     let params = {
-      driver_id: this.driver_id,
-      type: type_id
+      page: this.currentPage,
+      pagesize: this.perPage,
+      driverid: this.userid,
+      status: 5,
+      from: from,
+      to: to
     };
     this.apiService
-      .deleteDriverBusinessDocument(params)
+      .getTaskList(params)
       .then(res => {
-        let code = res.code;
-        if (code == 200) {
-          $("#uploader").val("");
-          this.getDocumentDate();
-        }
+        this.taskData = res.data;
+        this.totalItems = res.total;
       })
-      .catch(err => {
-        let status = err.status;
-      });
+      .catch(err => {});
   }
-  viewDocument(path) {
-    const win = window.open();
-    // GET.getFileArrayBuffer(disk, path).then((response) => {
-    //     const blob = new Blob([response.data], { type: 'application/pdf' });
-    win.document.write(
-      `<iframe src="${path}" allowfullscreen height="100%" width="100%"></iframe>`
-    );
-    win.document.title = "Pdf Viewer";
+  update() {
+    console.log(this.currentPage);
+    this.loadData();
   }
+  get totalPages() {
+    return Math.ceil(this.totalItems / this.perPage);
+  }
+
+    // Range datepicker
+    onDateSelection(date: NgbDate, datepicker: any) {
+      if (!this.fromDate && !this.toDate) {
+        this.fromDate = date;
+      } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+        this.toDate = date;
+        datepicker.close();
+        this.currentPage = 1;
+        this.loadData();
+      } else {
+        this.toDate = null;
+        this.fromDate = date;
+      }
+    }
+
+    isRange(date: NgbDate) {
+      return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
+    }
+    isHovered(date: NgbDate) {
+      return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+    }
+  
+    isInside(date: NgbDate) {
+      return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+    }
+    validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+      const parsed = this.formatter.parse(input);
+      return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+    }
 }

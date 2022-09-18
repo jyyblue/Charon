@@ -195,16 +195,21 @@ class MailManagementController extends Controller
         $page = $request->get('page', 1);
         $skip = ($page - 1) * $pageSize;
         $search = $request->get('search', '');
+        $email = $request->get('email', '');
 
         $all = EmailLog::leftjoin('task', function($join){
             $join->on('email_log.task_id', '=', 'task.id');
         });
         if ($search != '') {
-            $all = $all
-                ->whereRaw('LOWER(`email_log`.`subject`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
+            $all = $all->where(function($query) use($search){
+                $query->whereRaw('LOWER(`email_log`.`subject`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
                 ->orWhereRaw(' LOWER(`email_log`.`to`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
                 ->orWhereRaw(' LOWER(`task`.`docket`) LIKE ? ', ['%' . trim(strtolower($search)) . '%'])
                 ;
+            });
+        }
+        if(!empty($email)) {
+            $all = $all -> where('email_log.to', $email);
         }
         $count = $all->count();
         $all = $all->select(['email_log.*', 'task.docket'])->skip($skip)->take($pageSize)->get();

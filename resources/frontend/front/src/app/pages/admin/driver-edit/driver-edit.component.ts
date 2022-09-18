@@ -7,11 +7,17 @@ import { ApiService } from "src/app/shared/services/api.service";
 @Component({
   selector: "app-driver-edit",
   templateUrl: "./driver-edit.component.html",
-  styles: [],
+  styles: ['.uppercase { text-transform: uppercase }'],
   styleUrls: ["../../../../vendor/libs/ng-select/ng-select.scss"]
 })
 export class DriverEditComponent implements OnInit {
-  data = null;
+  data = {
+    'data': '',
+    id: '',
+    subcontractor: '',
+    type: '',
+    email: '',
+  };
   dataForm: FormGroup;
   loading = false;
   submitted = false;
@@ -19,12 +25,11 @@ export class DriverEditComponent implements OnInit {
   phoneMaskOptions = {
     mask: [/[1-9]/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]
   };
-  disabled = false;
 
   typeOptions = [];
 
   vatOptions = [];
-
+  active = 1;
   userid;
   constructor(
     private formBuilder: FormBuilder,
@@ -51,6 +56,7 @@ export class DriverEditComponent implements OnInit {
           this.typeOptions = res.driver_type;
           this.vatOptions = res.vat_type;
           this.data = res.data;
+          this.data.data = this.data.data ? JSON.parse(this.data.data): [];
         }
       })
       .catch(err => {
@@ -71,7 +77,21 @@ export class DriverEditComponent implements OnInit {
     fData["name"] = fData["subcontractor"]
       ? fData["subcontractor"]
       : this.data.subcontractor;
+    let temp = this.data.data ? this.data.data : {};
+    let oldData = {
+      ...temp
+    }
+    let newData = e.form;
+    let newKeys = Object.keys(newData);
+    newKeys.forEach(key => {
+      oldData[key] = newData[key];
+    });
+    let t = JSON.stringify(oldData);
+    console.log(t);
 
+    fData['data'] = JSON.stringify(oldData);
+    console.log(fData);
+    console.log(oldData);
     this.apiService
       .updateDriver(fData)
       .then(res => {
@@ -101,7 +121,6 @@ export class DriverEditComponent implements OnInit {
   }
 
   changeType(e) {
-    console.log(e);
     let type = e.type;
     this.data.type = type;
   }

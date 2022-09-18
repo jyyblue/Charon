@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import * as moment from 'moment';
 
 @Component({
   selector: "app-dcomponent-basic",
@@ -13,9 +14,21 @@ export class DcomponentBasicComponent implements OnInit {
   @Input()
   set data(data) {
     console.log(data);
+    let driverData = data.data;
+    var birthday;
+    if(driverData.birthday != undefined) {
+      let jd = moment(driverData.birthday);
+      birthday = {
+        year: jd.year(),
+        month: jd.month() + 1,
+        day: jd.date()
+      };
+    }
+
     this.dataForm = this.formBuilder.group({
       subcontractor: [data ? data.subcontractor : null, [Validators.required]],
       type: [data ? data.type : null, Validators.required],
+      birthday: [driverData ? birthday : null, []],
       call_sign: [data ? data.call_sign : null, Validators.required],
       cx_number: [data ? data.cx_number : null, []]
     });
@@ -39,9 +52,16 @@ export class DcomponentBasicComponent implements OnInit {
       return;
     }
 
+    let birthday = this.f.birthday.value; 
+    let jd = '';
+    if(birthday != undefined) {
+      jd = birthday.year + "-" + birthday.month + "-" + birthday.day;
+    }
+
     const params = {
       subcontractor: this.f.subcontractor.value,
       type: this.f.type.value,
+      birthday: jd,
       call_sign: this.f.call_sign.value,
       cx_number: this.f.cx_number.value
     };

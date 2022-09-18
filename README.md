@@ -26,3 +26,22 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 php artisan migrate:refresh --seed
 php artisan passport:install
+
+
+    php artisan serve
+
+    resources/frontend/front
+    npm run started
+
+## Build Frontend
+
+    npm run build:prod
+
+if fail to copy
+
+    copy ../../../public/assets/angular/index.html ../../views/angular.blade.php"
+
+resources\views\angular.blade.php
+
+    comment code between  --for dev--
+    uncomment code between --for product --

@@ -19,8 +19,8 @@ export class DriverAddComponent implements OnInit {
   phoneMaskOptions = {
     mask: [/[1-9]/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]
   };
-  disabled = false;
-
+  disabled = true;
+  active = 1;
   typeOptions = [
     { value: 1, label: "CX" },
     { value: 2, label: "PAYE" },
@@ -49,19 +49,6 @@ export class DriverAddComponent implements OnInit {
       call_sign: [null, Validators.required],
       type: [null, Validators.required],
       cx_number: [null, []]
-
-      // phone_number: [null, Validators.required],
-      // address: [null, Validators.required],
-      // address2: [null, []],
-      // city: [null, Validators.required],
-      // state: [null, Validators.required],
-      // postcode: [null, Validators.required],
-      // vat: [null, Validators.required],
-      // vat_number: [null, []],
-      // bank_name: [null, Validators.required],
-      // bank_sort_code: [null, Validators.required],
-      // bank_account_number: [null, Validators.required],
-      // payee_name: [null, Validators.required]
     });
   }
   getData() {
@@ -102,6 +89,7 @@ export class DriverAddComponent implements OnInit {
         if (code == 200) {
           let message = res.message;
           this.toastrService.success(message);
+          this.router.navigate(["admin/driver/edit", res.driver_id]);
         } else {
           let message = res.message;
           this.toastrService.error(message);

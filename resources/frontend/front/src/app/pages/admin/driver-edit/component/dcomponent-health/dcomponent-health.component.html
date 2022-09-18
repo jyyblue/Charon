@@ -1,0 +1,122 @@
+<form [formGroup]="dataForm" class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="has_long_standing_health_issue" class="form-label">Any long standing health issues?</label>
+                <input id="has_long_standing_health_issue" formControlName="has_long_standing_health_issue" name="has_long_standing_health_issue"
+                    type="checkbox">
+            </div>
+
+            <div class="form-group col-md-9" *ngIf="f.has_long_standing_health_issue.value">
+                <label class="form-label">Content</label>
+                <textarea class="form-control" rows="5" formControlName="long_standing_health_issue" name="long_standing_health_issue" [ngClass]="{ 'is-invalid': submitted &&
+                    f.long_standing_health_issue.errors }" ></textarea>
+                <div *ngIf="f.long_standing_health_issue.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.long_standing_health_issue.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="has_medical_disallow" class="form-label">Ever been told by medical professional not to drive?</label>
+                <input id="has_medical_disallow" formControlName="has_medical_disallow" name="has_medical_disallow"
+                    type="checkbox">
+            </div>
+
+            <div class="form-group col-md-9" *ngIf="f.has_medical_disallow.value">
+                <label class="form-label">Content</label>
+                <textarea class="form-control" rows="5" formControlName="medical_disallow" name="medical_disallow" [ngClass]="{ 'is-invalid': submitted &&
+                    f.medical_disallow.errors }" ></textarea>
+                <div *ngIf="f.medical_disallow.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.medical_disallow.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="has_dvla_condition" class="form-label">Any conditions that require notifying to DVLA?</label>
+                <input id="has_dvla_condition" formControlName="has_dvla_condition" name="has_dvla_condition"
+                    type="checkbox">
+            </div>
+
+            <div class="form-group col-md-9" *ngIf="f.has_dvla_condition.value">
+                <label class="form-label">Content</label>
+                <textarea class="form-control" rows="5" formControlName="has_dvla_condition" name="has_dvla_condition" [ngClass]="{ 'is-invalid': submitted &&
+                    f.has_dvla_condition.errors }" ></textarea>
+                <div *ngIf="f.has_dvla_condition.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.has_dvla_condition.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="has_routie_medical_incident" class="form-label">Any non routie medical incident in thelast 6 months?</label>
+                <input id="has_routie_medical_incident" formControlName="has_routie_medical_incident" name="has_routie_medical_incident"
+                    type="checkbox">
+            </div>
+
+            <div class="form-group col-md-9" *ngIf="f.has_routie_medical_incident.value">
+                <label class="form-label">Content</label>
+                <textarea class="form-control" rows="5" formControlName="routie_medical_incident" name="routie_medical_incident" [ngClass]="{ 'is-invalid': submitted &&
+                    f.routie_medical_incident.errors }" ></textarea>
+                <div *ngIf="f.routie_medical_incident.errors && submitted" class="invalid-feedback">
+                    <div *ngIf="f.routie_medical_incident.errors.required">
+                        This field is Required
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="has_eye_insight_test" class="form-label">Eye Insight Test</label>
+                <input id="has_eye_insight_test" formControlName="has_eye_insight_test" name="has_eye_insight_test"
+                    type="checkbox">
+            </div>
+
+            <div class="form-group col-md-9" *ngIf="f.has_eye_insight_test.value">
+                <input hidden type="file" accept="" id="uploader" (change)="uploadFile($event)" />
+
+                <div class="d-inline-flex">
+                    <a class="btn btn-default icon-btn md-btn-flat" ngbtooltip="Upload" (click)="uploadDocument()">
+                        <i class="ion ion-md-cloud-upload"></i>
+                    </a>
+
+                    <button 
+                        *ngIf="eye_insight_test"
+                        ngbtooltip="Delete" class="btn
+                        btn-default
+                        icon-btn md-btn-flat" 
+                        [swal]="{title:'Are you
+                        sure?', text:'You won\'t
+                        be able to revert this!', icon:'warning',
+                        showCancelButton:true, confirmButtonText:'Delete', 
+                        showCloseButton:true, customClass:
+                        {confirmButton:'btn btn-lg
+                        btn-warning',cancelButton: 'btn btn-lg
+                        btn-default'}}" (confirm)="deleteDocument()">
+                        <i class="ion ion-md-trash"></i>
+                    </button>
+                    <a 
+                        *ngIf="eye_insight_test"
+                        class="btn
+                        btn-default
+                        icon-btn md-btn-flat" ngbtooltip="View" href="{{
+                        downloadurl }}?driver={{ driver_id }}&filename={{
+                            eye_insight_test }}">
+                        <i class="ion ion-md-cloud-download"></i>
+                    </a>
+                </div>
+            </div>            
+        </div>
+        <button type="button" (click)="onSubmit()" class="btn btn-primary
+            rounded-pill d-block">
+            <span class="ion ion-md-add"></span>&nbsp; Update
+        </button>
+    </div>
+</form>
