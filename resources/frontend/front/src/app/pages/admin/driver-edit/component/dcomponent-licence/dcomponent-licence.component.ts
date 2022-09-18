@@ -5,7 +5,7 @@ import { ApiService } from "../../../../../../app/shared/services/api.service";
 declare var $: any;
 import { environment } from "../../../../../../environments/environment";
 import { NgbCalendar, NgbDate, NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
-import { isEmpty } from "rxjs/operators";
+import { DEFAULT_DOCUMENT_LIST, DRIVER_TYPE } from "src/app/shared/const/common";
 
 const hgv_license = 'hgv_license';
 const hgv_name = 'HGV License';
@@ -25,40 +25,9 @@ export class DcomponentLicenceComponent implements OnInit {
   driver_id= 0;
   hgv_licence_upload = null;
   documentList: any[] = [];
-  initialDocuments = [
-    {
-      'idx': 'operators_licence',
-      'name': 'Operators Licence',
-    },
-    {
-      'idx': 'fleet_vehicle_insurance',
-      'name': 'Fleet / Vehicle Insurance',
-    },
-    {
-      'idx': 'vat_certificate',
-      'name': 'VAT Certificate',
-    },
-    {
-      'idx': 'work_permit',
-      'name': 'Work Permit',
-    },
-    {
-      'idx': 'driving_licence',
-      'name': 'Driving Licence',
-    },
-    {
-      'idx': 'driver_cpc',
-      'name': 'Driver CPC',
-    },
-    {
-      'idx': 'eye_sight_test',
-      'name': 'Eye Sight Test',
-    },
-    {
-      'idx': 'uniform_issue_form',
-      'name': 'Uniform Issue Form',
-    }
-  ];
+  initialDocuments = [];
+  driver_type = 0;
+
   tdate: any;
   @Input() vatOptions = [];
   @Input() data: Object;
@@ -72,6 +41,10 @@ export class DcomponentLicenceComponent implements OnInit {
     if(this.data) {
       this.driver_id = this.data['id'];
       let licenceData = this.data['data'];
+      
+      this.driver_type = this.data['type'];
+      let dType = DRIVER_TYPE[this.driver_type];
+      this.initialDocuments = DEFAULT_DOCUMENT_LIST[dType];
 
       let licence_expiry = null;
       let hgv_licence = licenceData ? (licenceData.hgv_licence === true ? true: false) : false;

@@ -24,40 +24,7 @@ export class DcomponentDocumentComponent implements OnInit {
   document_idx: String;
   new_document_name= '';
   driver_type = 0;
-  initialDocuments = [
-    {
-      'idx': 'operators_licence',
-      'name': 'Operators Licence',
-    },
-    {
-      'idx': 'fleet_vehicle_insurance',
-      'name': 'Fleet / Vehicle Insurance',
-    },
-    {
-      'idx': 'vat_certificate',
-      'name': 'VAT Certificate',
-    },
-    {
-      'idx': 'work_permit',
-      'name': 'Work Permit',
-    },
-    {
-      'idx': 'driving_licence',
-      'name': 'Driving Licence',
-    },
-    {
-      'idx': 'driver_cpc',
-      'name': 'Driver CPC',
-    },
-    {
-      'idx': 'eye_sight_test',
-      'name': 'Eye Sight Test',
-    },
-    {
-      'idx': 'uniform_issue_form',
-      'name': 'Uniform Issue Form',
-    }
-  ];
+  initialDocuments = [];
   @Input() vatOptions = [];
   @Input() data: Object;
 
@@ -73,8 +40,6 @@ export class DcomponentDocumentComponent implements OnInit {
       this.driver_type = this.data['type'];
       let dType = DRIVER_TYPE[this.driver_type];
       this.initialDocuments = DEFAULT_DOCUMENT_LIST[dType];
-      console.log(this.initialDocuments);
-      console.log('this.driver_id', this.driver_id);
       let _data = this.data['data'];
       let documentData = _data.document ? JSON.parse(_data.document) : [];
       
