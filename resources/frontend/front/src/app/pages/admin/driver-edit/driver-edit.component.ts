@@ -7,7 +7,7 @@ import { ApiService } from "src/app/shared/services/api.service";
 @Component({
   selector: "app-driver-edit",
   templateUrl: "./driver-edit.component.html",
-  styles: [],
+  styles: ['.uppercase { text-transform: uppercase }'],
   styleUrls: ["../../../../vendor/libs/ng-select/ng-select.scss"]
 })
 export class DriverEditComponent implements OnInit {

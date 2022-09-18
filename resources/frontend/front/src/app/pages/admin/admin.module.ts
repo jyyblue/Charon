@@ -52,6 +52,7 @@ import { DcomponentLicenceComponent } from './driver-edit/component/dcomponent-l
 import { DcomponentHealthComponent } from './driver-edit/component/dcomponent-health/dcomponent-health.component';
 import { DcomponentTrainingComponent } from './driver-edit/component/dcomponent-training/dcomponent-training.component';
 import { DcomponentAssetComponent } from './driver-edit/component/dcomponent-asset/dcomponent-asset.component';
+import { DcomponentDocumentComponent } from './driver-edit/component/dcomponent-document/dcomponent-document.component';
 @NgModule({
   declarations: [
     CustomDaterangePicker2Component,
@@ -91,7 +92,8 @@ import { DcomponentAssetComponent } from './driver-edit/component/dcomponent-ass
     DcomponentLicenceComponent,
     DcomponentHealthComponent,
     DcomponentTrainingComponent,
-    DcomponentAssetComponent
+    DcomponentAssetComponent,
+    DcomponentDocumentComponent
   ],
   imports: [
     CommonModule,

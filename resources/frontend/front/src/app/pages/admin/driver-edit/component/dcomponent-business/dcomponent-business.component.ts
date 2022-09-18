@@ -1,246 +1,145 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { NgbCalendar, NgbDate, NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
+import { NgbDateStruct, NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
-import { ApiService } from "../../../../../../app/shared/services/api.service";
 declare var $: any;
 import { environment } from "../../../../../../environments/environment";
 import { v4 as uuidv4 } from 'uuid';
+import { ApiService } from "src/app/shared/services/api.service";
 
 @Component({
   selector: "app-dcomponent-business",
   templateUrl: "./dcomponent-business.component.html",
-  styles: [".noClick {pointer-events: none;color: #ad9e9e; }"],
+  styles: [
+    `
+  .form-group.hidden {
+    width: 0;
+    margin: 0;
+    border: none;
+    padding: 0;
+  }
+  .custom-day {
+    text-align: center;
+    padding: 0.185rem 0.25rem;
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+  }
+  .custom-day.focused {
+    background-color: #e6e6e6;
+  }
+  .custom-day.range, .custom-day:hover {
+    background-color: rgb(2, 117, 216);
+    color: white;
+  }
+  .custom-day.faded {
+    background-color: rgba(2, 117, 216, 0.5);
+  }
+`],
+  styleUrls: [
+    '../../../../../../vendor/libs/ngb-datepicker/ngb-datepicker.scss',
+    '../../../../../../vendor/libs/ng-select/ng-select.scss',
+  ]
 })
 export class DcomponentBusinessComponent implements OnInit {
-  downloadurl = `${environment.apiUrl}/admin/v1/driver/downloadpdf`;
-
-  dataForm: FormGroup;
-  submitted = false;
-  disabled = false;
-  driver_id= 0;
-  documentList = [];
-  document_idx: String;
-  new_document_name= '';
-  initialDocuments = [
-    {
-      'idx': 'operators_licence',
-      'name': 'Operators Licence',
-    },
-    {
-      'idx': 'fleet_vehicle_insurance',
-      'name': 'Fleet / Vehicle Insurance',
-    },
-    {
-      'idx': 'vat_certificate',
-      'name': 'VAT Certificate',
-    },
-    {
-      'idx': 'work_permit',
-      'name': 'Work Permit',
-    },
-    {
-      'idx': 'driving_licence',
-      'name': 'Driving Licence',
-    },
-    {
-      'idx': 'driver_cpc',
-      'name': 'Driver CPC',
-    },
-    {
-      'idx': 'eye_sight_test',
-      'name': 'Eye Sight Test',
-    },
-    {
-      'idx': 'uniform_issue_form',
-      'name': 'Uniform Issue Form',
-    }
-  ];
-  @Input() vatOptions = [];
-  @Input() data: Object;
-
-  @Output() valueChange = new EventEmitter<any>();
-  constructor(
-    private formBuilder: FormBuilder,
-    private apiService: ApiService,
-    private calendar: NgbCalendar,
-  ) {}
-  ngOnChanges() {
-    if(this.data) {
-      this.driver_id = this.data['id'];
-      console.log('this.driver_id', this.driver_id);
-      let _data = this.data['data'];
-      let documentData = _data.document ? JSON.parse(_data.document) : [];
-      
-      if ( documentData.length > 0) {
-        this.parseData(documentData);
-      } else {
-        this.initData();
-      }
-    }
+  @Input() userid = 0;
+  @Input()
+  set data(data) {
+    console.log(data);
   }
 
-  convertStrToDate(str = null) {
-    let jd = moment();
-    let today = {
-      year: jd.year(),
-      month: jd.month() + 1,
-      day: jd.date()
-    };
-    if ( str == undefined) {
-      return today;
-    }
-    jd = moment(str);
-    return {
-      year: jd.year(),
-      month: jd.month() + 1,
-      day: jd.date()
-    };
-  };
+  perPage = 10;
+
+  filterVal = "";
+  currentPage = 1;
+  totalItems = 0;
+  taskData: object[] = [];
+
+  hoveredDate: NgbDate | null = null;
+  fromDate: NgbDate | null;
+  toDate: NgbDate | null;
+  today = '';
+
+  constructor(    
+    private apiService: ApiService,
+    public formatter: NgbDateParserFormatter,
+    private calendar: NgbCalendar, 
+    ) {
+      let today = calendar.getToday();
+      let year = today.year;
+      let month = today.month;
+      this.fromDate = new NgbDate(year, month, 1);
+      this.toDate = calendar.getNext(this.fromDate, 'm', 1);
+      this.today = moment(formatter.format(calendar.getToday())).format('dddd, MMMM Do YYYY');
+     }
 
   ngOnInit(): void {
-
-  }
-  initData() {
-    this.documentList = [];
-    this.initialDocuments.forEach(element => {
-      this.documentList.push({
-        'idx': element['idx'],
-        'name': element['name'],
-        'pass': false,
-        'tdate': this.convertStrToDate(),
-        'expire': '',
-        'file': '',
-      });
-    });
-  };
-  parseData(documentData) {
-    this.documentList = [];
-
-    documentData.forEach(element => {
-      this.documentList.push({
-        'idx': element['idx'],
-        'name': element['name'],
-        'pass': element['pass'],
-        'tdate': this.convertStrToDate(element['tdate']),
-        'expire': element['expire'],
-        'file': element['file'],
-      })
-    });
-    console.log(this.documentList)
+    this.loadData();
   }
 
-  /**
-   * change event in invoice date
-   * @param event 
-   */
-  onDateChange(date: NgbDateStruct, idx: String) {
-    let index = this.documentList.findIndex(ele => {
-      return ele['idx'] === idx;
-    })
-    let passDate = date.year + "-" + date.month + "-" + date.day;
-    let _passDate = moment(passDate);
-    let _expire = _passDate.add(6, 'month');
-    passDate = moment(_expire).format('YYYY-MM-DD');
-
-    this.documentList[index]['expire'] = passDate;
-  }
-  
-  uploadDocument(type_id) {
-    this.document_idx = type_id;
-    console.log(type_id);
-    $("#uploader").click();
-  }
-  uploadFile(event) {
-    const file: File = event.target.files[0];
-    console.log(file);
-    if (file) {
-      // this.fileName = file.name;
-      const params = new FormData();
-      params.append("file", file);
-      params.append("driver_id", this.driver_id.toString());
-      params.append("onlyfile", 'true');
-      this.apiService
-        .uploadDriverBusinessDocument(params)
-        .then(res => {
-          let code = res.code;
-          if (code == 200) {
-            $("#uploader").val("");
-            let index = this.documentList.findIndex(ele => {
-              return ele['idx'] === this.document_idx;
-            });
-            this.documentList[index]['file'] = res.filename;
-          }
-        })
-        .catch(err => {
-          let status = err.status;
-        });
+  loadData() {
+    let from = '';
+    if(this.fromDate != undefined) {
+      from = this.fromDate.year + '-' + this.fromDate.month + '-' + this.fromDate.day;
+      from = moment(from).format('YYYY-MM-DD 00:00:00');
     }
-  }
+    let to = '';
+    if(this.toDate != undefined) {
+      to = this.toDate.year + '-' + this.toDate.month + '-' + this.toDate.day;
+      to = moment(to).format('YYYY-MM-DD 23:59:59');
+    }
 
-  deleteDocument(idx, deleteItem = false) {
-    let index = this.documentList.findIndex(ele => {
-      return ele['idx'] === idx;
-    });
-    let filename = this.documentList[index]['file'];
     let params = {
-      driver_id: this.driver_id,
-      filename: filename,
-      onlyfile: 'yes'
+      page: this.currentPage,
+      pagesize: this.perPage,
+      driverid: this.userid,
+      status: 5,
+      from: from,
+      to: to
     };
     this.apiService
-      .deleteDriverBusinessDocument(params)
+      .getTaskList(params)
       .then(res => {
-        let code = res.code;
-        if (code == 200) {
-          $("#uploader").val("");
-          this.documentList[index]['file'] = '';
-          if( deleteItem === true ) {
-            const itemIdx = this.documentList.findIndex(item => {
-              return item.idx === idx;
-            })
-            if(itemIdx > -1) {
-              this.documentList.splice(itemIdx, 1);
-            }
-          }
-        }
+        this.taskData = res.data;
+        this.totalItems = res.total;
       })
-      .catch(err => {
-        let status = err.status;
-      });
+      .catch(err => {});
+  }
+  update() {
+    console.log(this.currentPage);
+    this.loadData();
+  }
+  get totalPages() {
+    return Math.ceil(this.totalItems / this.perPage);
   }
 
-  addNewDocument() {
-    const uuid = uuidv4();
-    const name = this.new_document_name;
-    let newDoc = {
-      'idx': uuid,
-      'name': name,
-      'pass': false,
-      'tdate': this.convertStrToDate(),
-      'expire': '',
-      'file': '',
-    };
-    this.documentList.push(newDoc);
-    this.new_document_name = '';
-    $('#newDocumentModal').modal('hide');
-  }
+    // Range datepicker
+    onDateSelection(date: NgbDate, datepicker: any) {
+      if (!this.fromDate && !this.toDate) {
+        this.fromDate = date;
+      } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+        this.toDate = date;
+        datepicker.close();
+        this.currentPage = 1;
+        this.loadData();
+      } else {
+        this.toDate = null;
+        this.fromDate = date;
+      }
+    }
 
-  onModalClose() {
-    this.new_document_name = '';
-    $('#newDocumentModal').modal('hide');
-  }
-
-  onSubmit() {
-    this.submitted = true;
-
-    const params = {
-      'document': JSON.stringify(this.documentList)
-    };
-
-    const data = {
-      form: params
-    };
-    this.valueChange.emit(data);
-  }
+    isRange(date: NgbDate) {
+      return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
+    }
+    isHovered(date: NgbDate) {
+      return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+    }
+  
+    isInside(date: NgbDate) {
+      return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+    }
+    validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+      const parsed = this.formatter.parse(input);
+      return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+    }
 }

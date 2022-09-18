@@ -1,36 +1,45 @@
-<form [formGroup]="dataForm" class="card">
+<div class="card">
     <div class="card-body">
         <div class="row">
+            <form [formGroup]="dataForm" class="form-group col-md-6">
+                    <label class="form-label">Driving Licence Number</label>
+                    <input type="text" class="form-control" formControlName="licence_number" name="licence_number" [ngClass]="{ 'is-invalid': submitted &&
+                        f.licence_number.errors }" />
+                    <div *ngIf="f.licence_number.errors && submitted" class="invalid-feedback">
+                        <div *ngIf="f.licence_number.errors.required">
+                            This field is Required
+                        </div>
+                    </div>
+            </form>
             <div class="form-group col-md-6">
-                <label class="form-label">Driving Licence Number</label>
-                <input type="text" class="form-control" formControlName="licence_number" name="licence_number" [ngClass]="{ 'is-invalid': submitted &&
-                    f.licence_number.errors }" />
-                <div *ngIf="f.licence_number.errors && submitted" class="invalid-feedback">
-                    <div *ngIf="f.licence_number.errors.required">
-                        This field is Required
+                <label class="form-label">Expiry Date</label>
+
+                <div class="input-group">
+                    <input 
+                        class="form-control"
+                        placeholder="yyyy-mm-dd"
+                        ngbDatepicker 
+                        name="birthday" 
+                        #d="ngbDatepicker" 
+                        [(ngModel)]="tdate"
+                        (ngModelChange)="onDateChange($event)"
+                        readonly (click)="d.toggle()"
+                    />
+                    <div class="input-group-append">
+                        <button class="input-group-text" (click)="d.toggle()" type="button">
+                            <span class="ion ion-md-calendar" style="cursor: pointer;"></span>
+                        </button>
                     </div>
                 </div>
-            </div>
-            <div class="form-group col-md-6">
-                <label class="form-label">Driving Licence Expiry</label>
-                <input type="text" class="form-control" formControlName="licence_expiry" name="licence_expiry" [ngClass]="{
-                    'is-invalid': submitted &&
-                    f.licence_expiry.errors
-                    }" />
-                <div *ngIf="f.licence_expiry.errors && submitted" class="invalid-feedback">
-                    <div *ngIf="f.licence_expiry.errors.required">
-                        This field is Required
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-6">
-                <label class="form-label">HGV Licence?</label>
-                <input formControlName="hgv_licence" name="hgv_licence"
-                    type="checkbox">
             </div>
 
+        </div>
+        <div class="row">
+            <form [formGroup]="dataForm"  class="form-group col-md-6">
+                    <label class="form-label">HGV Licence?</label>
+                    <input formControlName="hgv_licence" name="hgv_licence"
+                        type="checkbox">
+            </form>
             <div class="form-group col-md-6" *ngIf="f.hgv_licence.value">
                 <label class="form-label">Driver CPC Upload</label>
                 <input hidden type="file" accept="application/pdf" id="uploader" (change)="uploadFile($event)" />
@@ -72,4 +81,4 @@
             <span class="ion ion-md-add"></span>&nbsp; Update
         </button>
     </div>
-</form>
+</div>

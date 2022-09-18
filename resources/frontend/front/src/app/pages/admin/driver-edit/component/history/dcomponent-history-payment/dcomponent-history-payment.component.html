@@ -26,6 +26,15 @@
             <thead>
                 <tr>
                     <th class="text-nowrap cursor-pointer" >
+                        Amount
+                    </th>
+                    <th class="text-nowrap cursor-pointer" >
+                        Payment Date
+                    </th>
+                    <th class="text-nowrap cursor-pointer" >
+                        Payment Reference
+                    </th>
+                    <th class="text-nowrap cursor-pointer" >
                         Docket Number
                     </th>
                     <th class="text-nowrap cursor-pointer" >
@@ -42,29 +51,19 @@
                     <th class="text-nowrap cursor-pointer" >
                         Invoice Rec Date
                     </th>
-
-                    <th class="text-nowrap cursor-pointer" >
-                        Payment Date
-                    </th>
-                    <th class="text-nowrap cursor-pointer" >
-                        Payment Reference
-                    </th>
-                    <th class="text-nowrap cursor-pointer" >
-                        Amount
-                    </th>
                 </tr>
             </thead>
             <tbody class="job-list-table">
                 <tr *ngFor="let task of taskData" (click)="editTask(task.id)">
+                    <td class="align-middle">&pound; {{task.d_tprice}}</td>
+                    <td class="align-middle">{{task.payment_date}}</td>
+                    <td class="align-middle">{{task.payment_reference}}</td>
                     <td class="align-middle">{{task.docket}}</td>
                     <td class="align-middle">{{ task.customer.account_code }} - {{task.customer.company_name}}
                     </td>
                     <td class="align-middle">{{task.invoice_date}}</td>
                     <td class="align-middle">{{ task.invoice_number }}</td>
                     <td class="align-middle">{{ task.invoice_received_date }}</td>
-                    <td class="align-middle">{{task.payment_date}}</td>
-                    <td class="align-middle">{{task.payment_reference}}</td>
-                    <td class="align-middle">&pound; {{task.d_tprice}}</td>
                 </tr>
             </tbody>
         </table>
